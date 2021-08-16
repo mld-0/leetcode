@@ -47,7 +47,7 @@ class Solution:
         n.printnode()
         return n
 
-    #   
+    #   Runtime (leetcode): 80ms (beats 20%)
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
         n1 = self.evaluate(l1)
         n2 = self.evaluate(l2)
@@ -57,6 +57,22 @@ class Solution:
         print(n)
         self.make_num_list(n)
 
+    #   LINK: https://leetcode.com/problems/add-two-numbers/discuss/1032/Python-concise-solution.
+    #   Runtime (leetcode): 68ms (beats 75%)
+    def addTwoNumbers_Alt1(self, l1, l2):
+        start = current = ListNode(0)
+        carry = 0
+        while l1 or l2 or carry:
+            if l1:
+                carry += l1.val
+                l1 = l1.next
+            if l2:
+                carry += l2.val
+                l2 = l2.next
+            current.next = ListNode(carry%10)
+            current = current.next
+            carry //= 10
+        return start.next
 
 
 def main():
@@ -73,6 +89,7 @@ def main():
     l1 = s.make_num_list(1000000000000000000000000000001)
 
     s.addTwoNumbers(l1, l2)
+    s.addTwoNumbers_Alt1(l1, l2)
 
 
 if __name__ == "__main__":
