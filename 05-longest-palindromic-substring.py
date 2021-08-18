@@ -1,3 +1,7 @@
+#   VIM SETTINGS: {{{3
+#   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
+#   vim: set foldlevel=2 foldcolumn=1:
+#   }}}1
 
 class Solution:
 
@@ -12,20 +16,20 @@ class Solution:
                     if len(loop_str) > len(result):
                         result = loop_str
         return result
- 
+
     def is_palindrome(self, s: str, start: int, end: int, palindromes: list) -> bool:
         result = s == s[::-1]
         return result
 
 
     #   Dynamic programming solution - time limit exceded?
-    def longestPalindrome(self, s: str) -> str:
+    def longestPalindrome_Second(self, s: str) -> str:
          #   longest palindrome is given by s[start:end]
         start = 0  
         end = 1 
         #   table[i][j] -> True if s[i:j+1] is a palindrome
         table = [[False for x in range(len(s))] for y in range(len(s))]
-        #   All substring of length 1 are palindromes
+        #   All substrings of length 1 are palindromes
         i = 0
         while (i < len(s)):
             table[i][i] = True
@@ -45,14 +49,38 @@ class Solution:
             i = 0
             while i < (len(s) - k + 1): 
                 j = i + k - 1  #  end index of substring:
+                print("[%s,%s] %s" % (i, j, s[i:j+1]), end="")
                 if (s[i] == s[j] and table[i+1][j-1] == True):
                     table[i][j] = True
+                    print(" - palindrome", end="")
                     if k > end-start:
                         start = i
                         end = j + 1
+                print("")
                 i += 1
             k += 1
         return s[start:end]
+
+    #   Results:
+    #       runtime: 4212ms (beats 27%)
+    def longestPalindrome_Third(self, s: str) -> str:
+        start = 0
+        end = 0
+        table = [[False]*len(s) for x in range(len(s))]
+        #   All substrings of length 1 are palindromes
+        for i in range(len(s)):
+            table[i][i] = True
+            start = i
+            end = i
+        for loop_end in range(1, len(s)):
+            for loop_start in range(loop_end-1, -1, -1):
+                if s[loop_start] == s[loop_end]:
+                    if loop_start == loop_end - 1 or table[loop_start+1][loop_end-1]:
+                        table[loop_start][loop_end] = True
+                        if (end-start) < (loop_end-loop_start):
+                            start = loop_start
+                            end = loop_end
+        return s[start:end+1]
 
 
     #   LINK: https://leetcode.com/problems/longest-palindromic-substring/discuss/900639/Python-Solution-%3A-with-detailed-explanation-%3A-using-DP
@@ -64,9 +92,9 @@ class Solution:
            dp[i][i] = True
            longest_palindrom = s[i]
        # filling the dp table
-       for i in range(len(s)-1,-1,-1):
+       for i in range(len(s)-1,-1,-1):  # [len(s)-1, -1)
 	   		# j starts from the i location : to only work on the upper side of the diagonal 
-           for j in range(i+1,len(s)):  
+           for j in range(i+1,len(s)):  #  [i+1, len(s))
                if s[i] == s[j]:  #if the chars mathces
                    # if len slicied sub_string is just one letter if the characters are equal, we can say they are palindomr dp[i][j] =True 
                    #if the slicied sub_string is longer than 1, then we should check if the inner string is also palindrom (check dp[i+1][j-1] is True)
@@ -75,36 +103,40 @@ class Solution:
                        # we also need to keep track of the maximum palindrom sequence 
                        if len(longest_palindrom) < len(s[i:j+1]):
                            longest_palindrom = s[i:j+1]
-               
+
+
        return longest_palindrom 
 
+    def longestPalindrome(self, s: str) -> str:
+        return self.longestPalindrome_Second(s)
 
 s = Solution()
 
-text = "cbbd"
-check = "bb"
-result = s.longestPalindrome_Ans(text)
+text = "ceebababefd"
+check = "ebababe"
+result = s.longestPalindrome(text)
 print("result=(%s)" % result)
 assert(result in check)
 
 text = "a"
 check = "a"
-result = s.longestPalindrome_Ans(text)
+result = s.longestPalindrome(text)
 print("result=(%s)" % result)
 assert(result in check)
 
 text = "ac"
 check = [ "a", "c" ]
-result = s.longestPalindrome_Ans(text)
+result = s.longestPalindrome(text)
 print("result=(%s)" % result)
 assert(result in check)
 
-text = "nmxyncuzlwhiobggiowtjexyzbzyhuqmpnyyimazcrnhrnkydxnioqhtchnnoqhuezypyxiepdvyesihlvbuzctptsaowfllxfdqvbwyitsegpbarqqpcrrvemwkglouhhtuxjdeppatdiiwhwvrqxqjcmzhuwurlqrshlsjyxksfjmhykyhcbpmrbsmbrrjwndjsgqdrafidmelnobhtpblozbzttpzheeffwysfrrwtewjnmqoyrvfxmgcmdoadagatwyocixggwppnmtrnfrbiijwojpetuqwknvtqgspuogrbqqptsrljjiaalmqlchlszflyixxpnkttzbrvhzrjzfbpuquuyzwhattxvoqpzieguwvmlrggrlmvwugeizpqovxttahwzyuuqupbfzjrzhvrbzttknpxxiylfzslhclqmlaaijjlrstpqqbrgoupsgqtvnkwqutepjowjiibrfnrtmnppwggxicoywtagadaodmcgmxfvryoqmnjwetwrrfsywffeehzpttzbzolbpthbonlemdifardqgsjdnwjrrbmsbrmpbchykyhmjfskxyjslhsrqlruwuhzmcjqxqrvwhwiidtappedjxuthhuolgkwmevrrcpqqrabpgestiywbvqdfxllfwoastptczubvlhiseyvdpeixypyzeuhqonnhcthqoinxdyknrhnrczamiyynpmquhyzbzyxejtwoiggboihwlzucnyxmn"
-check = ""
-result = s.longestPalindrome_Ans(text)
-print("result=(%s)" % result)
+#text = "nmxyncuzlwhiobggiowtjexyzbzyhuqmpnyyimazcrnhrnkydxnioqhtchnnoqhuezypyxiepdvyesihlvbuzctptsaowfllxfdqvbwyitsegpbarqqpcrrvemwkglouhhtuxjdeppatdiiwhwvrqxqjcmzhuwurlqrshlsjyxksfjmhykyhcbpmrbsmbrrjwndjsgqdrafidmelnobhtpblozbzttpzheeffwysfrrwtewjnmqoyrvfxmgcmdoadagatwyocixggwppnmtrnfrbiijwojpetuqwknvtqgspuogrbqqptsrljjiaalmqlchlszflyixxpnkttzbrvhzrjzfbpuquuyzwhattxvoqpzieguwvmlrggrlmvwugeizpqovxttahwzyuuqupbfzjrzhvrbzttknpxxiylfzslhclqmlaaijjlrstpqqbrgoupsgqtvnkwqutepjowjiibrfnrtmnppwggxicoywtagadaodmcgmxfvryoqmnjwetwrrfsywffeehzpttzbzolbpthbonlemdifardqgsjdnwjrrbmsbrmpbchykyhmjfskxyjslhsrqlruwuhzmcjqxqrvwhwiidtappedjxuthhuolgkwmevrrcpqqrabpgestiywbvqdfxllfwoastptczubvlhiseyvdpeixypyzeuhqonnhcthqoinxdyknrhnrczamiyynpmquhyzbzyxejtwoiggboihwlzucnyxmn"
+#check = ""
+#result = s.longestPalindrome(text)
+#print("result=(%s)" % result)
+#
+#
+#text = "fjnfkfbfeuujctmyttwidcrdjtkfoaylsceqqzzmkpyvljkwcxxtmxiwkrgoahxztuppnvxhyionhpakvjoizdzcqxuyaidjadrhfhuhbncijokbthvuigjytipgygnonhgkpvsqimxpslmptieumhunjlafttjstaxnivrpqcxrgocvaicpwfnmtkgbjnbfopxaiduqihomrdmhzzyzddytiqdjzmmqwmeyoqnttmiujobihdifkbntpphjhgxzbjpulnokvceohloltyosddbopgkllcxzzkfzmkywxlpkdjlorgorxzownuajjzcxuhyqexfklssbtralzlvdbtxapccipvvgjtusfsanvnyehpkwirygqogtsicwycgnajwekuzffhlsvfgqwpbuinwhvpqxjhamhxayicchmxmurakhzhoghnupohaqanduhjkegggpyetwebcjgavpspfjaoakjkktaxwehpyqvsczhbbhzcsvqyphewxatkkjkaoajfpspvagjcbewteypgggekjhudnaqahopunhgohzhkarumxmhcciyaxhmahjxqpvhwniubpwqgfvslhffzukewjangcywcistgoqgyriwkpheynvnasfsutjgvvpiccpaxtbdvlzlartbsslkfxeqyhuxczjjaunwozxrogroljdkplxwykmzfkzzxcllkgpobddsoytlolhoecvkonlupjbzxghjhpptnbkfidhibojuimttnqoyemwqmmzjdqityddzyzzhmdrmohiqudiaxpofbnjbgktmnfwpciavcogrxcqprvinxatsjttfaljnuhmueitpmlspxmiqsvpkghnongygpityjgiuvhtbkojicnbhuhfhrdajdiayuxqczdziojvkaphnoiyhxvnpputzxhaogrkwixmtxxcwkjlvypkmzzqqecslyaofktjdrcdiwttymtcjuuefbfkfnjf"
+#result = s.longestPalindrome(text)
+#print("result=(%s)" % result)
 
-
-text = "fjnfkfbfeuujctmyttwidcrdjtkfoaylsceqqzzmkpyvljkwcxxtmxiwkrgoahxztuppnvxhyionhpakvjoizdzcqxuyaidjadrhfhuhbncijokbthvuigjytipgygnonhgkpvsqimxpslmptieumhunjlafttjstaxnivrpqcxrgocvaicpwfnmtkgbjnbfopxaiduqihomrdmhzzyzddytiqdjzmmqwmeyoqnttmiujobihdifkbntpphjhgxzbjpulnokvceohloltyosddbopgkllcxzzkfzmkywxlpkdjlorgorxzownuajjzcxuhyqexfklssbtralzlvdbtxapccipvvgjtusfsanvnyehpkwirygqogtsicwycgnajwekuzffhlsvfgqwpbuinwhvpqxjhamhxayicchmxmurakhzhoghnupohaqanduhjkegggpyetwebcjgavpspfjaoakjkktaxwehpyqvsczhbbhzcsvqyphewxatkkjkaoajfpspvagjcbewteypgggekjhudnaqahopunhgohzhkarumxmhcciyaxhmahjxqpvhwniubpwqgfvslhffzukewjangcywcistgoqgyriwkpheynvnasfsutjgvvpiccpaxtbdvlzlartbsslkfxeqyhuxczjjaunwozxrogroljdkplxwykmzfkzzxcllkgpobddsoytlolhoecvkonlupjbzxghjhpptnbkfidhibojuimttnqoyemwqmmzjdqityddzyzzhmdrmohiqudiaxpofbnjbgktmnfwpciavcogrxcqprvinxatsjttfaljnuhmueitpmlspxmiqsvpkghnongygpityjgiuvhtbkojicnbhuhfhrdajdiayuxqczdziojvkaphnoiyhxvnpputzxhaogrkwixmtxxcwkjlvypkmzzqqecslyaofktjdrcdiwttymtcjuuefbfkfnjf"
-result = s.longestPalindrome_Ans(text)
-print("result=(%s)" % result)
