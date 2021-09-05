@@ -1,36 +1,35 @@
 
-def twoSum_A(nums, target):
-    target_difference = dict()
-    
-    for i, val_i in enumerate(nums):
-        target_difference[i] = target - val_i
-        
-    for i, val_i in target_difference.items():
-        temp = [index for index, val in enumerate(nums) if val == val_i]
-        for j in temp:
-            if i != j:
-                return [i, j]
+class Solution:
+
+    #   Result:
+    #       runtime: beats 75%
+    def twoSum(self, nums: list[int], target: int) -> list[int]:
+        """find the indices of the values in 'nums' that add up to 'target'"""
+
+        #   num_to_index[nums[index]] = index
+        num_to_index = dict()
+
+        for index in range(len(nums)):
+            delta = target - nums[index]
+
+            if delta in num_to_index.keys():
+                return [ num_to_index[delta], index ]
+
+            num_to_index[nums[index]] = index
 
 
-def twoSum_B(nums, target):
-    index_by_val = dict()  # keys = vals, values = indexes
-    #for i, val_i in enumerate(nums):
-    for i in range(len(nums)):
-        diff = target - nums[i]
-        if diff in nums[:i]:  
-            return [index_by_val[diff], i]
-        index_by_val[nums[i]] = i
+nums_targets_list = [ ([2,7,11,15], 9), ([3,2,4], 6), ([3,3], 6) ]
+check_list = [ [0,1], [1,2], [0,1] ]
 
+s = Solution()
 
-result = twoSum_A([3,3], 6)
-print(result)
-result = twoSum_A([2,7,11,15], 9)
-print(result)
+for (nums, target), check in zip(nums_targets_list, check_list):
+    result = s.twoSum(nums, target)
+    print("nums=(%s), target=(%s)" % (nums, target))
+    print("result=(%s)" % result)
+    print()
+    assert( result == check )
 
-result = twoSum_B([3,3], 6)
-print(result)
-result = twoSum_B([2,7,11,15], 9)
-print(result)
 
 
 
