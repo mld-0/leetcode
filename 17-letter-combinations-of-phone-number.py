@@ -61,5 +61,5 @@ for digits, check in zip(digits_list, check_list):
     result = s.letterCombinations(digits)
     print("result=(%s)" % result)
     print()
-
+    assert( set(result) == set(check) )
 
