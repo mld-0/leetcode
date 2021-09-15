@@ -55,29 +55,31 @@ class Solution:
         result = []
         nums.sort()
         #   need at least 3 numbers to continue
-        for l in range(len(nums)-2):
+        for i in range(len(nums)-2):
             #   prevent checking duplicate (again)
-            if l > 0 and nums[l] == nums[l-1]:
+            if i > 0 and nums[i] == nums[i-1]:
                 continue
             #   optimization
-            if nums[l] > 0:
+            if nums[i] > 0:
                 break
-            mid = l+1
+            l = i+1
             r = len(nums)-1
-            while mid < r:
-                trial = nums[l] + nums[mid] + nums[r]
+
+            while l < r:
+                trial = nums[i] + nums[l] + nums[r]
                 if trial < 0:
-                    mid += 1
+                    l += 1
                 elif trial > 0:
                     r -= 1
                 else:
-                    result.append([nums[l], nums[mid], nums[r]])
-                    while mid < r and nums[mid] == nums[mid+1]:  # avoid duplicates
-                        mid += 1
-                    while mid < r and nums[r] == nums[r-1]:  # avoid duplicates
+                    result.append([nums[i], nums[l], nums[r]])
+                    while l < r and nums[l] == nums[l+1]:  # avoid duplicates
+                        l += 1
+                    while l < r and nums[r] == nums[r-1]:  # avoid duplicates
                         r -= 1
-                    mid += 1
+                    l += 1
                     r -= 1
+
         return result
 
 
