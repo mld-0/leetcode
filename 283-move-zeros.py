@@ -8,11 +8,11 @@ class Solution:
 
     def moveZeros(self, nums: list[int]) -> None:
         """Move all '0's to the end of 'nums' (inplace), preserving order of other elements"""
-        #self.moveZeros_A(nums)
-        self.moveZeros_E(nums)
+        #self.move_Zeroes_A(nums)
+        self.moveZeroes_F(nums)
 
     #   runtime: beats 6%
-    def moveZeros_A(self, nums: list[int]) -> None:
+    def move_Zeroes_A(self, nums: list[int]) -> None:
         l = 0
         r = len(nums) - 1
         while l < r:
@@ -26,7 +26,7 @@ class Solution:
                 l += 1
 
     #   runtime: beats 30%
-    def moveZeros_B(self, nums: list[int]) -> None:
+    def move_Zeroes_B(self, nums: list[int]) -> None:
         result = [ 0 for x in nums ]
         k = 0
         for r in range(len(nums)):
@@ -37,7 +37,7 @@ class Solution:
 
 
     #   runtime: beats 18%
-    def moveZeros_C(self, nums: list[int]) -> None:
+    def move_Zeroes_C(self, nums: list[int]) -> None:
         #   Invariants:
         #       all elements before l are non-zeros
         #       all elements between r and l are zeros
@@ -50,7 +50,7 @@ class Solution:
             r += 1
 
     #   runtime: beats 16%
-    def moveZeros_D(self, nums: list[int]) -> None:
+    def move_Zeroes_D(self, nums: list[int]) -> None:
         l = 0
         r = 0
         while r < len(nums):
@@ -64,7 +64,7 @@ class Solution:
             r += 1
 
     #   runtime: beats 24%
-    def moveZeros_E(self, nums: list[int]) -> None:
+    def move_Zeroes_E(self, nums: list[int]) -> None:
         snowBall = 0
         for i in range(len(nums)):
             if nums[i] == 0:
@@ -73,6 +73,21 @@ class Solution:
                 temp = nums[i]
                 nums[i] = 0
                 nums[i-snowBall] = temp
+
+
+    #   runtime: beats 60%
+    def moveZeroes_F(self, nums: list[int]) -> None:
+        """Two pointers approach, at each stage, move the next non-zero value, 'p_current', with the end of the list of non-zero values, 'p_firstZero'"""
+
+        p_firstZero = 0
+        p_current = 0
+
+        while p_current < len(nums):
+            if nums[p_current] != 0:
+                nums[p_current], nums[p_firstZero] = nums[p_firstZero], nums[p_current]
+                p_firstZero += 1
+            p_current += 1
+
 
 
 s = Solution()
