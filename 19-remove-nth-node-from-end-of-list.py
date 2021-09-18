@@ -7,7 +7,6 @@ class ListNode:
     def __init__(self, val=0, _next=None):
         self.val = val
         self.next = _next
-
     def from_list(values):
         if len(values) == 0:
             return None
@@ -21,7 +20,6 @@ class ListNode:
             first = first.next
         second.next = None
         return result
-
     def to_list(self):
         result = []
         first = self
@@ -29,11 +27,14 @@ class ListNode:
             result.append(first.val)
             first = first.next
         return result
-
     def __repr__(self):
         return str(self.to_list())
 
 class Solution:
+
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        #return self.removeNthFromEnd_Ans(head, n)
+        return self.removeNthFromEnd_A(head, n)
 
     def removeNthFromStart(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         if n == 0:
@@ -52,7 +53,6 @@ class Solution:
             second.next = None
         return head
 
-    #   Result:
     #       runtime: beats 55%
     def removeNthFromEnd_A(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         list_len = 1
@@ -63,7 +63,6 @@ class Solution:
         index_remove = list_len - n
         return self.removeNthFromStart(head, index_remove)
 
-    #   Result:
     #       runtime: beats 80%
     def removeNthFromEnd_Ans(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         first = head
@@ -79,17 +78,31 @@ class Solution:
         second.next = second.next.next
         return head
 
-    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        #return self.removeNthFromEnd_Ans(head, n)
-        return self.removeNthFromEnd_A(head, n)
-
-s = Solution()
+    #   runtime: beats 58%
+    def removeNthFromEnd_TwoPointers(self, head: ListNode, n: int) -> ListNode:
+        l = head
+        r = head
+        for i in range(n):
+            r = r.next
+        if r is None:
+            return l.next
+        while r.next is not None:
+            r = r.next
+            l = l.next
+        l.next = l.next.next
+        return head
 
 list_values = [ ([1,2,3,4,5], 2), ([1], 1), ([1,2], 1) ]
 list_checks = [ [1,2,3,5], [], [1] ]
+
+s = Solution()
 
 for (loop_values, loop_n), loop_check in zip(list_values, list_checks):
     loop_node = ListNode.from_list(loop_values)
     result = s.removeNthFromEnd(loop_node, loop_n)
     print("result=(%s)" % str(result))
+    result_list = []
+    if result is not None: 
+        result_list = result.to_list()
+    assert( result_list == loop_check)
 
