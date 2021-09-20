@@ -9,13 +9,13 @@ class Solution:
             return False
         return True
 
-
-    # Sliding window algorithm: 
-    #   Results:
-    #       runtime: 288ms (beats 20%)
-    #       memory: run-dependent
-    # LINK: https://levelup.gitconnected.com/an-introduction-to-sliding-window-algorithms-5533c4fe1cc7
     def lengthOfLongestSubstring(self, s: str) -> int:
+        return self.lengthOfLongestSubstring_B(s)
+
+    #   Sliding window algorithm: 
+    #   runtime: beats 20%
+    # LINK: https://levelup.gitconnected.com/an-introduction-to-sliding-window-algorithms-5533c4fe1cc7
+    def lengthOfLongestSubstring_A(self, s: str) -> int:
         longest = 0
         left, right = 0, 0
         window_counter = defaultdict(int)
@@ -30,8 +30,8 @@ class Solution:
         return longest
 
 
-    #   Runtime (leetcode) 4732ms (beats 5%)
-    def lengthOfLongestSubstring_Brute(self, s: str) -> int:
+    #   runtime: beats 5%
+    def lengthOfLongestSubstring_BruteForce(self, s: str) -> int:
         longest = ""
         for i, val_i in enumerate(s):
             for j in range(i, len(s)+1):
@@ -41,6 +41,30 @@ class Solution:
                 else:
                     break
         return len(longest)
+
+    #   runtime: beats 71%
+    def lengthOfLongestSubstring_B(self, s: str) -> int:
+        result = ""
+        l = 0
+        #   position at which character last seen
+        seen = {}
+        for r in range(len(s)):
+            if s[r] not in seen:
+                #   s[r] is not in window, grow window
+                trial = s[l:r+1]
+                if len(trial) > len(result):
+                    result = trial
+            else:
+                if seen[s[r]] < l:
+                    #   s[r] is not in window, grow window
+                    trial = s[l:r+1]
+                    if len(trial) > len(result):
+                        result = trial
+                else:
+                    #   s[r] in window, advance 'l' past last instance of 's[r]'
+                    l = seen[s[r]] + 1
+            seen[s[r]] = r
+        return len(result)
 
 val_str = "abcabcbb"
 s = Solution()
