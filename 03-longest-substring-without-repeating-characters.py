@@ -66,6 +66,21 @@ class Solution:
             seen[s[r]] = r
         return len(result)
 
+    #   runtime: beats 71%
+    def lengthOfLongestSubstring_C(self, s: str) -> int:
+        result = ""
+        l = 0
+        seen = dict()
+        for r in range(len(s)):
+            if s[r] in seen and l <= seen[s[r]]:
+                l = seen[s[r]] + 1
+            else:
+                trial = s[l:r+1]
+                if len(trial) > len(result):
+                    result = trial
+            seen[s[r]] = r
+        return len(result)
+
 val_str = "abcabcbb"
 s = Solution()
 #result = s.lengthOfLongestSubstring_Brute(val_str)
