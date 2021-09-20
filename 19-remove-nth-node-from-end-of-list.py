@@ -36,6 +36,7 @@ class Solution:
         #return self.removeNthFromEnd_Ans(head, n)
         return self.removeNthFromEnd_A(head, n)
 
+
     def removeNthFromStart(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         if n == 0:
             head = head.next
@@ -53,44 +54,59 @@ class Solution:
             second.next = None
         return head
 
+
     #       runtime: beats 55%
     def removeNthFromEnd_A(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         list_len = 1
         first = head
+
         while first.next is not None:
             first = first.next
             list_len += 1
+
         index_remove = list_len - n
+
         return self.removeNthFromStart(head, index_remove)
+
 
     #       runtime: beats 80%
     def removeNthFromEnd_Ans(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
         first = head
         second = head
+
         while n > 0:
             first = first.next
             n -= 1
+
         if first is None:
             return head.next
+
         while first.next:
             first = first.next
             second = second.next
+
         second.next = second.next.next
         return head
 
-    #   runtime: beats 58%
+
+    #   runtime: beats 98%
     def removeNthFromEnd_TwoPointers(self, head: ListNode, n: int) -> ListNode:
         l = head
         r = head
+
         for i in range(n):
             r = r.next
+
         if r is None:
-            return l.next
+            return head.next
+
         while r.next is not None:
             r = r.next
             l = l.next
+
         l.next = l.next.next
         return head
+
 
 list_values = [ ([1,2,3,4,5], 2), ([1], 1), ([1,2], 1) ]
 list_checks = [ [1,2,3,5], [], [1] ]
