@@ -6,6 +6,8 @@ from __future__ import annotations
 import pprint
 #   {{{2
 
+#   Requires 'from __future__ import annotations'
+
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
         self.val = val
@@ -168,8 +170,11 @@ input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [] ]
 for values in input_values:
     loop_tree = TreeNode.from_list(values)
     print(loop_tree)
-    loop_list = loop_tree.to_list()
-    print("loop_list=(%s)" % str(loop_list))
-    assert( [ values[i] == loop_list[i] for i in range(len(values)) ] )
-    print()
+    if loop_tree is not None:
+        loop_list = loop_tree.to_list()
+        print("loop_list=(%s)" % str(loop_list))
+        assert( [ values[i] == loop_list[i] for i in range(len(values)) ] )
+        print()
+    else:
+        assert( values == [] )
 
