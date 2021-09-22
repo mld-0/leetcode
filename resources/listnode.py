@@ -26,3 +26,20 @@ class ListNode:
     def __repr__(self):
         return str(self.to_list())
 
+
+if __name__ == '__main__':
+    input_values = [ [1,2,3,4,5], [7,9,4,3], [], [1], ]
+    input_checks = input_values[:]
+
+    for value, check in zip(input_values, input_checks):
+        loop_node = ListNode.from_list(value)
+        print("loop_node=(%s)" % str(loop_node))
+        if loop_node is not None:
+            loop_list = loop_node.to_list()
+            assert( str(loop_node) == str(loop_list) )
+        else:
+            loop_list = []
+        print("loop_list=(%s)" % str(loop_list))
+        assert( loop_list == check )
+        print()
+
