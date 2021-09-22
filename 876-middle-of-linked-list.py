@@ -1,30 +1,7 @@
 from __future__ import annotations
 from typing import Optional
 import math
-
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-    def from_list(l):
-        if len(l) == 0:
-            return None
-        L = ListNode(l[0])
-        result = L
-        for i in range(1, len(l)):
-            L.next = ListNode(l[i])
-            L = L.next
-        return result
-    def to_list(self):
-        result = []
-        node = self
-        while node is not None:
-            result.append(node.val)
-            node = node.next
-        return result
-    def __repr__(self):
-        result = str(self.to_list())
-        return result
+from resources.listnode import ListNode
 
 
 class Solution:

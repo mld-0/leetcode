@@ -1,33 +1,4 @@
-
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-    def __repr__(self):
-        return str(self.to_list())
-
-    def to_list(self):
-        result = []
-        node = self
-        while node is not None:
-            result.append(node.val)
-            node = node.next
-        return result
-
-    def from_list(l):
-        if l is None or len(l) == 0:
-            return None
-        result = ListNode()
-        node = result
-        previous = node
-        for i in l:
-            node.val = i
-            previous = node
-            node.next = ListNode()
-            node = node.next
-        previous.next = None
-        return result
+from resources.listnode import ListNode
 
 
 class Solution:
