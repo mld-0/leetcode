@@ -2,7 +2,7 @@ from typing import Optional
 import pprint
 
 # Definition for singly-linked list.
-class ListNode:
+class BasicListNode:
 
     def __init__(self, val=0, next=None):
         self.val = val
@@ -28,14 +28,14 @@ class Solution:
         return val
 
     def make_num_list(self, val):
-        n = ListNode()
+        n = BasicListNode()
         loop_n_previous = None
         loop_n = n
         while (val > 0):
             loop_n.val = int(int(val) % 10)
             print("val=(%s), loop_n.val=(%s)" % (val, loop_n.val))
             loop_n_previous = loop_n
-            loop_n.next = ListNode(None, None)
+            loop_n.next = BasicListNode(None, None)
             loop_n = loop_n.next
             #   Initial solution: remove last digit from val, fails due to round errors when val becomes sufficently large
             #val = int(int(val) / 10)
@@ -48,7 +48,7 @@ class Solution:
         return n
 
     #   Runtime (leetcode): 80ms (beats 20%)
-    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+    def addTwoNumbers(self, l1: Optional[BasicListNode], l2: Optional[BasicListNode]) -> Optional[BasicListNode]:
         n1 = self.evaluate(l1)
         n2 = self.evaluate(l2)
         n = n1 + n2
@@ -60,7 +60,7 @@ class Solution:
     #   LINK: https://leetcode.com/problems/add-two-numbers/discuss/1032/Python-concise-solution.
     #   Runtime (leetcode): 68ms (beats 75%)
     def addTwoNumbers_Alt1(self, l1, l2):
-        start = current = ListNode(0)
+        start = current = BasicListNode(0)
         carry = 0
         while l1 or l2 or carry:
             if l1:
@@ -69,7 +69,7 @@ class Solution:
             if l2:
                 carry += l2.val
                 l2 = l2.next
-            current.next = ListNode(carry%10)
+            current.next = BasicListNode(carry%10)
             current = current.next
             carry //= 10
         return start.next
@@ -78,13 +78,13 @@ class Solution:
 def main():
     s = Solution()
 
-    l1 = ListNode(2)
-    l1.next = ListNode(4)
-    l1.next.next = ListNode(3)
+    l1 = BasicListNode(2)
+    l1.next = BasicListNode(4)
+    l1.next.next = BasicListNode(3)
 
-    l2 = ListNode(5)
-    l2.next = ListNode(6)
-    l2.next.next = ListNode(4)
+    l2 = BasicListNode(5)
+    l2.next = BasicListNode(6)
+    l2.next.next = BasicListNode(4)
 
     l1 = s.make_num_list(1000000000000000000000000000001)
 
