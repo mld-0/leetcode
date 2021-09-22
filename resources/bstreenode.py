@@ -165,16 +165,17 @@ class TreeNode:
         #   }}}
 
 
-input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [] ]
+if __name__ == '__main__':
+    input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [] ]
 
-for values in input_values:
-    loop_tree = TreeNode.from_list(values)
-    print(loop_tree)
-    if loop_tree is not None:
-        loop_list = loop_tree.to_list()
-        print("loop_list=(%s)" % str(loop_list))
-        assert( [ values[i] == loop_list[i] for i in range(len(values)) ] )
-        print()
-    else:
-        assert( values == [] )
+    for values in input_values:
+        loop_tree = TreeNode.from_list(values)
+        print(loop_tree)
+        if loop_tree is not None:
+            loop_list = loop_tree.to_list()
+            print("loop_list=(%s)" % str(loop_list))
+            assert( [ values[i] == loop_list[i] for i in range(len(values)) ] )
+            print()
+        else:
+            assert( values == [] )
 
