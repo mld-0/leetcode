@@ -13,6 +13,7 @@ class Solution:
         return self.mergeTrees_Recusive(root1, root2)
         #return self.mergeTrees_Iterative(root1, root2)
 
+
     #   runtime: beats 99%
     def mergeTrees_Recusive(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
         if root1 is None: 
@@ -26,6 +27,7 @@ class Solution:
         root1.right = self.mergeTrees(root1.right, root2.right)
 
         return root1
+
 
     #   runtime: beats 81%
     def mergeTrees_Iterative(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
