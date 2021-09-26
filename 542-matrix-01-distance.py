@@ -11,12 +11,66 @@ from typing import List
 class Solution:
 
     def updateMatrix(self, mat: List[List[int]]) -> List[List[int]]:
-        #return self.updateMatrix_DFS(mat)
-        return self.updateMatrix_DP(mat)
+        return self.updateMatrix_DFS_EndToStart(mat)
+        #return self.updateMatrix_DP(mat)
+        #return self.updateMatrix_DFS_StartToEnd(mat)
+
+    #   runtime: TLE
+    def updateMatrix_DFS_StartToEnd(self, mat: List[List[int]]) -> List[List[int]]:
+        #   {{{
+        #   result[row][col] = distance to nearest '0'
+        result = [ [ 0 for col in range(len(mat[0])) ] for row in range(len(mat)) ]
+        adjacent_offsets = [ (-1,0), (1,0), (0,-1), (0,1) ]  # offsets for 4-connected-ness
+
+        queue_ones = deque()
+
+        #   set result[row][col] = math.inf for one cells and add one cells to queue_ones
+        for row in range(len(mat)):
+            for col in range(len(mat[0])):
+                if mat[row][col] == 1:
+                    result[row][col] = math.inf
+                    queue_ones.append( (row,col) )
+
+        #   for each one cell, perform DFS until nearest zero cell is found
+        while len(queue_ones) > 0:
+            row_start, col_start = queue_ones.popleft()
+
+            queue_DFS = deque()
+            visited = set()
+
+            #   add adjacent cells
+            for delta_row, delta_col in adjacent_offsets:
+                if row_start+delta_row < 0 or row_start+delta_row >= len(mat):
+                    continue
+                if col_start+delta_col < 0 or col_start+delta_col >= len(mat[0]):
+                    continue
+                queue_DFS.append( (row_start+delta_row, col_start+delta_col) )
+
+            #   continue adding and visiting adjacent cells until zero cells is found
+            while len(queue_DFS) > 0:
+                row, col = queue_DFS.popleft()
+                visited.add( (row, col) )
+
+                if mat[row][col] == 0:
+                    result[row_start][col_start] = abs(row_start-row) + abs(col_start-col)
+                    break
+
+                for delta_row, delta_col in adjacent_offsets:
+                    if row+delta_row < 0 or row+delta_row >= len(mat):
+                        continue
+                    if col+delta_col < 0 or col+delta_col >= len(mat[0]):
+                        continue
+                    if (row+delta_row, col+delta_col) in visited:
+                        continue
+                    queue_DFS.append( (row+delta_row, col+delta_col) )
+
+        return result
+        #   }}}
 
 
     #   runtime: beats 23%
-    def updateMatrix_DFS(self, mat: List[List[int]]) -> List[List[int]]:
+    def updateMatrix_DFS_EndToStart(self, mat: List[List[int]]) -> List[List[int]]:
+        #   {{{
         #   result[row][col] = distance to nearest '0', initially 0 for '0' cells, and math.inf for '1' cells
         result = [ [ math.inf for col in range(len(mat[0])) ] for row in range(len(mat)) ]
         adjacent_offsets = [ (-1,0), (1,0), (0,-1), (0,1) ]  # offsets for 4-connected-ness
@@ -37,6 +91,7 @@ class Solution:
 
             #   for each square that that is 4-adjacent to (row,col)
             for delta_row, delta_col in adjacent_offsets:
+
                 #   out-of-bounds, skip
                 if row+delta_row < 0 or row+delta_row >= len(mat):
                     continue
@@ -49,10 +104,12 @@ class Solution:
                     queue.append( (row+delta_row, col+delta_col) )
 
         return result
+        #   }}}
 
     
     #   runtime: beats 72%
     def updateMatrix_DP(self, mat: List[List[int]]) -> List[List[int]]:
+        #   {{{
         #   result[row][col] = distance to nearest '0', initially 0 for '0' cells, and math.inf for '1' cells
         result = [ [ math.inf for col in range(len(mat[0])) ] for row in range(len(mat)) ]
 
@@ -76,6 +133,7 @@ class Solution:
                     result[row][col] = min(result[row][col], result[row][col+1] + 1)
 
         return result
+        #   }}}
 
 
 s = Solution()
