@@ -3,9 +3,14 @@ from resources.listnode import ListNode
 
 class Solution:
 
-    #   Results:
+    def reverseList(self, head):
+        #return self.reverseList_A(head)
+        #return self.reverseList_Inplace(head)
+        #return self.reverseList_Recursive(head)
+        return self.reverseList_RecursiveInplace(head)
+
     #       runtime: beats 39%
-    def reverseList_A(self, head):
+    def reverseList_Iterative(self, head):
         if head is None:
             return None
         elements = []
@@ -26,9 +31,8 @@ class Solution:
         return result
 
     
-    #   Results:
-    #       runtime: beats 69%
-    def reverseList_Ans(self, head):
+    #       runtime: beats 97%
+    def reverseList_Inplace(self, head):
         curr = head
         prev = None
         while curr is not None:
@@ -38,9 +42,28 @@ class Solution:
             curr = next_node
         return prev
 
-    def reverseList(self, head):
-        #return self.reverseList_A(head)
-        return self.reverseList_Ans(head)
+    
+    #   runtime: beats 90%
+    def reverseList_Recursive(self, head, r=None):
+        if head is None:
+            return r
+        if r is None:
+            r = ListNode(head.val)
+            return self.reverseList_Recursive(head.next, r)
+        r = ListNode(head.val, r)
+        return self.reverseList_Recursive(head.next, r)
+
+
+    #   runtime: beats 97%
+    def reverseList_RecursiveInplace(self, head):
+        if head is None or head.next is None:
+            return head
+        p = self.reverseList_RecursiveInplace(head.next)
+        head.next.next = head
+        head.next = None
+        return p
+
+        
 
 
 s = Solution()
@@ -55,8 +78,11 @@ for loop_input, loop_check in zip(input_list, check_list):
     result = s.reverseList(loop_input_linked)
     print("result=(%s)" % result)
     print("loop_check=(%s)" % loop_check)
+    result_list = []
     if result is not None:
-        assert( result.to_list() == loop_check )
+        result_list = result.to_list()
+    assert result_list == loop_check 
+    print()
 
 
 
