@@ -6,3 +6,7 @@ TODO: 2021-09-21T17:20:50AEST _leetcode, 733-flood-fill, queue (iterative) flood
 TODO: 2021-09-21T17:47:34AEST _leetcode, 695-max-area-of-island, iterative (stack) solution
 TODO: 2021-09-21T21:18:01AEST _leetcode, binary tree 'TreeNode', template as per 'ListNode', with methods for conversion to/from list
 TODO: 2021-09-22T22:37:03AEST _leetcode, replace 'helper' class (ListNode) declarations in problems with import from 'resources'
+TODO: 2021-09-27T16:57:58AEST _leetcode, 77-combinations, backtracking, recursive solutions
+TODO: 2021-09-27T16:58:26AEST _leetcode, 46-permutations, backtracking, recursive solutions
+TODO: 2021-09-27T16:59:30AEST _leetcode, 784-letter-case-permutation, backtracking, binary-mask
+
