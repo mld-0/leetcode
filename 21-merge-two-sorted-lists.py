@@ -2,9 +2,13 @@ from resources.listnode import ListNode
 
 class Solution:
 
-    #   Result:
-    #       runtime: 92%
     def mergeTwoLists(self, l1, l2):
+        #return self.mergeTwoLists_Iterative(l1, l2)
+        return self.mergeTwoLists_Recursive(l1, l2)
+
+
+    #       runtime: beats 92%
+    def mergeTwoLists_Iterative(self, l1, l2):
         if l1 is None and l2 is None:
             return None
         node = ListNode()
@@ -36,6 +40,21 @@ class Solution:
         previous.next = None
 
         return result
+
+
+    #   runtime: beats 94%
+    def mergeTwoLists_Recursive(self, l1, l2):
+        if l1 is None:
+            return l2
+        if l2 is None:
+            return l1
+        if l1.val < l2.val:
+            l1.next = self.mergeTwoLists_Recursive(l1.next, l2)
+            return l1
+        else:
+            l2.next = self.mergeTwoLists_Recursive(l1, l2.next)
+            return l2
+
 
 
 s = Solution()
