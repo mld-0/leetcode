@@ -1,0 +1,59 @@
+1	Binary Search
+704 binary search
+278 first bad version
+35 search insert position
+
+2	Two Pointers
+977 squares of sorted array
+189 rotate array
+
+3	Two Pointers
+283 move zeros
+167 two sum ii sorted input
+
+4	Two Pointers
+344 reverse string
+557 reverse words in string
+
+5	Two Pointers
+876 middle of linked list
+19 remove nth node 
+
+6	Sliding Window
+3 longest substring without repeating
+567 permutation in string
+
+7	BFS/DFS
+733-flood-fill
+695-max-area-of-island
+
+8	BFS/DFS
+617-merge-two-binary-trees
+116-populating-next-right-pointers
+
+9	BFS/DFS
+542-01-matrix
+994-rotting-oranges
+
+10	Recursion/Backtracking
+21-merge-two-sorted-lists
+206-reverse-linked-list
+
+11	Recursion/Backtracking
+77-combinations
+46-permutations
+784-letter-case-permutation
+
+12	Dynamic Programming
+70-climbinb-stairs
+198-house-robber
+120-triangle
+
+13	Bit Manipulation
+231-power-of-two
+191-number-of-one-bits
+
+14	Bit Manipulation
+190-reverse-bits
+136-single-number
+
