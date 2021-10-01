@@ -26,7 +26,7 @@ class Solution:
             if len(cur) == k:
                 result.append(cur[:])
                 return
-            for i in range(first, n):
+            for i in range(first, len(values)):
                 cur.append(values[i])
                 backtrack(i+1, cur)
                 cur.pop()
