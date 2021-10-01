@@ -35,7 +35,9 @@ class Solution:
     #       runtime: beats 86%
     def generateParenthesis_Ans_backtacking(self, n):
         result = []
-        def backtrack(S=[], l=0, r=0):
+        def backtrack(S=None, l=0, r=0):
+            if S is None:
+                S = []
             if len(S) == 2*n:
                 result.append(''.join(S))
                 return True
@@ -58,6 +60,8 @@ check_list = [ ["((()))","(()())","(())()","()(())","()()()"], [ "()" ] ]
 for value, check in zip(values_list, check_list):
     result = s.generateParenthesis(value)
     print("result=(%s)" % str(result))
+    assert result == check, "Check failed"
+    print()
 
 
 
