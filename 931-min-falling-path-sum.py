@@ -62,6 +62,7 @@ class Solution:
     def minFallingPathSum_DP(self, matrix: List[List[int]]) -> int:
         """Calculate the min-falling-path, iteratively with table, and rule defining cells in terms of previous row"""
         #   table 'grid' is initalized with values of matrix
+        #   Ongoing: 2021-10-01T15:41:54AEST (behaviour) copying nested list using '[:]'
         grid = matrix[:]
 
         #   skipping first row, for each cell in subsiquent rows/columns, add whichever of the cells above and adjacent have the smallest value
