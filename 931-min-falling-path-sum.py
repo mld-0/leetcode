@@ -22,6 +22,7 @@ class Solution:
     #   A 'top-down' DP approach is recursion-memorization
     #   runtime: beats 28%
     def minFallingPathSum_RecursiveMemoized(self, matrix: List[List[int]]) -> int:
+        """Lowest cost path from top->bottom through a table of numbers"""
         self.memoized = {}
 
         def min_path(row, col):
@@ -33,13 +34,11 @@ class Solution:
             trials = [ math.inf ] * 3
 
             if row < len(matrix) - 1:
-                if col-1 >= 0:
-                    trials[0] = min_path(row+1, col-1)
-                if col+1 < len(matrix[row]):
-                    trials[2] = min_path(row+1, col+1)
+                if col-1 >= 0: trials[0] = min_path(row+1, col-1)
                 trials[1] = min_path(row+1, col)
+                if col+1 < len(matrix[row]): trials[2] = min_path(row+1, col+1)
 
-                #   index of which gives next 'step' in path for current call stack
+                #   index of min(trials) gives next 'step' in path for current call stack
                 path += min(trials)
 
             self.memoized[(row,col)] = path
@@ -60,27 +59,26 @@ class Solution:
     #   A 'bottom-up' DP approach is table-filling
     #   runtime: beats 87%
     def minFallingPathSum_DP(self, matrix: List[List[int]]) -> int:
-        """Calculate the min-falling-path, iteratively with table, and rule defining cells in terms of previous row"""
-        #   table 'grid' is initalized with values of matrix
-        #   Ongoing: 2021-10-01T15:41:54AEST (behaviour) copying nested list using '[:]'
-        grid = matrix[:]
+        """Lowest cost path from top->bottom through a table of numbers, Calculate the min-falling-path, iteratively with table, and rule defining cells in terms of previous row"""
+        #   create 'grid' with values of 'matrix'
+        grid = [ x[:] for x in matrix ]
 
-        #   skipping first row, for each cell in subsiquent rows/columns, add whichever of the cells above and adjacent have the smallest value
+        #   skipping first row, for each cell in subsiquent rows/columns, to which add whichever of the cells above and adjacent have the smallest value
         for row in range(1, len(matrix)):
             for col in range(len(matrix[row])):
                 trials = [ math.inf ] * 3
 
-                if col-1 >= 0:
-                    trials[0] = grid[row-1][col-1]
-                if col+1 < len(matrix[row]):
-                    trials[2] = grid[row-1][col+1]
+                if col-1 >= 0: trials[0] = grid[row-1][col-1]
                 trials[1] = grid[row-1][col]
+                if col+1 < len(matrix[row]): trials[2] = grid[row-1][col+1]
 
                 grid[row][col] += min(trials)
 
         #   (can path be determined from examining 'grid'?)
 
         #   solution given by:
+        print(matrix)
+        print(grid)
         return min(grid[-1])
      
 
