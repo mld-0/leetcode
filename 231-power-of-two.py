@@ -1,7 +1,7 @@
 
 #   bitwise tricks:
-#       (n & (-n)) isolates the rightmost bit of n
-#       (n & (n-1)) sets rightmost bit of n to 0
+#       (n & (-n)) isolates the rightmost one bit of n
+#       (n & (n-1)) sets rightmost one bit of n to zero
 
 class Solution:
 
