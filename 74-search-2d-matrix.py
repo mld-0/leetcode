@@ -6,8 +6,10 @@ class Solution:
         #return self.searchMatrix_linear(matrix, target)
         return self.searchMatrix_rowcol(matrix, target)
 
+
     #   runtime: beats 97%
     def searchMatrix_linear(self, matrix: List[List[int]], target: int) -> bool:
+        """Binary search of 2d matrix as 1d flattened list"""
         def get_element_linear_index(index: int) -> int:
             row = index // len(matrix[0])
             col = index % len(matrix[0])
@@ -27,8 +29,10 @@ class Solution:
 
         return False
 
+
     #   runtime: beats 88%
     def searchMatrix_rowcol(self, matrix: List[List[int]], target: int) -> bool:
+        """Binary search to identify row, then binary search to identify col"""
         #   binary search for row containing element
         row_l = 0
         row_r = len(matrix) - 1
