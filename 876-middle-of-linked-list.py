@@ -7,6 +7,7 @@ from resources.listnode import ListNode
 class Solution:
 
     def middleNode(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        """Return the middle node in a given linked list"""
         #return self.middleNode_A(head)
         return self.middleNode_C(head)
 
