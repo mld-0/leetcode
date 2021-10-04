@@ -1,8 +1,9 @@
+from typing import List
 
 class Solution:
 
     #   runtime: beats 96%
-    def twoSum(self, numbers: list[int], target: int) -> list[int]:
+    def twoSum(self, numbers: List[int], target: int) -> List[int]:
         """Find the indexes (1-indexed) of values in sorted list 'numbers' which add to 'target'"""
         l = 0
         r = len(numbers) - 1
