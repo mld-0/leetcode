@@ -14,3 +14,4 @@ TODO: 2021-09-30T21:14:12AEST _leetcode, 931-min-falling-path-sum, trace path of
 TODO: 2021-09-30T22:08:06AEST _leetcode, 931-min-falling-path-sum, dynamic programming 'top down' solution
 TODO: 2021-10-03T20:25:42AEDT _leetcode, fix use of 'list', <others> as typehints
 TODO: 2021-10-04T11:42:39AEDT _leetcode, 33-search-rotated-sorted-array, intuition for 'search_onePass()' solution
+TODO: 2021-10-04T15:31:41AEDT _leetcode, 162-find-peak-element, (intuition behind how) bsearch_recursive identifies peak when only making a comparison with the following element, and not the previous (also - how increasing/decreasing sections are identified?) (also looking at/comparing to iterative)
