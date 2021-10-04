@@ -10,7 +10,24 @@ class Solution:
     #   runtime: beats 92%
     def search_twoPass(self, nums: List[int], target: int) -> int:
         """Find the index of the given element in a rotated sorted list, or -1 if not found, performing one search to find index about which list has been rotated (minimum element) and then another search on the half containing the target value"""
-
+        def find_rotation_index(nums: List[int]) -> int:
+            """Binary search for index about which the list has been rotated (index of min element in rotated sorted list) (from 153-min-in-rotated-sorted-array)"""
+            l = 0
+            r = len(nums) - 1
+            if len(nums) == 1:
+                return nums[0]
+            if nums[l] < nums[r]:
+                return nums[l]
+            while l <= r:
+                mid = l + (r - l) // 2
+                if nums[mid] > nums[mid+1]:
+                    return nums[mid+1]
+                if nums[mid-1] > nums[mid]:
+                    return nums[mid]
+                if nums[l] < nums[mid]:
+                    l = mid + 1
+                else:
+                    r = mid - 1
         def binary_search(nums: List[int], target: int) -> int:
             """Binary search, find the index of a given element in a list, or -1 if not found"""
             l = 0
@@ -23,23 +40,6 @@ class Solution:
                     l = mid + 1
                 elif nums[mid] > target:
                     r = mid - 1
-            return -1
-
-        def find_rotation_index(nums: List[int]) -> int:
-            """Binary search for index about which the list has been rotated (index of min element)"""
-            l = 0
-            r = len(nums)-1
-            if nums[l] < nums[r]:
-                return 0
-            while l <= r:
-                mid = (r + l) // 2
-                if nums[mid] > nums[mid+1]:
-                    return mid + 1
-                else:
-                    if nums[mid] < nums[l]:
-                        r = mid - 1
-                    else:
-                        l = mid + 1
             return -1
 
         #   handle single-element case
