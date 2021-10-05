@@ -20,7 +20,7 @@ class Solution:
         nums = sorted(nums)
 
         def twoSum_twoPointers(nums: List[int], target_index: int):
-            """Find pairs of values, a,b, in 'nums[target_index+1:]' which add to value at 'target_index', and appending [target, a, b] to 'result'"""
+            """Find pairs of values, a,b, in 'nums[target_index+1:]' which add to value at 'target_index', and append [target, a, b] to 'result'"""
             l = target_index + 1
             r = len(nums) - 1
             while l < r:
