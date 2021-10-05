@@ -14,6 +14,7 @@ class Solution:
         #return self.deleteDuplicates_useList(head)
         return self.deleteDuplicates_twoPointers(head)
 
+
     #   runtime: beats 98%
     def deleteDuplicates_useList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         values = []
@@ -35,6 +36,8 @@ class Solution:
             p = p.next
         return result
 
+
+    #   runtime: beats 98%
     def deleteDuplicates_twoPointers(self, head: Optional[ListNode]) -> Optional[ListNode]:
         #   Pseudo-Node 'sentinal' inserted before beginning of list, allowing first element to be easily removed if needed
         sentinal = ListNode(0, head)
@@ -48,9 +51,10 @@ class Solution:
         while r is not None:
             #   Is 'r' a duplicate 
             if r.next is not None and r.val == r.next.val:
-                #   If 'r' is a duplicate, advance past duplicates and remove them from list
+                #   advance 'r' to the last duplicate
                 while r.next is not None and r.val == r.next.val:
                     r = r.next
+                #   remove duplicates from list
                 l.next = r.next
             else:
                 #   Otherwise advance 'l'
