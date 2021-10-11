@@ -5,6 +5,7 @@ class Solution:
     def intervalIntersection(self, firstList: List[List[int]], secondList: List[List[int]]) -> List[List[int]]:
         return self.intervalIntersection_TwoPointers(firstList, secondList)
 
+    #   runtime: beats 95%
     def intervalIntersection_TwoPointers(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
         """Given two sorted list of intervals (as start/end points), return intersection as a sorted list of intervals"""
         result = []
