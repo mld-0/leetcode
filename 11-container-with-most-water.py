@@ -41,12 +41,12 @@ class Solution:
     #   runtime: TLE
     def maxArea_BruteForce(self, height: List[int]) -> int:
         V = 0
-        endpoints = [0, len(height)-1]
+        endpoints = [None, None]
 
         for i in range(0, len(height)-1):
             for j in range(1, len(height)):
-                h = min(height[i], height[j])
-                trial_V = h * (j - i)
+                trial_H = min(height[i], height[j])
+                trial_V = trial_H * (j - i)
                 if trial_V > V:
                     V = trial_V
                     endpoints = [i, j]
