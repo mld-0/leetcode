@@ -1,96 +1,79 @@
+#   VIM SETTINGS: {{{3
+#   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
+#   vim: set foldlevel=2 foldcolumn=2:
+#   }}}1
 from collections import defaultdict
 import functools
+#   {{{2
 
 class Solution:
 
-    def no_repeating_characters(self, s: str) -> bool:
-        charset = set(s)
-        if len(charset) != len(s):
-            return False
-        return True
-
     def lengthOfLongestSubstring(self, s: str) -> int:
-        return self.lengthOfLongestSubstring_B(s)
-
-    #   Sliding window algorithm: 
-    #   runtime: beats 20%
-    # LINK: https://levelup.gitconnected.com/an-introduction-to-sliding-window-algorithms-5533c4fe1cc7
-    def lengthOfLongestSubstring_A(self, s: str) -> int:
-        longest = 0
-        left, right = 0, 0
-        window_counter = defaultdict(int)
-        # Iterate right bound of window across s. left bounds is only iterated if duplicate char encountered
-        for right in range(0, len(s)):
-            window_counter[s[right]] += 1
-            # If the current window contains a duplicate, increment 'left'
-            if any([v > 1 for v in window_counter.values()]):
-                window_counter[s[left]] -= 1
-                left += 1
-            longest = max(longest, right - left + 1)
-        return longest
+        """Determine length of longest substring in 's' containing no repeat characters"""
+        #return self.lengthOfLongestSubstring_BruteForce(s)
+        return self.lengthOfLongestSubstring_SlidingWindowSeenDict(s)
 
 
     #   runtime: beats 5%
     def lengthOfLongestSubstring_BruteForce(self, s: str) -> int:
         longest = ""
         for i, val_i in enumerate(s):
-            for j in range(i, len(s)+1):
-                if self.no_repeating_characters(s[i:j]):
-                    if len(s[i:j]) > len(longest):
-                        longest = s[i:j]
+            for j in range(i, len(s)):
+                if len(s[i:j+1]) == len(set(s[i:j+1])):
+                    if len(s[i:j+1]) > len(longest):
+                        longest = s[i:j+1]
                 else:
                     break
         return len(longest)
 
-    #   runtime: beats 71%
-    def lengthOfLongestSubstring_B(self, s: str) -> int:
+
+    #   runtime: beats 53%
+    def lengthOfLongestSubstring_SlidingWindow(self, s: str) -> int:
         result = ""
         l = 0
-        #   position at which character last seen
-        seen = {}
+        window_counter = defaultdict(int)
+
         for r in range(len(s)):
-            if s[r] not in seen:
-                #   s[r] is not in window, grow window
-                trial = s[l:r+1]
-                if len(trial) > len(result):
-                    result = trial
-            else:
-                if seen[s[r]] < l:
-                    #   s[r] is not in window, grow window
-                    trial = s[l:r+1]
-                    if len(trial) > len(result):
-                        result = trial
-                else:
-                    #   s[r] in window, advance 'l' past last instance of 's[r]'
-                    l = seen[s[r]] + 1
-            seen[s[r]] = r
+            window_counter[s[r]] += 1
+            while l < r and window_counter[s[r]] > 1:
+                window_counter[s[l]] -= 1
+                l += 1
+            trial = s[l:r+1]
+            if len(trial) > len(result):
+                result = trial
+
         return len(result)
 
-    #   runtime: beats 71%
-    def lengthOfLongestSubstring_C(self, s: str) -> int:
+
+    #   runtime: beats 87%
+    def lengthOfLongestSubstring_SlidingWindowSeenDict(self, s: str) -> int:
         result = ""
         l = 0
+
+        #   seen[c]: position where 'c' last seen
         seen = dict()
+
         for r in range(len(s)):
-            if s[r] in seen and l <= seen[s[r]]:
+            #   character at 'r' seen before, advance 'l' to after previous instance of said character
+            if s[r] in seen and seen[s[r]] >= l:
                 l = seen[s[r]] + 1
-            else:
-                trial = s[l:r+1]
-                if len(trial) > len(result):
-                    result = trial
+            trial = s[l:r+1]
+            if len(trial) > len(result):
+                result = trial
             seen[s[r]] = r
+
         return len(result)
 
-val_str = "abcabcbb"
-s = Solution()
-#result = s.lengthOfLongestSubstring_Brute(val_str)
-result = s.lengthOfLongestSubstring(val_str)
-print(result)
 
-val_str = " "
 s = Solution()
-#result = s.lengthOfLongestSubstring_Brute(val_str)
-result = s.lengthOfLongestSubstring(val_str)
-print(result)
 
+input_values = [ "abcabcbb", "bbbbb", "pwwkew", "", " ", ]
+input_checks = [ 3, 1, 3, 0, 1, ]
+
+for input_str, check in zip(input_values, input_checks):
+    print("input_str=(%s)" % input_str)
+    result = s.lengthOfLongestSubstring(input_str)
+    print("result=(%s)" % result)
+    assert result == check, "Check failed"
+    print()
 
