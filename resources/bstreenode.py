@@ -2,11 +2,10 @@
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #   vim: set foldlevel=2 foldcolumn=2:
 #   }}}1
+#   Requires 'from __future__ import annotations'
 from __future__ import annotations
 import pprint
 #   {{{2
-
-#   Requires 'from __future__ import annotations'
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -62,7 +61,7 @@ class TreeNode:
                 else:
                     parent_node.right= TreeNode(val)
                     loop_nodes.append(parent_node.right)
-                tree_nodes.append(loop_nodes)
+            tree_nodes.append(loop_nodes)
         return head
         #   }}}
     def to_list_nested(self):
@@ -165,9 +164,10 @@ class TreeNode:
         #   }}}
 
 
-if __name__ == '__main__':
-    input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [] ]
 
+def test_treenode():
+    #   {{{
+    input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [], list(range(1,16)), [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], ]
     for values in input_values:
         loop_tree = TreeNode.from_list(values)
         print(loop_tree)
@@ -178,4 +178,8 @@ if __name__ == '__main__':
             print()
         else:
             assert( values == [] )
+    #   }}}
+
+if __name__ == '__main__':
+    test_treenode()
 
