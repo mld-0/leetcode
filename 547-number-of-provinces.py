@@ -17,6 +17,7 @@ class Solution:
         visited = set()
 
         def visit_adjacent(index):
+            """Mark given index as visited, and recurse for connected indexs which have not been visited"""
             visited.add( index )
             for j in range(len(isConnected[index])):
                 if j == index:
