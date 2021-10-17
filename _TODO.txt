@@ -17,3 +17,7 @@ TODO: 2021-10-04T11:42:39AEDT _leetcode, 33-search-rotated-sorted-array, intuiti
 TODO: 2021-10-04T15:31:41AEDT _leetcode, 162-find-peak-element, (intuition behind how) bsearch_recursive identifies peak when only making a comparison with the following element, and not the previous (also - how increasing/decreasing sections are identified?) (also looking at/comparing to iterative)
 TODO: 2021-10-13T21:16:41AEDT _leetcode, 325-max-size-subarray-sum-equals-k
 TODO: 2021-10-15T15:34:41AEDT _leetcode, 200-number-of-islands, UnionFind solution
+TODO: 2021-10-15T17:12:13AEDT _leetcode, 547-number-of-provinces, 'UnionFind' solution
+TODO: 2021-10-15T19:54:48AEDT _leetcode, 117-populating-next-right-pointer-ii, How to check solution (setting 'next' pointers) (see also 116-populating-next-right-pointer)
+TODO: 2021-10-15T21:53:07AEDT _leetcode, 117-populating-next-right-pointer-ii, level-traversal (slighly modified from 'tree_to_nested_list()'?), and advance-pointer solutions
+TODO: 2021-10-16T20:54:37AEDT _leetcode, 117-populating-next-right-pointer-ii, intuition of 'connect_AdvancePointer()', cleanup of solutions (including clarified variable names, 'prev', 'current', 'child' (regarding which level each belongs to)
