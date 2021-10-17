@@ -1,6 +1,6 @@
 #   VIM SETTINGS: {{{3
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
-#   vim: set foldlevel=2 foldcolumn=1:
+#   vim: set foldlevel=2 foldcolumn=2:
 #   }}}1
 from __future__ import annotations
 from collections import deque
@@ -167,23 +167,23 @@ class Node:
 class Solution:
     def connect(self, root: Node) -> Node:
         """Assign 'next' pointer of each node to the next node on the right on the same level"""
-        #return self.connect_NestedList(root)
-        return self.connect_AdvancePointer(root)
-
-    def max_depth(self, root: Node) -> int:
-        if root is None:
-            return 0
-        l = self.max_depth(root.left)
-        r = self.max_depth(root.right)
-        return max(l, r) + 1
+        return self.connect_NestedList(root)
+        #return self.connect_AdvancePointer(root)
 
     #   runtime: beats 35%
     def connect_NestedList(self, root: Node) -> Node:
         if root is None:
             return None
 
+        def max_depth(root: Node) -> int:
+            if root is None:
+                return 0
+            l = max_depth(root.left)
+            r = max_depth(root.right)
+            return max(l, r) + 1
+
         #   get depth of tree
-        tree_depth = self.max_depth(root)
+        tree_depth = max_depth(root)
 
         #   create nested list of nodes, each inner list being a level of the tree
         nodes = [ [ None for j in range(2**i) ] for i in range(tree_depth) ]
@@ -199,9 +199,9 @@ class Solution:
             if node is None:
                 queue.append(None)
                 queue.append(None)
-                continue
-            queue.append(node.left)
-            queue.append(node.right)
+            else:
+                queue.append(node.left)
+                queue.append(node.right)
             if level_position == 2**level:
                 level += 1
                 level_position = 0
