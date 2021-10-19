@@ -13,6 +13,7 @@ class Solution:
         #return self.subsets_Itertools(nums)
 
 
+    #   runtime: beats 97%
     def subsets_Cascading_i(self, nums: List[int]) -> List[List[int]]:
         result = [[]]
         for n in nums:
@@ -21,6 +22,7 @@ class Solution:
         return result
 
 
+    #   runtime: beats 99%
     def subsets_Cascading_ii(self, nums: List[int]) -> List[List[int]]:
         result = [[]]
         for n in nums:
@@ -30,6 +32,7 @@ class Solution:
         return result
 
 
+    #   runtime: beats 97%
     def subsets_Backtracking(self, nums: List[int]) -> List[List[int]]:
         result = []
         def backtrack(k, first=0, curr=None):
@@ -47,6 +50,7 @@ class Solution:
         return result
 
 
+    #   runtime: beats 97%
     def subsets_Bitmask(self, nums: List[int]) -> List[List[int]]:
         result = []
         for i in range(2**len(nums), 2**(len(nums)+1)):
@@ -55,6 +59,7 @@ class Solution:
         return result
     
 
+    #   runtime: beats 97%
     def subsets_Itertools(self, nums: List[int]) -> List[List[int]]:
         result = [ list(x) for i in range(len(nums)+1) for x in itertools.combinations(nums, i) ]
         return result
