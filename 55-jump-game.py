@@ -4,6 +4,7 @@
 #   }}}1
 from typing import List
 #   {{{2
+#   You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.
 class Solution:
 
     #   Ongoing: 2021-10-24T21:39:11AEDT _leetcode, 55-jump-game, ans DP_BottomUp is slow, ans DP_TopDown is TLE, both look to be optimal-ish, backtracking (is worse?), greedy (is better?)
