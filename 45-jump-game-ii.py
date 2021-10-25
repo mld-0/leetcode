@@ -8,22 +8,9 @@ import math
 #   {{{2
 class Solution:
 
-    #   runtime: beats 15%
-    def jump_DP_BottomUp_Iterative(self, nums: List[int]) -> int:
-        canReachEnd = [ math.inf for x in nums ]
-        canReachEnd[len(nums)-1] = 0
-
-        for i in range(len(nums)-2, -1, -1):
-            #   can we reach a square that can reach end of list
-            for j in range(i+1, min(i+nums[i], len(nums)-1)+1):
-                if canReachEnd[j] >= 0:
-                    canReachEnd[i] = min(canReachEnd[i], canReachEnd[j]+1)
-
-        return canReachEnd[0]
-
-
     #   runtime: TLE
     def jump_DP_TopDown(self, nums: List[int]) -> bool:
+        """Adapted from 55-jump-game, track number of jumps required to reach end for each square"""
         canReachEnd = [ math.inf for x in nums ]
         canReachEnd[len(nums)-1] = 0
 
@@ -43,6 +30,21 @@ class Solution:
         return canReachEnd[0]
 
     
+    #   runtime: beats 15%
+    def jump_DP_BottomUp_Iterative(self, nums: List[int]) -> int:
+        """Adapted from 55-jump-game, track number of jumps required to reach end for each square"""
+        canReachEnd = [ math.inf for x in nums ]
+        canReachEnd[len(nums)-1] = 0
+
+        for i in range(len(nums)-2, -1, -1):
+            #   can we reach a square that can reach end of list
+            for j in range(i+1, min(i+nums[i], len(nums)-1)+1):
+                if canReachEnd[j] >= 0:
+                    canReachEnd[i] = min(canReachEnd[i], canReachEnd[j]+1)
+
+        return canReachEnd[0]
+
+
     #   runtime: beats 97%
     def jump_Greedy(self, nums: List[int]) -> int:
         jumps = 0
@@ -56,7 +58,6 @@ class Solution:
                 currentJumpEnd = farthest
 
         return jumps
-
 
 
 s = Solution()
