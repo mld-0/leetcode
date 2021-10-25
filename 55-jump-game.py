@@ -4,7 +4,7 @@
 #   }}}1
 from typing import List
 #   {{{2
-#   You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.
+#   Problem: You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position. Return true if you can reach the last index, or false otherwise.
 class Solution:
 
     #   Ongoing: 2021-10-24T21:39:11AEDT _leetcode, 55-jump-game, ans DP_BottomUp is slow, ans DP_TopDown is TLE, both look to be optimal-ish, backtracking (is worse?), greedy (is better?)
@@ -46,8 +46,33 @@ class Solution:
         return canReachEnd[0]
 
 
+    #   runtime: TLE
+    def canJump_Backtracking(self, nums: List[int]) -> bool:
+
+        def canjump_solve(index):
+            if index == len(nums) - 1:
+                return True
+            for next_index in range(index+1, min(index+nums[index], len(nums)-1)+1):
+                if canjump_solve(next_index):
+                    return True
+            return False
+
+        return canjump_solve(0)
+
+
+    #   runtime: beats 90%
+    def canJump_Greedy(self, nums: List[int]) -> bool:
+        lastIndex = len(nums) - 1
+
+        for i in range(len(nums)-1, -1, -1):
+            if i + nums[i] >= lastIndex:
+                lastIndex = i
+
+        return lastIndex == 0
+
+
 s = Solution()
-test_functions = [ s.canJump_DP_TopDown, s.canJump_DP_BottomUp_Iterative, ]
+test_functions = [ s.canJump_DP_TopDown, s.canJump_DP_BottomUp_Iterative, s.canJump_Backtracking, s.canJump_Greedy, ]
 
 input_values = [ [2,3,1,1,4], [3,2,1,0,4], [1,3,2], ]
 input_checks = [ True, False, True, ]
@@ -60,5 +85,4 @@ for test_func in test_functions:
         print("result=(%s)" % result)
         assert result == check, "Check failed"
     print()
-
 
