@@ -1,142 +1,102 @@
 #   VIM SETTINGS: {{{3
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
-#   vim: set foldlevel=2 foldcolumn=1:
+#   vim: set foldlevel=2 foldcolumn=2:
 #   }}}1
-
+from typing import List
+import pprint
+#   {{{2
 class Solution:
 
     #   Brute force solution - time limit exceded
-    def longestPalindrome_First(self, s: str) -> str:
+    def longestPalindrome_BruteForce(self, s: str) -> str:
+
+        def is_palindrome(s: str) -> bool:
+            result = s == s[::-1]
+            return result
+
         result = ""
         for i in range(0, len(s)):
             for j in range(i+1, len(s)+1):
                 loop_str = s[i:j]
-                print("loop_str=(%s)" % loop_str)
-                if self.is_palindrome(loop_str):
+                if is_palindrome(loop_str):
                     if len(loop_str) > len(result):
                         result = loop_str
         return result
 
-    def is_palindrome(self, s: str, start: int, end: int, palindromes: list) -> bool:
-        result = s == s[::-1]
-        return result
 
-
-    #   Dynamic programming solution - time limit exceded?
-    def longestPalindrome_Second(self, s: str) -> str:
-         #   longest palindrome is given by s[start:end]
-        start = 0  
-        end = 1 
-        #   table[i][j] -> True if s[i:j+1] is a palindrome
-        table = [[False for x in range(len(s))] for y in range(len(s))]
-        #   All substrings of length 1 are palindromes
-        i = 0
-        while (i < len(s)):
-            table[i][i] = True
-            i += 1
-        #   Substrings of length 2 are palindromes if start/end letter match
-        i = 0
-        while i < (len(s) - 2 + 1):
-            if (s[i] == s[i+1]):
-                table[i][i+1] = True
-                start = i
-                end = start + 2
-            i += 1
-        #   Substrings of length k are palindromes if start/end letter match, 
-        #   and table[start][end] describes a palindrome
-        k = 3
-        while k <= len(s):
-            i = 0
-            while i < (len(s) - k + 1): 
-                j = i + k - 1  #  end index of substring:
-                print("[%s,%s] %s" % (i, j, s[i:j+1]), end="")
-                if (s[i] == s[j] and table[i+1][j-1] == True):
-                    table[i][j] = True
-                    print(" - palindrome", end="")
-                    if k > end-start:
-                        start = i
-                        end = j + 1
-                print("")
-                i += 1
-            k += 1
-        return s[start:end]
-
-    #   Results:
-    #       runtime: 4212ms (beats 27%)
-    def longestPalindrome_Third(self, s: str) -> str:
+    #   runtime: beats 15%
+    def longestPalindrome_DP_BottomUp(self, s: str) -> str:
+        #   longest palindrome is given by s[start:end+1]
         start = 0
         end = 0
-        table = [[False]*len(s) for x in range(len(s))]
+
+        #   is_palindrome[i][j]: True if s[i:j+1] is a palindrome
+        is_palindrome = [ [ False for y in range(len(s)) ] for x in range(len(s)) ]
+
         #   All substrings of length 1 are palindromes
         for i in range(len(s)):
-            table[i][i] = True
-            start = i
-            end = i
-        for loop_end in range(1, len(s)):
-            for loop_start in range(loop_end-1, -1, -1):
-                if s[loop_start] == s[loop_end]:
-                    if loop_start == loop_end - 1 or table[loop_start+1][loop_end-1]:
-                        table[loop_start][loop_end] = True
-                        if (end-start) < (loop_end-loop_start):
-                            start = loop_start
-                            end = loop_end
+            is_palindrome[i][i] = True
+
+        #   Substrings of length 2 are palindromes if start/end letters match
+        for i in range(len(s)-1):
+            if s[i] == s[i+1]:
+                is_palindrome[i][i+1] = True
+                start = i
+                end = i + 1
+
+        #   s[l:r+1] is a palindrome if s[l] == s[r] and is_palindrome[l+1][r-1] == True
+        for r in range(1, len(s)):
+            for l in range(r-2, -1, -1):
+                if s[l] == s[r] and is_palindrome[l+1][r-1]:
+                    is_palindrome[l][r] = True
+                    if r-l > end-start:
+                        end = r
+                        start = l
+
         return s[start:end+1]
 
+    
+    #   TODO: 2021-10-26T17:21:24AEDT _leetcode, 05-longest-palindromic-substring, intuition for TwoPointers solution
+    #   runtime: beats 91%
+    def longestPalindrome_TwoPointers(self, s: str) -> str:
+        result_start = 0
+        result_len = 1
 
-    #   LINK: https://leetcode.com/problems/longest-palindromic-substring/discuss/900639/Python-Solution-%3A-with-detailed-explanation-%3A-using-DP
-    def longestPalindrome_Ans(self, s: str) -> str:
-       longest_palindrom = ''
-       dp = [[0]*len(s) for _ in range(len(s))]
-       #filling out the diagonal by 1
-       for i in range(len(s)):
-           dp[i][i] = True
-           longest_palindrom = s[i]
-       # filling the dp table
-       for i in range(len(s)-1,-1,-1):  # [len(s)-1, -1)
-	   		# j starts from the i location : to only work on the upper side of the diagonal 
-           for j in range(i+1,len(s)):  #  [i+1, len(s))
-               if s[i] == s[j]:  #if the chars mathces
-                   # if len slicied sub_string is just one letter if the characters are equal, we can say they are palindomr dp[i][j] =True 
-                   #if the slicied sub_string is longer than 1, then we should check if the inner string is also palindrom (check dp[i+1][j-1] is True)
-                   if j-i ==1 or dp[i+1][j-1] is True:
-                       dp[i][j] = True
-                       # we also need to keep track of the maximum palindrom sequence 
-                       if len(longest_palindrom) < len(s[i:j+1]):
-                           longest_palindrom = s[i:j+1]
+        for i in range(len(s)):
+            r = i
+            while r < len(s) and s[i] == s[r]:
+                r += 1
 
+            l = i - 1
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                l -= 1
+                r += 1
 
-       return longest_palindrom 
+            trial_len = r - l - 1
+            if trial_len > result_len:
+                result_len = trial_len
+                result_start = l + 1
 
-    def longestPalindrome(self, s: str) -> str:
-        return self.longestPalindrome_Second(s)
+        return s[result_start:result_start+result_len]
+
 
 s = Solution()
 
-text = "ceebababefd"
-check = "ebababe"
-result = s.longestPalindrome(text)
-print("result=(%s)" % result)
-assert(result in check)
+input_values = [ "debabec", "ceebababefd", "a", "ac", ]
+input_checks = [ "ebabe", "ebababe", "a", [ "a", "c" ], ]
 
-text = "a"
-check = "a"
-result = s.longestPalindrome(text)
-print("result=(%s)" % result)
-assert(result in check)
+test_functions = [ s.longestPalindrome_BruteForce, s.longestPalindrome_DP_BottomUp, s.longestPalindrome_TwoPointers, ]
 
-text = "ac"
-check = [ "a", "c" ]
-result = s.longestPalindrome(text)
-print("result=(%s)" % result)
-assert(result in check)
-
-#text = "nmxyncuzlwhiobggiowtjexyzbzyhuqmpnyyimazcrnhrnkydxnioqhtchnnoqhuezypyxiepdvyesihlvbuzctptsaowfllxfdqvbwyitsegpbarqqpcrrvemwkglouhhtuxjdeppatdiiwhwvrqxqjcmzhuwurlqrshlsjyxksfjmhykyhcbpmrbsmbrrjwndjsgqdrafidmelnobhtpblozbzttpzheeffwysfrrwtewjnmqoyrvfxmgcmdoadagatwyocixggwppnmtrnfrbiijwojpetuqwknvtqgspuogrbqqptsrljjiaalmqlchlszflyixxpnkttzbrvhzrjzfbpuquuyzwhattxvoqpzieguwvmlrggrlmvwugeizpqovxttahwzyuuqupbfzjrzhvrbzttknpxxiylfzslhclqmlaaijjlrstpqqbrgoupsgqtvnkwqutepjowjiibrfnrtmnppwggxicoywtagadaodmcgmxfvryoqmnjwetwrrfsywffeehzpttzbzolbpthbonlemdifardqgsjdnwjrrbmsbrmpbchykyhmjfskxyjslhsrqlruwuhzmcjqxqrvwhwiidtappedjxuthhuolgkwmevrrcpqqrabpgestiywbvqdfxllfwoastptczubvlhiseyvdpeixypyzeuhqonnhcthqoinxdyknrhnrczamiyynpmquhyzbzyxejtwoiggboihwlzucnyxmn"
-#check = ""
-#result = s.longestPalindrome(text)
-#print("result=(%s)" % result)
-#
-#
-#text = "fjnfkfbfeuujctmyttwidcrdjtkfoaylsceqqzzmkpyvljkwcxxtmxiwkrgoahxztuppnvxhyionhpakvjoizdzcqxuyaidjadrhfhuhbncijokbthvuigjytipgygnonhgkpvsqimxpslmptieumhunjlafttjstaxnivrpqcxrgocvaicpwfnmtkgbjnbfopxaiduqihomrdmhzzyzddytiqdjzmmqwmeyoqnttmiujobihdifkbntpphjhgxzbjpulnokvceohloltyosddbopgkllcxzzkfzmkywxlpkdjlorgorxzownuajjzcxuhyqexfklssbtralzlvdbtxapccipvvgjtusfsanvnyehpkwirygqogtsicwycgnajwekuzffhlsvfgqwpbuinwhvpqxjhamhxayicchmxmurakhzhoghnupohaqanduhjkegggpyetwebcjgavpspfjaoakjkktaxwehpyqvsczhbbhzcsvqyphewxatkkjkaoajfpspvagjcbewteypgggekjhudnaqahopunhgohzhkarumxmhcciyaxhmahjxqpvhwniubpwqgfvslhffzukewjangcywcistgoqgyriwkpheynvnasfsutjgvvpiccpaxtbdvlzlartbsslkfxeqyhuxczjjaunwozxrogroljdkplxwykmzfkzzxcllkgpobddsoytlolhoecvkonlupjbzxghjhpptnbkfidhibojuimttnqoyemwqmmzjdqityddzyzzhmdrmohiqudiaxpofbnjbgktmnfwpciavcogrxcqprvinxatsjttfaljnuhmueitpmlspxmiqsvpkghnongygpityjgiuvhtbkojicnbhuhfhrdajdiayuxqczdziojvkaphnoiyhxvnpputzxhaogrkwixmtxxcwkjlvypkmzzqqecslyaofktjdrcdiwttymtcjuuefbfkfnjf"
-#result = s.longestPalindrome(text)
-#print("result=(%s)" % result)
+for test_func in test_functions:
+    print(test_func.__name__)
+    for text, check in zip(input_values, input_checks):
+        print("text=(%s)" % text)
+        result = test_func(text)
+        print("result=(%s)" % result)
+        assert type(result) == str, "Check failed, result is str"
+        if type(check) == str:
+            assert result == check, "Check failed"
+        elif type(check) == list:
+            assert result in check, "Check failed"
+    print()
 
