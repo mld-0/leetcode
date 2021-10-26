@@ -26,3 +26,4 @@ TODO: 2021-10-19T21:18:26AEDT _leetcode, 90-subsets-ii, review/implement ans
 TODO: 2021-10-19T21:26:24AEDT _leetcode, 90-subsets-ii, why subsets_i_Backtracking fails when 'nums' is not sorted?
 TODO: 2021-10-20T20:29:18AEDT _leetcode, (a real f------ case of lying eyes), solution ('combinationSum2_BacktrackCounter' / 'combinationSum2_Ans_Backtracking') runs correctly if ('combinationSum2_Ans_BacktrackingDP' / 'combinationSum2_BacktrackingDP') is run prior, but check fails when it is not run prior (in list of functions to be tested) 
 TODO: 2021-10-24T21:41:23AEDT _leetcode, 55-jump-game, (continuing), backtracking, greedy solutions, evaluation of solution
+TODO: 2021-10-26T17:21:24AEDT _leetcode, 05-longest-palindromic-substring, intuition for TwoPointers solution
