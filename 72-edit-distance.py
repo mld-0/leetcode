@@ -8,6 +8,7 @@ import math
 #   Ongoing: 2021-10-29T20:28:37AEDT Use of 0/1 indexing in recursive(/iterative) solutions for string position (vs position in table)?
 class Solution:
 
+    #   LINK: https://medium.com/@ethannam/understanding-the-levenshtein-distance-equation-for-beginners-c4285a5604f0
     #   runtime: beats 42%
     def minDistance_Iterative(self, word1: str, word2: str, returnTable: bool=False) -> int:
         #   empty word, edit distance is length of other word
@@ -26,45 +27,17 @@ class Solution:
         #   iteratively fill table
         for row in range(1, len(table)):
             for col in range(1, len(table[0])):
-                left = table[row-1][col] + 1    #   Remove
-                down = table[row][col-1] + 1    #   Insert
-                diag = table[row-1][col-1]  
+                diag = table[row-1][col-1]      #   Equal
                 if word1[row-1] != word2[col-1]:
                     diag = diag + 1             #   Replace
+                left = table[row-1][col] + 1    #   Remove
+                down = table[row][col-1] + 1    #   Insert
                 table[row][col] = min(left, down, diag)
 
+        #   return either able, or last value, as per 'returnTable'
         if returnTable:
             return table
         return table[-1][-1]
-
-
-    #   runtime: beats 98%
-    def minDistance_RecursiveMemorize(self, word1: str, word2: str) -> int:
-        memo = dict()
-
-        def solve(m: int, n: int):
-            if (m,n) in memo:
-                return memo[(m,n)]
-
-            if m == 0 or n == 0:
-                result = m + n
-                memo[(m,n)] = result
-                return result
-
-            if word1[m-1] == word2[n-1]:
-                result = solve(m-1, n-1)
-                memo[(m,n)] = result
-                return result
-
-            left = solve(m-1, n)     #   Remove
-            down = solve(m, n-1)     #   Insert
-            diag = solve(m-1, n-1)   #   Replace
-
-            result = 1 + min(left, down, diag)
-            memo[(m,n)] = result
-            return result
-
-        return solve(len(word1), len(word2))
 
 
     #   runtime: TLE
@@ -83,6 +56,37 @@ class Solution:
         return solve(len(word1), len(word2))
 
     
+    #   LINK: https://www.geeksforgeeks.org/edit-distance-dp-5/
+    #   runtime: beats 98%
+    def minDistance_RecursiveMemorize(self, word1: str, word2: str) -> int:
+        memo = dict()
+
+        def solve(m: int, n: int):
+            if (m,n) in memo:
+                return memo[(m,n)]
+
+            #   empty word, edit distance is length of other word
+            if m == 0 or n == 0:
+                result = m + n
+                memo[(m,n)] = result
+                return result
+
+            if word1[m-1] == word2[n-1]:
+                result = solve(m-1, n-1)    #   Equal
+                memo[(m,n)] = result
+                return result
+
+            left = solve(m-1, n)            #   Remove
+            down = solve(m, n-1)            #   Insert
+            diag = solve(m-1, n-1)          #   Replace
+
+            result = 1 + min(left, down, diag)
+            memo[(m,n)] = result
+            return result
+
+        return solve(len(word1), len(word2))
+
+
     def minDistance_PythonLevenshtein(self, word1: str, word2: str) -> int:
         import Levenshtein
         return Levenshtein.distance(word1, word2)
@@ -130,8 +134,8 @@ class Solution:
 s = Solution()
 test_functions = [ s.minDistance_Iterative, s.minDistance_RecursiveMemorize, s.minDistance_PythonLevenshtein, ]
 
-input_values = [ ("horse", "ros"), ("intention", "execution"), ("dinitrophenylhydrazine", "benzalphenylhydrazone"), ]
-input_checks = [ 3, 5, 7, ]
+input_values = [ ("horse", "ros"), ("intention", "execution"), ("sitting", "kitten"), ("dinitrophenylhydrazine", "benzalphenylhydrazone"), ]
+input_checks = [ 3, 5, 3, 7, ]
 
 for test_func in test_functions:
     print(test_func.__name__)
