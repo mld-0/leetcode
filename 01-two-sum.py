@@ -18,15 +18,18 @@ class Solution:
             num_to_index[nums[index]] = index
 
 
-nums_targets_list = [ ([2,7,11,15], 9), ([3,2,4], 6), ([3,3], 6) ]
-check_list = [ (0,1), (1,2), (0,1) ]
-
 s = Solution()
+test_functions = [ s.twoSum, ]
 
-for (nums, target), check in zip(nums_targets_list, check_list):
-    result = s.twoSum(nums, target)
-    print("nums=(%s), target=(%s)" % (str(nums), str(target)))
-    print("result=(%s)" % str(result))
+input_values = [ ([2,7,11,15], 9), ([3,2,4], 6), ([3,3], 6) ]
+input_checks = [ (0,1), (1,2), (0,1) ]
+
+for test_func in test_functions:
+    print(test_func.__name__)
+    for (nums, target), check in zip(input_values, input_checks):
+        result = test_func(nums, target)
+        print("nums=(%s), target=(%s)" % (str(nums), str(target)))
+        print("result=(%s)" % str(result))
+        assert result == check, "Check comparison failed"
     print()
-    assert( result == check )
 
