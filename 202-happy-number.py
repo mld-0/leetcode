@@ -28,6 +28,7 @@ class Solution:
         return True
 
     
+    #   runtime: beats 89%
     def isHappy_FloydCycleFinding(self, n: int) -> bool:
         """Determine whether 'n' becomes 1 when iteratively replaced by the sum of its digits squared, or cycles endlessly"""
 
