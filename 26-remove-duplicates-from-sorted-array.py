@@ -56,6 +56,7 @@ assert len(input_values) == len(check_values), "input/check Mismatch"
 
 
 for f in test_functions:
+    print(f.__name__)
     for nums, (expectedK, expectedNums) in zip(input_values, check_values):
         nums = nums[:]
         print("nums=(%s)" % nums)
