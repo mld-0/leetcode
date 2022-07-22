@@ -2,7 +2,6 @@ from typing import List
 
 #   Problem: remove all occurences of 'val' in 'nums', in-place, returning the number of elements remaining, 'k'. The order of elements may be changed. Only use O(1) extra memory.
 
-#   Continue: 2022-07-14T21:39:41AEST leetcode, 27-remove-element, two-pointers problem
 
 class Solution:
     
