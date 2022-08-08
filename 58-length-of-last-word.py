@@ -2,6 +2,7 @@
 
 class Solution:
 
+    #   runtime: beats 72%
     def lengthOfLastWord_twoPointers(self, s: str) -> int:
         def is_whitespace(x):
             return x == ' '
@@ -18,12 +19,13 @@ class Solution:
         return r + 1
 
 
+    #   runtime: beats 87%
     def lengthOfLastWord_naive(self, s: str) -> int:
-        raise NotImplementedError()
+        return len(s.strip().split(' ')[-1])
 
 
 s = Solution()
-test_functions = [ s.lengthOfLastWord_twoPointers, ]
+test_functions = [ s.lengthOfLastWord_twoPointers, s.lengthOfLastWord_naive, ]
 
 input_values = [ "Hello World", "   fly me   to   the moon  ", "luffy is still joyboy", "asdf", "a bc, d", " a", ]
 input_checks = [ 5, 4, 6, 4, 1, 1, ]
