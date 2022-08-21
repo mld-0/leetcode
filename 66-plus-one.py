@@ -14,8 +14,8 @@ class Solution:
 s = Solution()
 test_functions = [ s.plusOne_naive, ]
 
-input_values = [ [1,2,3], [4,3,2,1], [9], ]
-input_checks = [ [1,2,4], [4,3,2,2], [1,0], ]
+input_values = [ [1,2,3], [4,3,2,1], [9], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6], ]
+input_checks = [ [1,2,4], [4,3,2,2], [1,0], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,7], ]
 assert len(input_values) == len(input_checks)
 
 for f in test_functions:
