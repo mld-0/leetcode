@@ -203,37 +203,22 @@ vector<char> string2digits(const string& s) {
 
 class Solution {
 public:
+
+	//	Fails for inputs that do not fit into a long ('stol' throws out_of_range)
 	vector<int> plusOne_naive(vector<int>& digits) 
 	{
-		//	convert vector<int> to vector<char>
 		vector<char> digits_char;
 		for (const auto& d: digits) {
 			char d_char = d + '0';
 			digits_char.push_back(d_char);
 		}
-		//printVector("digits_char", digits_char);
-
-		//	convert vector<char> to string
 		string digits_str = this->join(digits_char);
-		//cerr << "digits_str=(" << digits_str << ")\n";
-
-		//	convert string to int
 		long digits_long = stol(digits_str);
-		//cerr << "digits_long=(" << digits_long << ")\n";
-
-		//	add 1
 		long result_long = digits_long + 1;
-		//cerr << "result_long=(" << result_long << ")\n";
-
-		//	convert int to string <(or int -> vector<int> directly)>
 		string result_str = std::to_string(result_long);
-		//cerr << "result_str=(" << result_str << ")\n";
-
-		//	convert string to vector<int>
 		vector<int> result = this->split(result_str);
 		return result;
 	}
-
 	vector<int> split(const string &str) {
 		vector<int> result;
 		for (const char& c: str) {
@@ -242,11 +227,38 @@ public:
 		}
 		return result;
 	}
-
 	string join(const vector<char> words) {
 		string result = "";
 		for (int i = 0; i < words.size(); ++i) {
 			result += words[i];
+		}
+		return result;
+	}
+
+	//	runtime: beats 100%
+	vector<int> plusOne_carrying(vector<int>& digits) 
+	{
+		vector<int> result = digits;
+		if (result[result.size()-1] != 9) {
+			result[result.size()-1] += 1;
+			return result;
+		}
+
+		int nines_start = result.size() - 1;
+		while (nines_start > 0 && digits[nines_start-1] == 9) {
+			nines_start -= 1;
+		}
+
+		if (nines_start == 0) {
+			result.insert(result.begin(), 1);
+			for (int i = 1; i < result.size(); ++i) {
+				result[i] = 0;
+			}
+		} else {
+			result[nines_start-1] += 1;
+			for (int i = nines_start; i < result.size(); ++i) {
+				result[i] = 0;
+			}
 		}
 		return result;
 	}
@@ -266,7 +278,7 @@ int main()
 		vector<int>& digits = input_values[i];
 		vector<int>& check = input_checks[i];
 		printVector("digits", digits);
-		vector<int> result = s.plusOne_naive(digits);
+		vector<int> result = s.plusOne_carrying(digits);
 		printVector("result", result);
 		assert (check == result);
 	}

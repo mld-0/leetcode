@@ -15,11 +15,11 @@ class Solution:
     def plusOne_carrying(self, digits: List[int]) -> List[int]:
         result = [ x for x in digits ]
         if digits[-1] != 9:
-            result[-1] = result[-1] + 1
+            result[-1] += 1
             return result
 
         nines_start = len(result) - 1
-        while nines_start > 0 and digits[nines_start-1] ==9:
+        while nines_start > 0 and digits[nines_start-1] == 9:
             nines_start -= 1
 
         if nines_start == 0:
