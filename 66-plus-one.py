@@ -11,8 +11,31 @@ class Solution:
         return result
 
 
+    #   runtime: beats 85%
+    def plusOne_carrying(self, digits: List[int]) -> List[int]:
+        result = [ x for x in digits ]
+        if digits[-1] != 9:
+            result[-1] = result[-1] + 1
+            return result
+
+        nines_start = len(result) - 1
+        while nines_start > 0 and digits[nines_start-1] ==9:
+            nines_start -= 1
+
+        if nines_start == 0:
+            result.insert(0, 1)
+            for i in range(1, len(result)):
+                result[i] = 0
+        else:
+            result[nines_start-1] += 1
+            for i in range(nines_start, len(result)):
+                result[i] = 0
+
+        return result
+
+
     #   runtime: beats 72%
-    def plusOne_ii(self, digits: List[int]) -> List[int]:
+    def plusOne_customFunctions(self, digits: List[int]) -> List[int]:
 
         def atoi(s: str) -> int:
             result = 0
@@ -63,7 +86,7 @@ class Solution:
 
 
 s = Solution()
-test_functions = [ s.plusOne_naive, s.plusOne_ii, ]
+test_functions = [ s.plusOne_naive, s.plusOne_carrying, s.plusOne_customFunctions, ]
 
 input_values = [ [1,2,3], [4,3,2,1], [9], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6], ]
 input_checks = [ [1,2,4], [4,3,2,2], [1,0], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,7], ]
