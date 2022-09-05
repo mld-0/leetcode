@@ -84,9 +84,49 @@ class Solution:
         return result
 
 
+    #   runtime: beats 95%
+    def plusOne_customFunctions_ii(self, digits: List[int]) -> List[int]:
+
+        def atoi(s: str) -> int:
+            result = 0
+            for i, x in enumerate(s):
+                result += (ord(x) - ord('0')) * 10 ** (len(s)-i-1)
+            return result
+
+        def itoa(x: int) -> str:
+            import math
+            if x == 0:
+                return "0"
+            if x < 10:
+                return chr(x+ord('0'))
+            result = []
+            while x > 0:
+                temp = x % 10
+                result.append(chr(temp+ord('0')))
+                x = x // 10
+            result = result[::-1]
+            result = join(result, '')
+            return result
+
+        def join(l: List[str], delim: str):
+            result = ""
+            for x in l:
+                result += x
+                result += delim
+            if len(delim) > 0:
+                result = result[:0-len(delim)]
+            return result
+
+        digits = [ itoa(x) for x in digits ]
+        digits = join(digits, '')
+        digits = atoi(digits)
+        result = [ atoi(x) for x in itoa(digits+1) ]
+        return result
+
+
 
 s = Solution()
-test_functions = [ s.plusOne_naive, s.plusOne_carrying, s.plusOne_customFunctions, ]
+test_functions = [ s.plusOne_naive, s.plusOne_carrying, s.plusOne_customFunctions, s.plusOne_customFunctions_ii, ]
 
 input_values = [ [1,2,3], [4,3,2,1], [9], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,6], ]
 input_checks = [ [1,2,4], [4,3,2,2], [1,0], [7,2,8,5,0,9,1,2,9,5,3,6,6,7,3,2,8,4,3,7,9,5,7,7,4,7,4,9,4,7,0,1,1,1,7,4,0,0,7], ]
