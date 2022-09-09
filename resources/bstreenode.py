@@ -5,6 +5,7 @@
 #   Requires 'from __future__ import annotations'
 from __future__ import annotations
 import pprint
+import logging
 #   {{{2
 
 class TreeNode:
@@ -34,7 +35,7 @@ class TreeNode:
                     val = None
                 loop_vals.append(val)
             tree_values.append(loop_vals)
-        print("tree_values=(%s)" % str(tree_values))
+        logging.debug("tree_values=(%s)" % str(tree_values))
         head = TreeNode(tree_values[0][0])
         tree_nodes = [ [ head ] ]
         #   For each level in tree, create and attach children of previous level
@@ -44,9 +45,9 @@ class TreeNode:
                 parent_node = tree_nodes[loop_level-1][j//2]
                 parent_val = tree_values[loop_level-1][j//2]
                 if j % 2 == 0:
-                    print("(%s).L=(%s)" % (parent_val, val))
+                    logging.debug("(%s).L=(%s)" % (parent_val, val))
                 else:
-                    print("(%s).R=(%s)" % (parent_val, val))
+                    logging.debug("(%s).R=(%s)" % (parent_val, val))
                 #   None indicates missing node
                 if val is None:
                     loop_nodes.append(None)
@@ -89,7 +90,7 @@ class TreeNode:
                     tree_vals[loop_level][j] = None
                 else:
                     tree_vals[loop_level][j] = tree_nodes[loop_level][j].val
-        #print("tree_vals=(%s)" % str(tree_vals))
+        logging.debug("tree_vals=(%s)" % str(tree_vals))
         return tree_vals
         #   }}}
     def to_list(self):
