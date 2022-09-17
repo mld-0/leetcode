@@ -9,7 +9,7 @@ import sys
 import pprint
 import logging
 #   {{{2
-#   Ongoing: 2022-09-09T22:47:12AEST 94-binary-tree-inorder-traversal features input list '[1,None,2,3]' which we needed to convert to '[1,None,2,None,None,3]' to be able to create the tree the problem describes - is this format with implied empty branches used in other problems (necessitating a converter between them?)
+#   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches)
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -29,7 +29,7 @@ class TreeNode:
 
     def to_list_nested(self) -> List[List]:
         """Convert tree into nested list, with inner list containing values from each level"""
-        tree_nestedNodes = self._toNestedNodesList()
+        tree_nestedNodes = self._tree_toNestedNodesList()
         f = lambda x: None if not x else x.val
         tree_nestedValues = [ [ f(n) for n in x ] for x in tree_nestedNodes ]
         logging.debug("tree_nestedValues=(%s)" % str(tree_nestedValues))
@@ -42,6 +42,39 @@ class TreeNode:
         result = [ val for level in tree_nestedValues for val in level ]
         return result
 
+    def fill_list_infer_missing(values: List) -> List:
+        """Convert tree-as-list as given for leetcode input to format acceptable for 'from_list()' (by filling in missing None children of None parents)"""
+        #   {{{
+        if len(values) == 0:
+            return []
+        values = list(values)
+        tree_levels_count = TreeNode._listLevelsCountWhenNested(values)
+        for i in range(len(values), 2**tree_levels_count):
+            values.append(None)
+        result = [ [] for _ in range(tree_levels_count) ]
+        result[0] = [ values[0] ]
+        logging.debug("result=(%s)" % result)
+        z = 1
+        for loop_level in range(1, tree_levels_count):
+            loop_nodes = []
+            parent_level = result[loop_level-1]
+            logging.debug("parent_level=(%s)" % parent_level)
+            for x in parent_level:
+                if x is not None:
+                    loop_nodes.append(values[z])
+                    z += 1
+                    loop_nodes.append(values[z])
+                    z += 1
+                else:
+                    loop_nodes.append(None)
+                    loop_nodes.append(None)
+            result[loop_level] = loop_nodes
+            logging.debug("parent_level=(%s)" % parent_level)
+        result_flat = [ val for level in result for val in level ]
+        logging.debug("result_flat=(%s)" % result_flat)
+        return result_flat
+        #   }}}
+
     def max_depth(root: TreeNode) -> int:
         """Depth of deepest node in tree"""
         if root is None:
@@ -51,11 +84,9 @@ class TreeNode:
         return max(l, r) + 1
 
     def _splitListToNestedValuesList(values: List) -> List[List]:
+        """Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]"""
         #   {{{
-        tree_levels_count = 0
-        while 2**tree_levels_count <= len(values):
-            tree_levels_count += 1
-        #   Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]
+        tree_levels_count = TreeNode._listLevelsCountWhenNested(values)
         z = 0
         tree_nestedValues = []
         for loop_level in range(tree_levels_count):
@@ -73,7 +104,15 @@ class TreeNode:
         return tree_nestedValues
         #   }}}
 
+    def _listLevelsCountWhenNested(values: List) -> int:
+        """For a given flat list, how many levels of nested list / tree are necessary to represent it"""
+        tree_levels_count = 0
+        while 2**tree_levels_count <= len(values):
+            tree_levels_count += 1
+        return tree_levels_count
+
     def _buildTreeFromNestedValuesList(tree_nestedValues: List[List]) -> List[List[TreeNode]]:
+        """Create tree from given nested list of values, returning nested list of the nodes of that tree"""
         #   {{{
         head = TreeNode(tree_nestedValues[0][0])
         tree_nestedNodes = [ [ head ] ]
@@ -103,7 +142,8 @@ class TreeNode:
         return tree_nestedNodes
         #   }}}
 
-    def _toNestedNodesList(self) -> List[List[Optional[TreeNode]]]:
+    def _tree_toNestedNodesList(self) -> List[List[Optional[TreeNode]]]:
+        """Get the nodes of the tree as a nested list"""
         #   {{{
         depth = TreeNode.max_depth(self)
         #   nested list of nodes, each inner list corresponding to a level of the tree
@@ -126,13 +166,13 @@ class TreeNode:
         """Text representation of tree as multi-line string"""
         #   {{{
         result = ""
-        lines, *_ = self._display_aux()
+        lines, *_ = self._repr_helper()
         for line in lines:
             result += line + "\n"
         return result[:-1]
         #   }}}
 
-    def _display_aux(self):
+    def _repr_helper(self):
         """Returns list of strings, width, height, and horizontal coordinate of the root."""
         #   {{{
         #   LINK: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
@@ -145,7 +185,7 @@ class TreeNode:
             return [line], width, height, middle
         # Only left child.
         if self.right is None:
-            lines, n, p, x = self.left._display_aux()
+            lines, n, p, x = self.left._repr_helper()
             s = '%s' % self.val
             u = len(s)
             first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
@@ -154,7 +194,7 @@ class TreeNode:
             return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
         # Only right child.
         if self.left is None:
-            lines, n, p, x = self.right._display_aux()
+            lines, n, p, x = self.right._repr_helper()
             s = '%s' % self.val
             u = len(s)
             first_line = s + x * '_' + (n - x) * ' '
@@ -162,8 +202,8 @@ class TreeNode:
             shifted_lines = [u * ' ' + line for line in lines]
             return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
         # Two children.
-        left, n, p, x = self.left._display_aux()
-        right, m, q, y = self.right._display_aux()
+        left, n, p, x = self.left._repr_helper()
+        right, m, q, y = self.right._repr_helper()
         s = '%s' % self.val
         u = len(s)
         first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
@@ -177,14 +217,11 @@ class TreeNode:
         return lines, n + m + u, max(p, q) + 2, n + u // 2
         #   }}}
 
-    def fill_list_infer_missing(values: List) -> List:
-        """Convert tree-as-list as given for leetcode input to format acceptable for 'from_list()' (by filling in missing None children of None parents)"""
-        raise NotImplementedError()
-
 
 
 def test_fromList_toList():
     #   {{{
+    print("test_fromList_toList:")
     input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [], list(range(1,16)), [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], ]
     for values in input_values:
         loop_tree = TreeNode.from_list(values)
@@ -192,26 +229,30 @@ def test_fromList_toList():
         if loop_tree is not None:
             loop_list = loop_tree.to_list()
             print("loop_list=(%s)" % str(loop_list))
-            assert( [ values[i] == loop_list[i] for i in range(len(values)) ] )
-            print()
+            assert [ values[i] == loop_list[i] for i in range(len(values)) ] 
         else:
-            assert( values == [] )
+            assert values == [] 
+    print()
     #   }}}
 
 def test_fillListInferMissing():
-    input_values = [ [1], [], [1,2], [1,None,2,3], ]
-    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], ]
+    #   {{{
+    print("test_fillListInferMissing:")
+    logging.warning("test_fillListInferMissing test values insufficent - need more complex example of btree-as-list to call this tested")
+    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], ]
+    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], ]
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
         result = TreeNode.fill_list_infer_missing(values)
         print("result=(%s)" % result)
         assert result == check, "Check comparison failed"
-
+    print()
+    #   }}}
 
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG, stream=sys.stderr)
     test_fromList_toList()
-    #test_fillListInferMissing()
+    test_fillListInferMissing()
 
