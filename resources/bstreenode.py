@@ -237,8 +237,8 @@ def test_fillListInferMissing():
     #   {{{
     print("test_fillListInferMissing:")
     logging.warning("test_fillListInferMissing test values insufficent - need more complex example of btree-as-list to call this tested")
-    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], ]
-    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], ]
+    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,2,None,2,None], ]
+    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], ]
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
@@ -247,6 +247,7 @@ def test_fillListInferMissing():
         assert result == check, "Check comparison failed"
         if values == check:
             logging.debug("note: values == check (no modification was required)")
+        print(TreeNode.from_list(result))
     print()
     #   }}}
 
