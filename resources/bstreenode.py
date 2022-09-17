@@ -1,15 +1,13 @@
-#   VIM SETTINGS: {{{3
+#   {{{3
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #   vim: set foldlevel=2 foldcolumn=2:
-#   }}}1
-#   Requires 'from __future__ import annotations' ... ((for 'TreeNode' type hints) alternatively use class name as string?)
+#   {{{2
+#   Required for own-class type hints (alternatively use class name as string?)
 from __future__ import annotations
 from typing import List, Optional
 import sys
-import pprint
 import logging
-#   {{{2
-#   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches)
+#   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches) [...] (does leetcode give such an input?)
 
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -38,7 +36,7 @@ class TreeNode:
     def to_list(self) -> List:
         """Convert tree into list (such that 'from_list()' will produce an identical tree)"""
         tree_nestedValues = self.to_list_nested()
-        #   result is given by flattening 'tree_nestedValues'
+        #   flatten 'tree_nestedValues'
         result = [ val for level in tree_nestedValues for val in level ]
         return result
 
@@ -239,14 +237,16 @@ def test_fillListInferMissing():
     #   {{{
     print("test_fillListInferMissing:")
     logging.warning("test_fillListInferMissing test values insufficent - need more complex example of btree-as-list to call this tested")
-    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], ]
-    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], ]
+    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], ]
+    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], ]
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
         result = TreeNode.fill_list_infer_missing(values)
         print("result=(%s)" % result)
         assert result == check, "Check comparison failed"
+        if values == check:
+            logging.debug("note: values == check (no modification was required)")
     print()
     #   }}}
 
