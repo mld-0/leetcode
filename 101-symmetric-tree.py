@@ -1,5 +1,6 @@
 from resources.bstreenode import TreeNode
 from typing import Optional
+#   Continue: 2022-09-17T23:17:04AEST leetcode, 101-symmetric-tree, review ans (recursive/iterative)
 
 #class TreeNode:
 #    def __init__(self, val=0, left=None, right=None):
@@ -10,7 +11,7 @@ from typing import Optional
 class Solution:
 
     #   runtime: TLE
-    def isSymmetric_Recursive_InOrderDFS(self, root: Optional[TreeNode]) -> bool:
+    def isSymmetric_InOrderDFS(self, root: Optional[TreeNode]) -> bool:
 
         def max_tree_depth(root: Optional[TreeNode]) -> int:
             if root is None:
@@ -42,8 +43,19 @@ class Solution:
         return nodes_left == nodes_right[::-1]
 
 
+    #   runtime: beats 94%
     def isSymmetric_Recursive(self, root: Optional[TreeNode]) -> bool:
-        raise NotImplementedError()
+
+        def isMirror(l: Optional[TreeNode], r: Optional[TreeNode]) -> bool:
+            if l is None and r is None:
+                return True
+            if l is None or r is None:
+                return False
+            return l.val == r.val and isMirror(l.left, r.right) and isMirror(l.right, r.left)
+
+        if root is None:
+            return True
+        return isMirror(root.left, root.right)
 
 
     def isSymmetric_iterative(self, root: Optional[TreeNode]) -> bool:
@@ -52,11 +64,11 @@ class Solution:
 
 
 s = Solution()
-test_functions = [ s.isSymmetric_Recursive_InOrderDFS, ]
+test_functions = [ s.isSymmetric_InOrderDFS, s.isSymmetric_Recursive, ]
 #test_functions = [ s.isSymmetric_Recursive_InOrderDFS, s.isSymmetric_Recursive, s.isSymmetric_iterative, ]
 
-input_values = [ [1,2,2,3,4,4,3], [1,2,2,None,3,None,3], [], [1,2,2,2,None,2], [5,4,1,None,1,None,4,2,None,2,None], ]
-result_validation = [ True, False, True, False, False, ]
+input_values = [ [1,2,2,3,4,4,3], [1,2,2,None,3,None,3], [], [1,2,2,2,None,2], [5,4,1,None,1,None,4,2,None,2,None], [2,3,3,4,5,None,4], ]
+result_validation = [ True, False, True, False, False, False, ]
 assert len(input_values) == len(result_validation)
 
 for f in test_functions:
