@@ -11,6 +11,7 @@ import random
 
 class Solution:
 
+    #   runtime: beats 99%
     def sortedArrayToBST_ans(self, nums: List[int]) -> Optional[TreeNode]:
 
         def helper(l: int, r: int) -> Optional[TreeNode]:
@@ -25,6 +26,7 @@ class Solution:
         return helper(0, len(nums)-1)
 
 
+    #   runtime: beats 82%
     def sortedArrayToBST_ans_ii(self, nums: List[int]) -> Optional[TreeNode]:
 
         def helper(nums: List[int]) -> Optional[TreeNode]:
