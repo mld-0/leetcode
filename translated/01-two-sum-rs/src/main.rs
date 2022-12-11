@@ -1,4 +1,3 @@
-#![allow(unused)]
 use std::collections::HashMap;
 
 struct Solution {}
@@ -11,7 +10,7 @@ impl Solution {
         //  num_to_index[nums[index]] = index
         let mut num_to_index = HashMap::<i32,usize>::new();
 
-        for index in (0..nums.len()) {
+        for index in 0..nums.len() {
             let delta = target - nums[index];
 
             if num_to_index.contains_key(&delta) {
