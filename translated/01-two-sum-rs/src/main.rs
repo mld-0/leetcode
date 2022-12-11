@@ -1,24 +1,31 @@
 #![allow(unused)]
-
 use std::collections::HashMap;
 
 struct Solution {}
 
 impl Solution {
+
     //  runtime: beats 100%
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+
         //  num_to_index[nums[index]] = index
         let mut num_to_index = HashMap::<i32,usize>::new();
+
         for index in (0..nums.len()) {
             let delta = target - nums[index];
+
             if num_to_index.contains_key(&delta) {
                 return vec![ num_to_index.remove(&delta).unwrap() as i32, index as i32 ];
             }
+
             num_to_index.insert(nums[index], index);
         }
+
         vec![]
     }
+
 }
+
 
 fn main() 
 {
