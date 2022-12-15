@@ -62,7 +62,7 @@ class Solution:
         result_start = 0
         result_len = 1
 
-        for i in range(len(s)):
+        for i in range(1, len(s)):
             r = i
             while r < len(s) and s[i] == s[r]:
                 r += 1
