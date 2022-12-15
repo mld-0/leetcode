@@ -62,7 +62,7 @@ class Solution:
         result_start = 0
         result_len = 1
 
-        for i in range(1, len(s)):
+        for i in range(0, len(s)):
             r = i
             while r < len(s) and s[i] == s[r]:
                 r += 1
@@ -82,8 +82,8 @@ class Solution:
 
 s = Solution()
 
-input_values = [ "debabec", "ceebababefd", "a", "ac", ]
-input_checks = [ "ebabe", "ebababe", "a", [ "a", "c" ], ]
+input_values = [ "debabec", "ceebababefd", "a", "ac", "bb" ]
+input_checks = [ "ebabe", "ebababe", "a", [ "a", "c" ], "bb" ]
 
 test_functions = [ s.longestPalindrome_BruteForce, s.longestPalindrome_DP_BottomUp, s.longestPalindrome_TwoPointers, ]
 
