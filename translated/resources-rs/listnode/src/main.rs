@@ -19,7 +19,7 @@ pub mod listnode {
         pub fn new(val: i32) -> Self {
             ListNode { val, next: None, }
         }
-        pub fn from_list(values: &[i32]) -> Option<Self> {
+        pub fn from_list(values: &[i32]) -> Option<Box<Self>> {
             if values.len() == 0 {
                 return None;
             }
@@ -35,7 +35,7 @@ pub mod listnode {
                 }
                 (*second).next = None;
             }
-            Some(result)
+            Some(Box::new(result))
         }
         pub fn to_list(&self) -> Vec<i32> {
             let mut result = vec![];
