@@ -198,7 +198,12 @@ impl TreeNode {
 //  Create tree from given nested list of values, returning nested list of the nodes of that tree"""
     pub fn _buildTreeFromNestedValuesList(tree_nestedValues: Vec<Vec<Option<i32>>>) -> Option<Rc<RefCell<TreeNode>>>
     {
-        assert_eq!(tree_nestedValues[0][0].is_none(), false, "First node cannot be 'None'");
+        if tree_nestedValues.len() < 1 || tree_nestedValues[0].len() < 1 {
+            panic!("Must pass at nested Vec of at least 1 element");
+        }
+        if tree_nestedValues[0][0].is_none() {
+            panic!("First element cannot be 'None'");
+        }
         let node = Self { val: tree_nestedValues[0][0].unwrap(), left: None, right: None, };
         let mut head = Some(Rc::new(RefCell::new(node)));
         let mut tree_nestedNodes: Vec<Vec<*mut Option<Rc<RefCell<TreeNode>>>>> = vec![ vec![ &mut head as *mut Option<Rc<RefCell<TreeNode>>> ] ];
