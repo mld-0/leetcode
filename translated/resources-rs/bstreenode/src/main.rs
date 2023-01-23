@@ -312,7 +312,13 @@ impl TreeNode {
 //  Text representation of tree as multi-line string
     pub fn to_string(&self) -> String
     {
-        "".to_string()
+        let mut result = "".to_string();
+        let (lines, _, _, _) = self._to_string_helper();
+        for line in &lines {
+            result += line; 
+            result += "\n"
+        }
+        result.trim_end().to_string()
     }
 
 //        #   {{{
@@ -359,8 +365,72 @@ impl TreeNode {
 //        return lines, n + m + u, max(p, q) + 2, n + u // 2
 //        #   }}}
 //  Returns list of strings, width, height, and horizontal coordinate of the root.
-    pub fn _to_string_helper(&self)
+    pub fn _to_string_helper(&self) -> (Vec<String>, usize, usize, usize)
     {
+        //  LINK: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
+        //  No child
+        if self.right.is_none() && self.left.is_none() {
+            let line = self.val.clone().to_string();
+            //let width = line.len();
+            let width = line.chars().count();
+            let height = 1_usize;
+            let middle = width / 2;
+            return ( vec![ line ], width, height, middle );
+        }
+        //  Only left child
+        if self.right.is_none() {
+            let (mut lines, n, p, x) = self.left.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+            let s = self.val.clone().to_string();
+            let u = s.chars().count();
+            let first_line = str::repeat(" ", x+1) + &str::repeat("_", n-x-1) + &s;
+            let second_line = str::repeat(" ", x) + "/" + &str::repeat(" ", n-x-1+u);
+            let mut shifted_lines = Vec::<String>::new();
+            shifted_lines.push(first_line);
+            shifted_lines.push(second_line);
+            for line in lines {
+                let temp = line + &str::repeat(" ", u);
+                shifted_lines.push(temp);
+            }
+            return (shifted_lines, n+u, p+2, n+u/2);
+        }
+        //  Only right child
+        if self.left.is_none() {
+            let (mut lines, n, p, x) = self.right.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+            let s = self.val.clone().to_string();
+            let u = s.chars().count();
+            let first_line = s + &str::repeat("_", x) + &str::repeat(" ", n-x);
+            let second_line = str::repeat(" ", u+x) + "\\" + &str::repeat(" ", n-x-1);
+            let mut shifted_lines = Vec::<String>::new();
+            shifted_lines.push(first_line);
+            shifted_lines.push(second_line);
+            for line in lines {
+                let temp = str::repeat(" ", u) + &line;
+                shifted_lines.push(temp);
+            }
+            return (shifted_lines, n+u, p+2, u/2);
+        }
+        //  Two children
+        let (mut left, n, p, x) = self.left.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+        let (mut right, m, q, y) = self.right.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+        let s = self.val.clone().to_string();
+        let u = s.chars().count();
+        let first_line = str::repeat(" ", x+1) + &str::repeat("_", n-x-1) + &s + &str::repeat("_", y) + &str::repeat(" ", m-y);
+        let second_line = str::repeat(" ", x) + "/" + &str::repeat(" ", n-x-1+u+y) + "\\" + &str::repeat(" ", m-y-1);
+        if p < q {
+            for _ in 0..(q-p) {
+                left.push(str::repeat(" ", n));
+            }
+        } else if q < p {
+            for _ in 0..(p-q) {
+                right.push(str::repeat(" ", m));
+            }
+        }
+        let mut lines = vec![first_line, second_line];
+        for (a,b) in left.iter().zip(right.iter()) {
+            let temp = a.to_string() + &str::repeat(" ", u) + &b;
+            lines.push(temp);
+        }
+        (lines, n+m+u, std::cmp::max(p,q)+2, n+u/2)
     }
 
 }
@@ -368,13 +438,19 @@ impl TreeNode {
 
 fn test_fromList_toList()
 {
-    println!("{}", get_func_name!());
+    println!("{}:", get_func_name!());
     let input_values: Vec<Vec<Option<i32>>> = vec![ vec![Some(1),Some(3),Some(2),Some(5)], vec![Some(2),Some(1),Some(3),None,Some(4),None,Some(7)], vec![Some(1)], vec![Some(1),Some(2)], vec![], (1..16).map(|x| Some(x)).collect::<Vec::<Option<i32>>>(), vec![Some(1),Some(2),Some(3),Some(4),None,None,Some(7),Some(8),Some(9),None,None,None,None,Some(14),Some(15)], ];
     for values in input_values {
         println!("values=({:?})", values);
         let loop_tree = TreeNode::from_list(&values);
-        println!("loop_tree=({:?})", loop_tree);
+        let loop_tree_str = if loop_tree.is_some() {
+            loop_tree.as_ref().unwrap().as_ref().borrow().to_string()
+        } else {
+            "None".to_string()
+        };
+        println!("loop_tree_str:\n{}", loop_tree_str);
         if loop_tree.is_some() {
+            //println!("loop_tree.to_string():\n{}", loop_tree.as_ref().unwrap().as_ref().borrow().to_string());
             let loop_list = loop_tree.as_ref().unwrap().as_ref().borrow().to_list();
             println!("loop_list=({:?})", loop_list);
             assert!( (0..values.len()).map(|i| values[i] == loop_list[i]).all(|x| x == true) );
@@ -387,7 +463,7 @@ fn test_fromList_toList()
 
 fn test_fillListInferMissing() 
 {
-    println!("{}", get_func_name!());
+    println!("{}:", get_func_name!());
     println!("warning, test values insufficent - need more complex example of btree-as-list to call this tested");
     let input_values: Vec<Vec<Option<i32>>> = vec![ vec![Some(1)], vec![], vec![Some(1),Some(2)], vec![Some(1),None,Some(2),Some(3)], vec![Some(1),None,Some(2)], vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),Some(2),None,Some(2),None], ];
     let result_validate: Vec<Vec<Option<i32>>> = vec![ vec![Some(1)], vec![], vec![Some(1),Some(2),None], vec![Some(1),None,Some(2),None,None,Some(3),None], vec![Some(1),None,Some(2)], vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),None,None,Some(2),None,None,None,Some(2),None], ];
@@ -400,7 +476,13 @@ fn test_fillListInferMissing()
         if values == check {
             println!("note: values == check (no modification was required)");
         }
-        println!("{:?}", TreeNode::from_list(&result));
+        let loop_tree = TreeNode::from_list(&result);
+        let loop_tree_str = if loop_tree.is_some() {
+            loop_tree.as_ref().unwrap().as_ref().borrow().to_string()
+        } else {
+            "None".to_string()
+        };
+        println!("loop_tree_str:\n{}", loop_tree_str);
     }
     println!();
 }
