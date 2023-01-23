@@ -16,7 +16,6 @@
 
 //  Continue: 2023-01-19T22:13:16AEDT macro, 'debug!()'
 //  Continue: 2023-01-20T21:51:54AEDT implementation without unsafe/raw-pointers
-//  Continue: 2023-01-20T21:53:22AEDT implement 'to_string()' / 'to_string_helper()' 
 //  Continue: 2023-01-20T21:54:37AEDT review (after) 'Learn Rust With Entirely Too Many Linked Lists'
 
 //  macro: get_func_name!()
@@ -241,24 +240,6 @@ impl TreeNode {
         head
     }
 
-//        #   {{{
-//    def _tree_toNestedNodesList(self) -> List[List[Optional[TreeNode]]]:
-//        depth = TreeNode.max_depth(self)
-//        #   nested list of nodes, each inner list corresponding to a level of the tree
-//        tree_nestedNodes = [ [ None for x in range(2**i) ] for i in range(depth) ]
-//        tree_nestedNodes[0][0] = self
-//        for loop_level in range(1, len(tree_nestedNodes)):
-//            for j in range(len(tree_nestedNodes[loop_level])):
-//                parent_node = tree_nestedNodes[loop_level-1][j//2]
-//                if parent_node is None:
-//                    tree_nestedNodes[loop_level][j] = None
-//                    continue
-//                if j % 2 == 0:
-//                    tree_nestedNodes[loop_level][j] = parent_node.left
-//                else:
-//                    tree_nestedNodes[loop_level][j] = parent_node.right
-//        return tree_nestedNodes
-//        #   }}}
 //  Get the nodes of the tree as a nested list
     pub fn _tree_toNestedNodesList(&self) -> Vec<Vec<Option<&TreeNode>>>
     {
@@ -301,14 +282,6 @@ impl TreeNode {
         tree_nestedNodes
     }
 
-//        #   {{{
-//    def __repr__(self):
-//        result = ""
-//        lines, *_ = self._repr_helper()
-//        for line in lines:
-//            result += line + "\n"
-//        return result[:-1]
-//        #   }}}
 //  Text representation of tree as multi-line string
     pub fn to_string(&self) -> String
     {
@@ -321,49 +294,6 @@ impl TreeNode {
         result.trim_end().to_string()
     }
 
-//        #   {{{
-//    def _repr_helper(self):
-//        #   LINK: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
-//        # No child.
-//        if self.right is None and self.left is None:
-//            line = '%s' % self.val
-//            width = len(line)
-//            height = 1
-//            middle = width // 2
-//            return [line], width, height, middle
-//        # Only left child.
-//        if self.right is None:
-//            lines, n, p, x = self.left._repr_helper()
-//            s = '%s' % self.val
-//            u = len(s)
-//            first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
-//            second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
-//            shifted_lines = [line + u * ' ' for line in lines]
-//            return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
-//        # Only right child.
-//        if self.left is None:
-//            lines, n, p, x = self.right._repr_helper()
-//            s = '%s' % self.val
-//            u = len(s)
-//            first_line = s + x * '_' + (n - x) * ' '
-//            second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
-//            shifted_lines = [u * ' ' + line for line in lines]
-//            return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
-//        # Two children.
-//        left, n, p, x = self.left._repr_helper()
-//        right, m, q, y = self.right._repr_helper()
-//        s = '%s' % self.val
-//        u = len(s)
-//        first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
-//        second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
-//        if p < q:
-//            left += [n * ' '] * (q - p)
-//        elif q < p:
-//            right += [m * ' '] * (p - q)
-//        zipped_lines = zip(left, right)
-//        lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
-//        return lines, n + m + u, max(p, q) + 2, n + u // 2
-//        #   }}}
 //  Returns list of strings, width, height, and horizontal coordinate of the root.
     pub fn _to_string_helper(&self) -> (Vec<String>, usize, usize, usize)
     {
