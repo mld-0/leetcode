@@ -75,8 +75,8 @@ class Solution:
 s = Solution()
 functions = [ s.checkInclusion_Sorting, s.checkInclusion_Counter, s.checkInclusion_RollingCounter, s.checkInclusion_RollingListCount, ]
 
-inputs = [ ("ab", "eidbaooo"), ("ab", "eidboaoo"), ("a", "ab") ]
-checks = [ True, False, True ]
+inputs = [ ("ab", "eidbaooo"), ("ab", "eidboaoo"), ("a", "ab"), ("horse", "ros"), ]
+checks = [ True, False, True, False, ]
 assert len(inputs) == len(checks)
 
 for f in functions:
