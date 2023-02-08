@@ -6,7 +6,8 @@ class Solution:
     def checkInclusion_Sorting(self, s1: str, s2: str) -> bool:
         s1_sorted = sorted(s1)
         for l in range(0, len(s2)-len(s1)+1):
-            trial = sorted(s2[l:l+len(s1)])
+            r = min(l+len(s1), len(s2))
+            trial = sorted(s2[l:r])
             if trial == s1_sorted:
                 return True
         return False
@@ -16,7 +17,8 @@ class Solution:
     def checkInclusion_Counter(self, s1: str, s2: str) -> bool:
         s1_counts = Counter(s1)
         for l in range(0, len(s2)-len(s1)+1):
-            trial = s2[l:l+len(s1)]
+            r = min(l+len(s1), len(s2))
+            trial = s2[l:r]
             trial_counts = Counter(trial)
             if trial_counts == s1_counts:
                 return True
