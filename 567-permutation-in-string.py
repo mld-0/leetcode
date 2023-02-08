@@ -2,8 +2,10 @@ from collections import Counter
 
 class Solution:
 
-    #   runtime: beats 9%
+    #   runtime: beats 12%
     def checkInclusion_Sorting(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
         s1_sorted = sorted(s1)
         for l in range(0, len(s2)-len(s1)+1):
             r = min(l+len(s1), len(s2))
@@ -13,8 +15,10 @@ class Solution:
         return False
 
 
-    #   runtime: beats 22%
+    #   runtime: beats 23%
     def checkInclusion_Counter(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
         s1_counts = Counter(s1)
         for l in range(0, len(s2)-len(s1)+1):
             r = min(l+len(s1), len(s2))
