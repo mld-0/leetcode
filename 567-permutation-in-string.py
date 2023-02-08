@@ -79,8 +79,7 @@ class Solution:
 
 
 s = Solution()
-#functions = [ s.checkInclusion_Sorting, s.checkInclusion_Counter, s.checkInclusion_RollingCounter, s.checkInclusion_RollingListCount, ]
-functions = [ s.checkInclusion_Sorting, ]#s.checkInclusion_Counter, s.checkInclusion_RollingCounter, s.checkInclusion_RollingListCount, ]
+functions = [ s.checkInclusion_Sorting, s.checkInclusion_Counter, s.checkInclusion_RollingCounter, s.checkInclusion_RollingListCount, ]
 
 inputs = [ ("ab", "eidbaooo"), ("ab", "eidboaoo"), ("a", "ab"), ("horse", "ros"), ("adc", "dcda"), ]
 checks = [ True, False, True, False, True, ]
