@@ -2,11 +2,6 @@ from collections import Counter
 
 class Solution:
 
-    def checkInclusion(self, s1: str, s2: str) -> bool:
-        #return self.checkInclusion_A(s1, s2)
-        return self.checkInclusion_BruteForce(s1, s2)
-
-
     #   runtime: beats 9%
     def checkInclusion_Sorting(self, s1: str, s2: str) -> bool:
         s1_sorted = sorted(s1)
@@ -78,13 +73,18 @@ class Solution:
 
 
 s = Solution()
+functions = [ s.checkInclusion_Sorting, s.checkInclusion_Counter, s.checkInclusion_RollingCounter, s.checkInclusion_RollingListCount, ]
 
-input_values = [ ("ab", "eidbaooo"), ("ab", "eidboaoo"), ("a", "ab") ]
-input_checks = [ True, False, True ]
+inputs = [ ("ab", "eidbaooo"), ("ab", "eidboaoo"), ("a", "ab") ]
+checks = [ True, False, True ]
+assert len(inputs) == len(checks)
 
-for (s1, s2), check in zip(input_values, input_checks):
-    result = s.checkInclusion(s1, s2)
-    print("result=(%s)" % str(result))
-    assert( result == check )
+for f in functions:
+    print(f.__name__)
+    for (s1, s2), check in zip(inputs, checks):
+        print(f"s1=({s1}), s2=({s2})")
+        result = f(s1, s2)
+        print(f"result=({result})")
+        assert result == check, "Check comparison failed"
     print()
 
