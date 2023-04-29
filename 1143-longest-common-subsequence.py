@@ -50,6 +50,10 @@ class Solution:
         return table[0][0]
 
 
+    def longestCommonSubsequence_DP_BottomUp_Iterative_ii(self, text1: str, text2: str) -> int:
+        raise NotImplementedError()
+
+
 s = Solution()
 test_functions = [ s.longestCommonSubsequence_DP_TopDown_RecursiveMemorize, s.longestCommonSubsequence_DP_BottomUp_Iterative_i, s.longestCommonSubsequence_DP_BottomUp_Iterative_ii, ]
 
