@@ -2,7 +2,7 @@ import time
 import heapq
 import random
 from typing import List
-from collections import Counter
+from collections import Counter, defaultdict
 
 class Solution:
 
@@ -63,8 +63,20 @@ class Solution:
         return unique[n-k:]
 
 
+    #   runtime: beats 50%
+    def topKFrequent_ans_BucketSort(self, nums: List[int], k: int) -> List[int]:
+        frq = defaultdict(list)
+        for key, cnt in Counter(nums).items():
+            frq[cnt].append(key)
+        res = []
+        for times in reversed(range(len(nums) + 1)):
+            res.extend(frq[times])
+            if len(res) >= k: return res[:k]
+        return res[:k]
+
+
 s = Solution()
-test_functions = [ s.topKFrequent_CounterSorted, s.topKFrequent_ans_CounterHeapSorted, s.topKFrequent_ans_Quickselect, ]
+test_functions = [ s.topKFrequent_CounterSorted, s.topKFrequent_ans_CounterHeapSorted, s.topKFrequent_ans_Quickselect, s.topKFrequent_ans_BucketSort, ]
 
 inputs = [ ([1,1,1,2,2,3], 2), ([1], 1), ([4,4,4,4,5], 1), ([1,2,3,4,5],5), ([7,7,5,5,5,8,8,8,8], 2), ([6,6,9,9,9,6,6,9,9,1,1,1,1,1], 3), ]
 checks = [ [1,2], [1], [4], [1,2,3,4,5], [8,5], [1,9,6], ]
