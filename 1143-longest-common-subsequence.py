@@ -1,8 +1,9 @@
 #   VIM SETTINGS: {{{3
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #   vim: set foldlevel=2 foldcolumn=2:
-#   }}}1
 #   {{{2
+import time
+
 class Solution:
 
     def longestCommonSubsequence_DP_TopDown_RecursiveMemorize(self, text1: str, text2: str) -> int:
@@ -60,12 +61,14 @@ test_functions = [ s.longestCommonSubsequence_DP_TopDown_RecursiveMemorize, s.lo
 input_values = [ ("abcde", "ace"), ("abc", "abc"), ("abc", "def"), ]
 input_checks = [ 3, 3, 0, ]
 
-for test_func in test_functions:
-    print(test_func.__name__)
+for f in test_functions:
+    print(f.__name__)
+    startTime = time.time()
     for (text1, text2), check in zip(input_values, input_checks):
         print("text1=(%s), text2=(%s)" % (text1, text2))
-        result = test_func(text1, text2)
+        result = f(text1, text2)
         print("result=(%s)" % result)
         assert result == check, "Check comparison failed"
+    print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
     print()
 

@@ -5,18 +5,13 @@
 from typing import List
 import itertools
 from collections import Counter
+import time
 #   {{{2
 def is_sortable(obj):
     cls = obj.__class__
     return cls.__lt__ != object.__lt__ or cls.__gt__ != object.__gt__
 
 class Solution:
-    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
-        return self.permuteUnique_i(nums)
-        #return self.permute_i_Unique_Backtracking(nums)
-        #return self.permute_i_Unique_Recursive(nums)
-        #return self.permute_i_Unique_Itertools(nums)
-
 
     #   runtime: beats 97%
     def permuteUnique_BacktrackCounter(self, nums: List[int]) -> List[List[int]]:
@@ -85,14 +80,22 @@ class Solution:
 
 s = Solution()
 
+test_functions = [ s.permuteUnique_BacktrackCounter, s.permute_i_Unique_Backtracking, s.permute_i_Unique_Recursive, s.permute_i_Unique_Itertools, ]
+
 input_values = [ [1,1,2], [1,2,3], ]
 input_checks = [ [[1,1,2],[1,2,1],[2,1,1]], [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]], ]
+assert len(input_values) == len(input_checks)
 
-for nums, check in zip(input_values, input_checks):
-    print("nums=(%s)" % nums)
-    result = s.permuteUnique(nums)
-    print("result=(%s)" % result)
-    assert is_sortable(result), "Check failed is_sortable"
-    assert sorted(result) == sorted(check), "Check failed"
+for f in test_functions:
+    print(f.__name__)
+    startTime = time.time()
+    for nums, check in zip(input_values, input_checks):
+        print("nums=(%s)" % nums)
+        result = f(nums)
+        print("result=(%s)" % result)
+        assert is_sortable(result), "Check failed is_sortable"
+        assert sorted(result) == sorted(check), "Check failed"
+    print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
     print()
+
 
