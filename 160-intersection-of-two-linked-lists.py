@@ -13,11 +13,11 @@ class Solution:
         set_A = set()
         A = headA
         while not A is None:
-            set_A.add(A)
+            set_A.add(id(A))
             A = A.next
         B = headB
         while not B is None:
-            if B in set_A:
+            if id(B) in set_A:
                 return B
             B = B.next
         return None
@@ -57,7 +57,7 @@ class Solution:
     def getIntersectionNode_Ans(self, headA: ListNode, headB: ListNode) -> Optional[ListNode]:
         pA = headA
         pB = headB
-        while pA != pB:
+        while pA is not pB:
             pA = headB if pA is None else pA.next
             pB = headA if pB is None else pB.next
         return pA
