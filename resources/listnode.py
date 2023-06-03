@@ -26,7 +26,7 @@ class ListNode:
         return result
 
     def __eq__(self, rhs):
-        if rhs is None:
+        if not isinstance(rhs, ListNode):
             return False
         if self.val != rhs.val:
             return False
