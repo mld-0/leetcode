@@ -15,9 +15,9 @@ class Solution:
         seen = set()
         n = head
         while not n.next is None:
-            if n in seen:
+            if id(n) in seen:
                 return True
-            seen.add(n)
+            seen.add(id(n))
             n = n.next
         return False
 
@@ -34,7 +34,7 @@ class Solution:
                 fast = fast.next.next
             except AttributeError as e:
                 return False
-            if slow == fast:
+            if slow is fast:
                 return True
 
 

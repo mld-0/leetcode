@@ -1,3 +1,4 @@
+import time
 from resources.bstreenode import TreeNode
 from typing import Optional
 
@@ -6,7 +7,7 @@ class Solution:
     def maxDepth_TreeNode(self, root: Optional[TreeNode]) -> int:
         if root is None:
             return 0
-        return root.max_depth()
+        return TreeNode.max_depth(root)
 
     #   runtime: beats 96%
     def maxDepth_Recursive(self, root: Optional[TreeNode]) -> int:
@@ -41,6 +42,7 @@ assert len(input_values) == len(result_checks)
 
 for f in test_functions:
     print(f.__name__)
+    startTime = time.time()
     for nodes_list, check in zip(input_values, result_checks):
         nodes_list = TreeNode.fill_list_infer_missing(nodes_list)
         print("nodes_list=(%s)" % nodes_list)
@@ -49,5 +51,6 @@ for f in test_functions:
         result = f(root)
         print("result=(%s)" % result)
         assert result == check, "Check comparison failed"
+    print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
     print()
 
