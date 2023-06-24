@@ -100,7 +100,7 @@ class Solution:
     #   runtime: beats 95%
     def inorderTraversal_recursive(self, root: Optional[TreeNode]) -> List[int]:
         result = []
-        j
+
         def dfs_inorder(node):
             if node is None:
                 return

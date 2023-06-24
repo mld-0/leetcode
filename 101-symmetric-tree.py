@@ -58,7 +58,7 @@ class Solution:
         return isMirror(root.left, root.right)
 
 
-    def isSymmetric_iterative(self, root: Optional[TreeNode]) -> bool:
+    def isSymmetric_Iterative(self, root: Optional[TreeNode]) -> bool:
         raise NotImplementedError()
 
 

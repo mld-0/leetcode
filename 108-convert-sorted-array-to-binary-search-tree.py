@@ -26,19 +26,28 @@ class Solution:
         return helper(0, len(nums)-1)
 
 
+
+
+
     #   runtime: beats 82%
     def sortedArrayToBST_ans_ii(self, nums: List[int]) -> Optional[TreeNode]:
 
         def helper(nums: List[int]) -> Optional[TreeNode]:
             if len(nums) == 0:
                 return None
+
             p = get_mid_index(0, len(nums)-1)
+
             result = TreeNode(nums[p])
             result.left = helper(nums[:p])
             result.right = helper(nums[p+1:])
+
             return result
 
         return helper(nums)
+
+
+
 
 
 def get_mid_index(l, r) -> int:

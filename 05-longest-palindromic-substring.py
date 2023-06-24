@@ -80,7 +80,7 @@ class Solution:
         return s[result_start:result_start+result_len]
 
 
-    def longestPalindrome_TwoPointers_ClaifyIndexes(self, s: str) -> str:
+    def longestPalindrome_TwoPointers_ClarifyIndexes(self, s: str) -> str:
         raise NotImplementedError()
 
 
@@ -89,7 +89,7 @@ s = Solution()
 input_values = [ "debabec", "ceebababefd", "a", "ac", "bb" ]
 input_checks = [ "ebabe", "ebababe", "a", [ "a", "c" ], "bb" ]
 
-test_functions = [ s.longestPalindrome_BruteForce, s.longestPalindrome_DP_BottomUp, s.longestPalindrome_TwoPointers, s.longestPalindrome_TwoPointers_ClaifyIndexes, ]
+test_functions = [ s.longestPalindrome_BruteForce, s.longestPalindrome_DP_BottomUp, s.longestPalindrome_TwoPointers, s.longestPalindrome_TwoPointers_ClarifyIndexes, ]
 
 for test_func in test_functions:
     print(test_func.__name__)
