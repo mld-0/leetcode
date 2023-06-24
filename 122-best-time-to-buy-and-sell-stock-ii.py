@@ -5,28 +5,6 @@ from typing import List, Optional
 class Solution:
 
     #   runtime: TLE
-    def maxProfit_recursive(self, prices: List[int]) -> int:
-
-        def solve(prices: List[int], holding: Optional[int]) -> int:
-            if len(prices) == 0:
-                return 0
-            result = 0
-            for i in range(len(prices)):
-                sell = -math.inf
-                hold = -math.inf
-                buy = -math.inf
-                if not holding is None:
-                    sell = prices[i] + solve(prices[i+1:], None)
-                else:
-                    buy = solve(prices[i+1:], prices[i]) - prices[i]
-                hold = solve(prices[i+1:], holding)
-                result = max(result, sell, hold, buy)
-            return result
-
-        return solve(prices, None)
-        
-
-    #   runtime: TLE
     def maxProfit_recursiveMemoize(self, prices: List[int]) -> int:
         memoize = dict()
 
@@ -52,8 +30,43 @@ class Solution:
         return solve(prices, None)
 
 
+    #   runtime: beats 97%
+    def maxProfit_greedy(self, prices: List[int]) -> int:
+        result = 0
+        high = prices[0]
+        low = prices[0]
+        i = 0
+        while i < len(prices) - 1:
+            while i < len(prices) - 1 and prices[i+1] <= prices[i]:
+                i += 1
+            low = prices[i]
+            while i < len(prices) - 1 and prices[i+1] >= prices[i]:
+                i += 1
+            high = prices[i]
+            result += high - low 
+        return result
+
+
+    #   runtime: beats 94%
+    def maxProfit_greedy_simplified(self, prices: List[int]) -> int:
+        result = 0
+        i = 0
+        while i < len(prices) - 1:
+            if prices[i+1] > prices[i]:
+                result += prices[i+1] - prices[i]
+            i += 1
+        return result
+
+
+    def maxProfit_ans_DP_bottomUp(self, prices: List[int]) -> int:
+        raise NotImplementedError()
+
+    def maxProfit_ans_DP_topDown(self, prices: List[int]) -> int:
+        raise NotImplementedError()
+
+
 s = Solution()
-test_functions = [ s.maxProfit_recursive, s.maxProfit_recursiveMemoize, ]
+test_functions = [ s.maxProfit_recursiveMemoize, s.maxProfit_greedy, s.maxProfit_greedy_simplified, s.maxProfit_ans_DP_bottomUp, s.maxProfit_ans_DP_topDown, ]
 
 inputs = [ [7,1,5,3,6,4], [1,2,3,4,5], [7,6,4,3,1], ]
 checks = [ 7, 4, 0, ]
