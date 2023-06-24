@@ -1,6 +1,7 @@
 import time
 import math
-from typing import List, Optional
+from functools import cache
+from typing import List, Tuple, Optional
 
 class Solution:
 
@@ -58,11 +59,36 @@ class Solution:
         return result
 
 
+    #   runtime: beats 79%
     def maxProfit_ans_DP_bottomUp(self, prices: List[int]) -> int:
-        raise NotImplementedError()
+        cur_hold = -math.inf
+        cur_not_hold = 0
+        for p in prices:
+            prev_hold, prev_not_hold = cur_hold, cur_not_hold
+            #   either continue to hold, or sell 
+            cur_hold = max(prev_hold, prev_not_hold - p)
+            #   either continue to not-hold, or buy
+            cur_not_hold = max(prev_not_hold, prev_hold + p)
+        return cur_not_hold
 
+
+    #   runtime: beats 34%
     def maxProfit_ans_DP_topDown(self, prices: List[int]) -> int:
-        raise NotImplementedError()
+        memoize = dict()
+
+        def solve(day: int) -> Tuple[int,int]:
+            if day == 0:
+                return ( -prices[0], 0 )
+            if day in memoize:
+                return memoize[day]
+            prev_hold, prev_not_hold = solve(day - 1)
+            cur_hold = max(prev_hold, prev_not_hold - prices[day])            
+            cur_not_hold = max(prev_not_hold, prev_hold + prices[day])
+            memoize[day] = (cur_hold, cur_not_hold)
+            return (cur_hold, cur_not_hold)
+
+        cur_hold, cur_not_hold = solve(len(prices) - 1)
+        return cur_not_hold
 
 
 s = Solution()
