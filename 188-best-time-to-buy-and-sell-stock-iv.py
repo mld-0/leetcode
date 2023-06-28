@@ -45,6 +45,7 @@ class Solution:
         raise NotImplementedError()
 
 
+    #   Ongoing: Faster if we specifically handle the 2k>n case?
     #   runtime: beats 94%
     def maxProfit_generalise_k_eq_2_DP_constSpace(self, k: int, prices: List[int]) -> int:
         costs = [ math.inf for _ in range(k) ]
