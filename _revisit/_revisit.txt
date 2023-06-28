@@ -1,3 +1,5 @@
+About: changes previously uncommited (git diffs for each linked file):
+
 05-longest-palindromic-substring:
 -    def longestPalindrome_TwoPointers_ClaifyIndexes(self, s: str) -> str:
 +    def longestPalindrome_TwoPointers_ClarifyIndexes(self, s: str) -> str:
