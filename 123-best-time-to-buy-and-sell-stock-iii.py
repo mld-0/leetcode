@@ -54,7 +54,7 @@ for f in test_functions:
     print(f.__name__)
     startTime = time.time()
     for prices, check in zip(inputs, checks):
-        print(f"inputs=({inputs})")
+        print(f"prices=({prices})")
         result = f(prices)
         print(f"result=({result})")
         assert result == check, "Check comparison failed"
