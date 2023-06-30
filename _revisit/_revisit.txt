@@ -107,7 +107,7 @@ Dynamic programming solutions (top down and bottom up)
 
 
 188-best-time-to-buy-and-sell-stock-iv:
-merging solution (missing)
+merging solution (missing) [...] (merging is the fastest solution?)
 one/two table DP solutions (not understood well enough to remember)
 (for one-table solution -> more easily understood with i/j reversed?)
 
