@@ -40,14 +40,21 @@ class Solution:
     #    return t2_profit
     #   }}}
 
+    def maxProfit_greedy(self, prices: List[int]) -> int:
+        result = 0
+        i = 0
+        while i < len(prices) - 1:
+            if prices[i+1] > prices[i]:
+                result += prices[i+1] - prices[i]
+            i += 1
+        return result
 
-    def maxProfit_DP(self, k: int, prices: List[int]) -> int:
-        raise NotImplementedError()
 
-
-    #   Ongoing: Faster if we specifically handle the 2k>n case?
     #   runtime: beats 94%
     def maxProfit_generalise_k_eq_2_DP_constSpace(self, k: int, prices: List[int]) -> int:
+        if 2*k > len(prices):
+            return self.maxProfit_greedy(prices)
+
         costs = [ math.inf for _ in range(k) ]
         profits = [ 0 for _ in range(k) ] 
 
@@ -61,16 +68,41 @@ class Solution:
         return profits[-1]
 
 
+    #   runtime: beats 48%
+    def maxProfit_ans_DP_two_tables(self, k: int, prices: List[int]) -> int:
+        if 2*k > len(prices):
+            return self.maxProfit_greedy(prices)
 
-    def maxProfit_ans_DP(self, k: int, prices: List[int]) -> int:
-        raise NotImplementedError()
+        #   i = day, j = number of completed transactions
+        hold = [ [ -math.inf for _ in range(k+1) ] for _ in range(len(prices)) ]
+        not_hold = [ [ -math.inf for _ in range(k+1) ] for _ in range(len(prices)) ]
+
+        #   initial conditions:
+        hold[0][1] = -1 * prices[0]
+        not_hold[0][0] = 0
+
+        for i in range(1, len(prices)):
+            for j in range(k+1):
+                not_hold[i][j] = max( not_hold[i-1][j], hold[i-1][j] + prices[i] )
+                if j > 0:
+                    hold[i][j] = max( hold[i-1][j], not_hold[i-1][j-1] - prices[i] )
+
+        result = 0
+        for j in range(k+1):
+            result = max(result, not_hold[-1][j])
+        return result
+
 
     def maxProfit_ans_merging(self, k: int, prices: List[int]) -> int:
         raise NotImplementedError()
 
 
+    def maxProfit_ans_DP_one_table(self, k: int, prices: List[int]) -> int:
+        raise NotImplementedError()
+
+
 s = Solution()
-test_functions = [ s.maxProfit_i, ]
+test_functions = [ s.maxProfit_generalise_k_eq_2_DP_constSpace, s.maxProfit_ans_DP_two_tables, ]
 
 inputs = [ (1,[7,1,5,3,6,4]), (1,[7,6,4,3,1]), (2,[2,4,1]), (2,[3,2,6,5,0,3]), (4,[1,2,4,2,5,7,2,4,9,0]), ]
 checks = [ 5, 0, 2, 7, 15, ]
