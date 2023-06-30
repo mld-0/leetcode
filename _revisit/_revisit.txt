@@ -107,5 +107,7 @@ Dynamic programming solutions (top down and bottom up)
 
 
 188-best-time-to-buy-and-sell-stock-iv:
-DP/merging solutions, (2k>n case?)
+merging solution (missing)
+one/two table DP solutions (not understood well enough to remember)
+(for one-table solution -> more easily understood with i/j reversed?)
 

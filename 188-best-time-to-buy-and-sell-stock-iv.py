@@ -93,16 +93,34 @@ class Solution:
         return result
 
 
+    #   runtime: beats 72%
+    def maxProfit_ans_DP_one_table(self, k: int, prices: List[int]) -> int:
+        if 2*k > len(prices):
+            return self.maxProfit_greedy(prices)
+
+        #   table[i][j]: max profit up to prices[j] using at most i transactions
+        table = [ [ -math.inf for _ in range(len(prices)) ] for _ in range(k+1) ]
+
+        for j in range(len(prices)):
+            table[0][j] = 0
+        for i in range(k+1):
+            table[i][0] = 0
+
+        for i in range(1, k+1):
+            localMax = table[i-1][0] - prices[0]
+            for j in range(1, len(prices)):
+                table[i][j] = max(table[i][j-1], prices[j] + localMax)
+                localMax = max(localMax, table[i-1][j] - prices[j])
+
+        return table[k][-1]
+
+
     def maxProfit_ans_merging(self, k: int, prices: List[int]) -> int:
         raise NotImplementedError()
 
 
-    def maxProfit_ans_DP_one_table(self, k: int, prices: List[int]) -> int:
-        raise NotImplementedError()
-
-
 s = Solution()
-test_functions = [ s.maxProfit_generalise_k_eq_2_DP_constSpace, s.maxProfit_ans_DP_two_tables, ]
+test_functions = [ s.maxProfit_generalise_k_eq_2_DP_constSpace, s.maxProfit_ans_DP_two_tables, s.maxProfit_ans_DP_one_table, ]
 
 inputs = [ (1,[7,1,5,3,6,4]), (1,[7,6,4,3,1]), (2,[2,4,1]), (2,[3,2,6,5,0,3]), (4,[1,2,4,2,5,7,2,4,9,0]), ]
 checks = [ 5, 0, 2, 7, 15, ]
