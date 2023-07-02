@@ -10,14 +10,12 @@ from typing import List
 class Solution:
 
     #   runtime: beats 5%
-    def removeDuplicates(self, nums: List[int]) -> int:
-        l = 0
-        r = 0
+    def removeDuplicates_shuffle_i(self, nums: List[int]) -> int:
+        l = 0       #   index of first current number
+        r = 0       #   index of last current number
         result = 0
 
         while r <= len(nums) - 1:
-            #   l points to start of next number
-            #   move r to end of current number
             r = l
             while r < len(nums) - 1 and nums[r+1] == nums[l]:
                 r += 1
@@ -43,8 +41,49 @@ class Solution:
         return result
 
 
-    def removeDuplicates_ii(self, nums: List[int]) -> int:
-        raise NotImplementedError()
+    #   runtime: beats 98%
+    def removeDuplicates_ans_pop(self, nums: List[int]) -> int:
+        i = 1
+        count = 1
+        while i < len(nums):
+            if nums[i] == nums[i-1]:
+                count += 1
+                if count > 2:
+                    nums.pop(i)
+                    i -= 1
+            else:
+                count = 1
+            i += 1
+        return len(nums)
+
+
+    #   runtime: beats 94%
+    def removeDuplicates_ans_twoPointers_overwrite(self, nums: List[int]) -> int:
+        k = 2
+        l = 1
+        r = 1
+        count = 1
+        while r < len(nums):
+            if nums[r] == nums[r-1]:
+                count += 1
+            else:
+                count = 1
+            if count <= k:
+                nums[l] = nums[r]
+                l += 1
+            r += 1
+        return l
+
+
+    #   runtime: beats 97%
+    def removeDuplicates_ans_simple(self, nums: List[int]) -> int:
+        k = 2
+        i = 0
+        for x in nums:
+            if i < k or x > nums[i-k]:
+                nums[i] = x
+                i += 1
+        return i
 
 
 
@@ -57,7 +96,7 @@ def validate_result(nums, result_len, check_len, check):
     return True
 
 s = Solution()
-test_functions = [ s.removeDuplicates, s.removeDuplicates_ii, ]
+test_functions = [ s.removeDuplicates_shuffle_i, s.removeDuplicates_ans_pop, s.removeDuplicates_ans_twoPointers_overwrite, s.removeDuplicates_ans_simple, ]
 
 inputs = [ [1,1,1,2,2,3], [0,0,1,1,1,1,2,3,3], [1,1,1,1,1,1,2,2,2,3,3,4], [1], [1,1,1], [1,1,1,2], ]
 checks = [ (5,[1,1,2,2,3]), (7,[0,0,1,1,2,3,3]), (7,[1,1,2,2,3,3,4]), (1,[1]), (2,[1,1]), (3,[1,1,2]), ]

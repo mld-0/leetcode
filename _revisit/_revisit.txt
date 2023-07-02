@@ -113,5 +113,5 @@ one/two table DP solutions (not understood well enough to remember)
 
 
 80-remove-duplicates-from-sorted-array-ii:
-O(n) solution (current solution is O(n^2)?)
+Remember (intuition behind) O(n) two-pointers solution
 
