@@ -115,3 +115,6 @@ one/two table DP solutions (not understood well enough to remember)
 80-remove-duplicates-from-sorted-array-ii:
 Remember (intuition behind) O(n) two-pointers solution
 
+
+863-all-nodes-distance-k:
+Binary tree search problem: Equivalent-graph DFS/BFS ans
