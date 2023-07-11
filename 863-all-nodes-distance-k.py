@@ -50,6 +50,15 @@ class Solution:
         return result
 
 
+    def distanceK_DFS(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+        raise NotImplementedError()
+
+
+    def distanceK_BFS(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+        raise NotImplementedError()
+
+
+
 def buildTreeAndGetTarget(values, target_value) -> Tuple[TreeNode, TreeNode]:
     """Create a binary tree from a list of unique values, returning both the root node, and the node that has value matching `target_value`"""
     values_non_null = [ x for x in values if x is not None ]
