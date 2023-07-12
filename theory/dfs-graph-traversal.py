@@ -54,14 +54,61 @@ class BTree_DFS_Recursive:
 
 class BTree_DFS_Iterative:
 
-    def dfs_preorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        raise NotImplementedError()
+    def dfs_preorder(self, node: Optional[TreeNode]) -> List:
+        if node is None:
+            return []
+        stack = [ node ]
+        result = []
+        while len(stack) > 0:
+            node = stack.pop()
+            result.append(node.val)
+            if node.right:  # right child is pushed first so that left is processed first
+                stack.append(node.right)
+            if node.left:
+                stack.append(node.left)
+        return result
 
-    def dfs_postorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        raise NotImplementedError()
+    def dfs_postorder(self, node: Optional[TreeNode]) -> List:
+        if node is None:
+            return []
+        result = []
+        stack = []
+        lastNodeVisited = None
+        while (len(stack) > 0) or (node is not None):
+            if not node is None:
+                stack.append(node)
+                node = node.left
+            else:
+                peekNode = stack[-1]
+                if (peekNode.right is not None) and (lastNodeVisited is not peekNode.right):
+                    node = peekNode.right
+                else:
+                    result.append(peekNode.val)
+                    lastNodeVisited = stack.pop()
+        return result
 
-    def dfs_inorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        raise NotImplementedError()
+    def dfs_inorder(self, node: Optional[TreeNode]) -> List:
+        if node is None:
+            return []
+        result = []
+        stack = []
+        while (len(stack) > 0) or (node is not None):
+            if node is not None:
+                stack.append(node)
+                node = node.left
+            else:
+                node = stack.pop()
+                result.append(node.val)
+                node = node.right
+        return result
+
+
+class Graph_AdjacencyMatrix_DFS:
+    ...
+
+
+class Graph_AdjacencyList_DFS:
+    ...
 
 
 class test_BTree_DFS:
@@ -89,6 +136,7 @@ class test_BTree_DFS:
         t = test_BTree_DFS()
         t.test_dfs(BTree_DFS_Recursive())
         t.test_dfs(BTree_DFS_Iterative())
+
 
 if __name__ == '__main__':
     test_BTree_DFS.run()
