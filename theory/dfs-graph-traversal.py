@@ -33,7 +33,8 @@ class BTree_DFS_Recursive:
         result: List[Any] = []
         solve(node)
         return result
-            
+
+
     def dfs_postorder(self, node: Optional[TreeNode]) -> List:
 
         def solve(node: Optional[TreeNode]):
@@ -46,6 +47,7 @@ class BTree_DFS_Recursive:
         result: List[Any] = []
         solve(node)
         return result
+
 
     def dfs_inorder(self, node: Optional[TreeNode]) -> List:
 
@@ -66,8 +68,10 @@ class BTree_DFS_Iterative:
     def dfs_preorder(self, node: Optional[TreeNode]) -> List:
         if node is None:
             return []
+
         stack: List[TreeNode] = [ node ]
         result = []
+
         while len(stack) > 0:
             node = stack.pop()
             result.append(node.val)
@@ -75,14 +79,18 @@ class BTree_DFS_Iterative:
                 stack.append(node.right)
             if node.left:
                 stack.append(node.left)
+
         return result
+
 
     def dfs_postorder(self, node: Optional[TreeNode]) -> List:
         if node is None:
             return []
+
         result = []
         stack: List[TreeNode] = []
         lastNodeVisited = None
+
         while len(stack) > 0 or node is not None:
             if not node is None:
                 stack.append(node)
@@ -94,13 +102,17 @@ class BTree_DFS_Iterative:
                 else:
                     result.append(peekNode.val)
                     lastNodeVisited = stack.pop()
+
         return result
+
 
     def dfs_inorder(self, node: Optional[TreeNode]) -> List:
         if node is None:
             return []
+
         result = []
         stack: List[TreeNode] = []
+
         while len(stack) > 0 or node is not None:
             if node is not None:
                 stack.append(node)
@@ -109,6 +121,7 @@ class BTree_DFS_Iterative:
                 node = stack.pop()
                 result.append(node.val)
                 node = node.right
+
         return result
 
 
