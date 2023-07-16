@@ -21,34 +21,43 @@ from typing import List, Optional
 
 class BTree_DFS_Recursive:
 
-    def dfs_preorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        if result is None:
-            result = []
-        if node is None:
-            return result
-        result.append(node.val)
-        self.dfs_preorder(node.left, result)
-        self.dfs_preorder(node.right, result)
-        return result
+    def dfs_preorder(self, node: Optional[TreeNode]) -> List:
 
+        def solve(node: Optional[TreeNode]):
+            if node is None:
+                return
+            result.append(node.val)
+            solve(node.left)
+            solve(node.right)
+
+        result = []
+        solve(node)
+        return result
+            
     def dfs_postorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        if result is None:
-            result = []
-        if node is None:
-            return result
-        self.dfs_postorder(node.left, result)
-        self.dfs_postorder(node.right, result)
-        result.append(node.val)
+
+        def solve(node: Optional[TreeNode]):
+            if node is None:
+                return
+            solve(node.left)
+            solve(node.right)
+            result.append(node.val)
+
+        result = []
+        solve(node)
         return result
 
     def dfs_inorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
-        if result is None:
-            result = []
-        if node is None:
-            return result
-        self.dfs_inorder(node.left, result)
-        result.append(node.val)
-        self.dfs_inorder(node.right, result)
+
+        def solve(node: Optional[TreeNode]):
+            if node is None:
+                return
+            solve(node.left)
+            result.append(node.val)
+            solve(node.right)
+
+        result = []
+        solve(node)
         return result
 
 
