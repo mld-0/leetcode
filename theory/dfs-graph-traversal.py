@@ -5,7 +5,7 @@
 import time
 import inspect
 from resources.bstreenode import TreeNode
-from typing import List, Optional
+from typing import List, Optional, Any
 
 #   Depth first search:
 #
@@ -30,11 +30,11 @@ class BTree_DFS_Recursive:
             solve(node.left)
             solve(node.right)
 
-        result = []
+        result: List[Any] = []
         solve(node)
         return result
             
-    def dfs_postorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
+    def dfs_postorder(self, node: Optional[TreeNode]) -> List:
 
         def solve(node: Optional[TreeNode]):
             if node is None:
@@ -43,11 +43,11 @@ class BTree_DFS_Recursive:
             solve(node.right)
             result.append(node.val)
 
-        result = []
+        result: List[Any] = []
         solve(node)
         return result
 
-    def dfs_inorder(self, node: Optional[TreeNode], result: Optional[List]=None) -> List:
+    def dfs_inorder(self, node: Optional[TreeNode]) -> List:
 
         def solve(node: Optional[TreeNode]):
             if node is None:
@@ -56,7 +56,7 @@ class BTree_DFS_Recursive:
             result.append(node.val)
             solve(node.right)
 
-        result = []
+        result: List[Any] = []
         solve(node)
         return result
 
@@ -66,7 +66,7 @@ class BTree_DFS_Iterative:
     def dfs_preorder(self, node: Optional[TreeNode]) -> List:
         if node is None:
             return []
-        stack = [ node ]
+        stack: List[TreeNode] = [ node ]
         result = []
         while len(stack) > 0:
             node = stack.pop()
@@ -81,9 +81,9 @@ class BTree_DFS_Iterative:
         if node is None:
             return []
         result = []
-        stack = []
+        stack: List[TreeNode] = []
         lastNodeVisited = None
-        while (len(stack) > 0) or (node is not None):
+        while len(stack) > 0 or node is not None:
             if not node is None:
                 stack.append(node)
                 node = node.left
@@ -100,8 +100,8 @@ class BTree_DFS_Iterative:
         if node is None:
             return []
         result = []
-        stack = []
-        while (len(stack) > 0) or (node is not None):
+        stack: List[TreeNode] = []
+        while len(stack) > 0 or node is not None:
             if node is not None:
                 stack.append(node)
                 node = node.left
