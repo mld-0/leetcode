@@ -150,7 +150,7 @@ class BTree_DFS_Iterative:
 
 class Graph_AdjacencyList_DFS:
 
-    def dfs_preorder(self, graph: Dict[int,List], start: int):
+    def dfs_preorder(self, graph: Dict[int,List], start: int) -> List:
         seen = set()
         result: List[Any] = []
 
@@ -166,7 +166,7 @@ class Graph_AdjacencyList_DFS:
         return result
 
 
-    def dfs_postorder(self, graph: Dict[int,List], start: int):
+    def dfs_postorder(self, graph: Dict[int,List], start: int) -> List:
         seen = set()
         result: List[Any] = []
 
@@ -184,35 +184,35 @@ class Graph_AdjacencyList_DFS:
 
 class Graph_AdjacencyMatrix_DFS:
 
-    def dfs_preorder(self, graph: List[List[int]], start: int):
+    def dfs_preorder(self, graph: List[List[int]], start: int) -> List:
         seen = set()
         result: List[Any] = []
 
         def solve(graph: List[List[int]], position: int):
             seen.add(position)
             result.append(position)
-            for i, n in enumerate(graph[position]):
-                if n == 0:
+            for n, x in enumerate(graph[position]):
+                if x == 0:
                     continue
-                if i in seen:
+                if n in seen:
                     continue
-                solve(graph, i)
+                solve(graph, n)
 
         solve(graph, start)
         return result
 
 
-    def dfs_postorder(self, graph: List[List[int]], start: int):
+    def dfs_postorder(self, graph: List[List[int]], start: int) -> List:
         seen = set()
         result: List[Any] = []
 
         def solve(graph: List[List[int]], position: int):
-            for i, n in enumerate(graph[position]):
-                if n == 0:
+            for n, x in enumerate(graph[position]):
+                if x == 0:
                     continue
-                if i in seen:
+                if n in seen:
                     continue
-                solve(graph, i)
+                solve(graph, n)
             seen.add(position)
             result.append(position)
 
