@@ -126,6 +126,44 @@ class Solution:
         search_bfs(target.val)
         return result
 
+    
+    #   runtime: beats 98%
+    def distanceK_ans_DoubleWalk(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
+
+        def SearchPath(root: Optional[TreeNode], target: TreeNode, path: List[TreeNode]) -> bool:
+            if root is None:
+                return False
+            path.append(root)
+            if root is target:
+                return True
+            if SearchPath(root.left, target, path) or SearchPath(root.right, target, path):
+                return True
+            path.pop()
+            return False
+
+        def CollectValues(node: Optional[TreeNode], depth: int, values: List[int]):
+            if node is None:
+                return
+            if depth == 0:
+                values.append(node.val)
+                return
+            depth -= 1
+            CollectValues(node.left, depth, values)
+            CollectValues(node.right, depth, values)
+
+        path = []
+        SearchPath(root, target, path)
+        values = []
+        CollectValues(target, k, values)
+        k -= 1
+        for i in range(len(path)-1, 0, -1):
+            if k == 0:
+                values.append(path[i-1].val)
+                break
+            node = path[i-1].right if path[i-1].left == path[i] else path[i-1].left
+            CollectValues(node, k-1, values)
+            k -= 1
+        return values
 
 
 def buildTreeAndGetTarget(values, target_value) -> Tuple[TreeNode, TreeNode]:
@@ -143,7 +181,7 @@ def buildTreeAndGetTarget(values, target_value) -> Tuple[TreeNode, TreeNode]:
     return (root, target)
 
 s = Solution()
-test_functions = [ s.distanceK_parentPointers, s.distanceK_DFS, s.distanceK_BFS, ]
+test_functions = [ s.distanceK_parentPointers, s.distanceK_DFS, s.distanceK_BFS, s.distanceK_ans_DoubleWalk, ]
 
 inputs = [ ([3,5,1,6,2,0,8,None,None,7,4],5,2), ([1],1,3), ([0,2,1,None,None,3],3,3), ]
 checks = [ [7,4,1], [], [2], ]
