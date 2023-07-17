@@ -2,6 +2,7 @@ import time
 import math
 from resources.bstreenode import TreeNode
 from typing import List, Tuple, Optional, Dict
+from collections import defaultdict, deque
 
 class Solution:
 
@@ -25,15 +26,15 @@ class Solution:
                 return parents[id(node)]
             return None
 
-        def get_depth_k_descendants(node: TreeNode, target: TreeNode, distance: int):
+        def get_depth_k_descendants(node: TreeNode, avoid: TreeNode, distance: int):
             nonlocal k
             if distance == k:
                 result.append(node.val)
             else:
-                if node.left is not None and node.left is not target:
-                    get_depth_k_descendants(node.left, target, distance + 1)
-                if node.right is not None and node.right is not target:
-                    get_depth_k_descendants(node.right, target, distance + 1)
+                if node.left is not None and node.left is not avoid:
+                    get_depth_k_descendants(node.left, avoid, distance + 1)
+                if node.right is not None and node.right is not avoid:
+                    get_depth_k_descendants(node.right, avoid, distance + 1)
 
         store_parents(root)
         get_depth_k_descendants(target, target, 0)
@@ -50,12 +51,80 @@ class Solution:
         return result
 
 
+    #   runtime: beats 97%
     def distanceK_DFS(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
-        raise NotImplementedError()
 
+        def to_graph(node: TreeNode):
+            if node.val not in graph:
+                graph[node.val] = []
+            if node.left is not None:
+                graph[node.val].append(node.left.val)
+                graph[node.left.val].append(node.val)
+                to_graph(node.left)
+            if node.right is not None:
+                graph[node.val].append(node.right.val)
+                graph[node.right.val].append(node.val)
+                to_graph(node.right)
 
+        graph = defaultdict(list)
+        to_graph(root)
+
+        def search_dfs(node_val: int, distance: int):
+            if node_val in seen:
+                return
+            seen.add(node_val)
+            if distance == k:
+                result.append(node_val)
+                return
+            for n in graph[node_val]:
+                if n in seen:
+                    continue
+                search_dfs(n, distance + 1)
+
+        result = []
+        seen = set()
+        search_dfs(target.val, 0)
+        return result
+                
+
+    #   runtime: beats 99%
     def distanceK_BFS(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
-        raise NotImplementedError()
+
+        def to_graph(node: TreeNode):
+            if node.val not in graph:
+                graph[node.val] = []
+            if node.left is not None:
+                graph[node.val].append(node.left.val)
+                graph[node.left.val].append(node.val)
+                to_graph(node.left)
+            if node.right is not None:
+                graph[node.val].append(node.right.val)
+                graph[node.right.val].append(node.val)
+                to_graph(node.right)
+
+        graph = defaultdict(list)
+        to_graph(root)
+
+        def search_bfs(node_val: int):
+            queue.append( (node_val, 0) )
+            while len(queue) > 0:
+                current, distance = queue.popleft()
+                if current in seen:
+                    continue
+                seen.add(current)
+                if distance == k:
+                    result.append(current)
+                    continue
+                for n in graph[current]:
+                    if n in seen:
+                        continue
+                    queue.append( (n, distance + 1) )
+
+        result = []
+        queue = deque()
+        seen = set()
+        search_bfs(target.val)
+        return result
 
 
 
@@ -74,7 +143,7 @@ def buildTreeAndGetTarget(values, target_value) -> Tuple[TreeNode, TreeNode]:
     return (root, target)
 
 s = Solution()
-test_functions = [ s.distanceK_parentPointers, ]
+test_functions = [ s.distanceK_parentPointers, s.distanceK_DFS, s.distanceK_BFS, ]
 
 inputs = [ ([3,5,1,6,2,0,8,None,None,7,4],5,2), ([1],1,3), ([0,2,1,None,None,3],3,3), ]
 checks = [ [7,4,1], [], [2], ]
