@@ -62,8 +62,40 @@ class Solution:
         return sorted(list(result))
 
 
+    def eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm(self, graph: List[List[int]]) -> List[int]:
+        num_nodes = len(graph)
+        graph_invert = [ [] for _ in range(num_nodes) ]
+        graph_in_edges = [ 0 for _ in range(num_nodes) ]
+
+        #   Invert the graph, and count the number of edges going into each node for the non-inverted graph
+        for src in range(num_nodes):
+            for dest in graph[src]:
+                graph_invert[dest].append(src)
+                graph_in_edges[src] += 1
+
+        result = []
+        queue = deque()
+
+        #   Add all terminal nodes to the queue
+        for n in range(num_nodes):
+            if graph_in_edges[n] == 0:
+                queue.append(n)
+
+        #   Iteratively remove terminal nodes (those with no remaining in_edges) from the graph
+        #   The only nodes left in the origional graph (nodes not in `result`) are either in a cycle, or lead to a node in a cycle
+        while len(queue) > 0:
+            current = queue.popleft()
+            result.append(current)
+            for n in graph_invert[current]:
+                graph_in_edges[n] -= 1
+                if graph_in_edges[n] == 0:
+                    queue.append(n)
+
+        return sorted(result)
+
+
 s = Solution()
-test_functions = [ s.eventualSafeNodes_DFSCycleCheck, s.eventualSafeNodes_BFSCycleCheck, ]
+test_functions = [ s.eventualSafeNodes_DFSCycleCheck, s.eventualSafeNodes_BFSCycleCheck, s.eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm, ]
 
 inputs = [ [[1,2],[2,3],[5],[0],[5],[],[]], [[1,2,3,4],[1,2],[3,4],[0,4],[]], [[],[0,2,3,4],[3],[4],[]], ]
 checks = [ [2,4,5,6], [4], [0,1,2,3,4], ]
