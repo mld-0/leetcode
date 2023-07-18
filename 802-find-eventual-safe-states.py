@@ -62,6 +62,7 @@ class Solution:
         return sorted(list(result))
 
 
+    #   runtime: beats 65%
     def eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm(self, graph: List[List[int]]) -> List[int]:
         num_nodes = len(graph)
         graph_invert = [ [] for _ in range(num_nodes) ]
