@@ -13,12 +13,13 @@ pub mod listnode {
         pub val: i32,
         pub next: Option<Box<ListNode>>
     }
-    
+
     impl ListNode {
         #[inline]
         pub fn new(val: i32) -> Self {
             ListNode { val, next: None, }
         }
+
         pub fn from_list(values: &[i32]) -> Option<Box<Self>> {
             if values.len() == 0 {
                 return None;
@@ -37,6 +38,7 @@ pub mod listnode {
             }
             Some(Box::new(result))
         }
+
         pub fn to_list(&self) -> Vec<i32> {
             let mut result = vec![];
             let mut first = Some(self);
@@ -46,19 +48,23 @@ pub mod listnode {
             }
             result
         }
+
         pub fn to_string(&self) -> String {
             format!("{:?}", self.to_list())
         }
+
     }
 
 }
 
-fn main() 
+
+fn test_to_list_from_list()
 {
     use listnode::*;
 
     let values = vec![ vec![1,2,3,4,5], vec![7,9,4,3], vec![], vec![1], ];
     let checks = values.clone();
+    assert_eq!(values, checks);
 
     for (value, check) in values.iter().zip(checks.iter()) {
         let loop_node = ListNode::from_list(value);
@@ -72,5 +78,114 @@ fn main()
         assert_eq!(loop_list, *check);
         println!();
     }
+}
+
+
+fn traversal_non_mutating()
+{
+    use listnode::*;
+
+    let vals = vec![1,2,3,4,5];
+    let check = vals.clone();
+    let head = ListNode::from_list(&vals);
+
+    //  Using `while let Some()`
+    let mut result = vec![];
+    let mut node = &head;
+    while let Some(curr) = node {
+        result.push(curr.val);
+        node = &curr.next;
+    }
+    assert_eq!(vals, result);
+
+    //  Using `match`
+    let mut result = vec![];
+    let mut node = &head;
+    while node.is_some() {
+        match node {
+            Some(n) => {
+                result.push(n.val);
+                node = &n.next;
+            },
+            None => {}
+        }
+    }
+    assert_eq!(vals, result);
+
+    //  Using `if let Some()`
+    let mut result = vec![];
+    let mut node = &head;
+    loop {
+        if let Some(n) = node {
+            result.push(n.val);
+            node = &n.next;
+        } else {
+            break;
+        }
+    }
+
+}
+
+
+fn traversal_mutate_values() 
+{
+    use listnode::*;
+
+    let vals = vec![1,2,3,4,5];
+    let mut head = ListNode::from_list(&vals);
+
+    let mut node = &mut head;
+    while let Some(curr) = node {
+        curr.val = 0;
+        node = &mut curr.next;
+    }
+    assert_eq!(head.unwrap().to_list(), vec![0,0,0,0,0]);
+}
+
+
+fn traversal_consume_list()
+{
+    use listnode::*;
+
+    let vals = vec![1,2,3,4,5];
+    let mut head = ListNode::from_list(&vals);
+
+    let mut result = vec![];
+    while let Some(mut node) = head {
+        head = node.next.take();
+        node.next = None;
+        result.push(*node);
+    }
+    //println!("{:?}", result);
+    
+}
+
+
+fn traversal_pointers()
+{
+    use listnode::*;
+
+    let vals = vec![1,2,3,4,5];
+    let mut head = ListNode::from_list(&vals);
+
+    let mut result: Vec<*mut Option<Box<ListNode>>> = vec![];
+    unsafe {
+        let mut raw_node = &mut head as *mut Option<Box<ListNode>>;
+        while let Some(node) = raw_node.as_mut().unwrap().as_mut() {
+            result.push(raw_node);
+            raw_node = &mut node.next as *mut _;
+        }
+    }
+
+}
+
+
+fn main() 
+{
+    test_to_list_from_list();
+    traversal_non_mutating();
+    traversal_mutate_values();
+    traversal_consume_list();
+    traversal_pointers();
 }
 
