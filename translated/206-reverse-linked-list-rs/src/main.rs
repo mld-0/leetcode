@@ -9,28 +9,23 @@ struct Solution;
 
 impl Solution {
 
-    //    #       runtime: beats 39%
-    //    def reverseList_Iterative(self, head):
-    //        if head is None:
-    //            return None
-    //        elements = []
-    //        node = head
-    //        while node is not None:
-    //            elements.append(node.val)
-    //            node = node.next
-    //        elements = elements[::-1]
-    //        result = ListNode()
-    //        node = result
-    //        previous = node
-    //        for i in elements:
-    //            node.val = i
-    //            node.next = ListNode()
-    //            previous = node
-    //            node = node.next
-    //        previous.next = None
-    //        return result
-    pub fn reverse_list_iterative(_head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {        
-        unimplemented!();
+    //  runtime: beats 100%
+    pub fn reverse_list_iterative(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {        
+        let mut elements = Vec::new();
+        while let Some(mut node) = head {
+            elements.push(node.val);
+            head = node.next.take();
+        }
+        elements.reverse();
+        let mut result: Option<Box<ListNode>> = None;
+        let mut tail = &mut result;
+        for val in elements {
+            *tail = Some(Box::new(ListNode { val, next: None }));
+            if let Some(t) = tail {
+                tail = &mut t.next;
+            }
+        }
+        result
     }
 
 
@@ -110,11 +105,8 @@ impl Solution {
 
 fn main() 
 {
-    let _test_functions: Vec<fn(Option<Box<ListNode>>)->Option<Box<ListNode>>> = vec![ Solution::reverse_list_iterative, Solution::reverse_list_inplace_pointers, Solution::reverse_list_inplace, Solution::reverse_list_recursive, Solution::reverse_list_recursive_inplace, ];
-    let _test_functions_names = vec![ "reverse_list_iterative", "reverse_list_inplace_pointers", "reverse_list_inplace", "reverse_list_recursive", "reverse_list_recursive_inplace", ];
-
-   let test_functions: Vec<fn(Option<Box<ListNode>>)->Option<Box<ListNode>>> = vec![ Solution::reverse_list_inplace, Solution::reverse_list_recursive, Solution::reverse_list_recursive_inplace, Solution::reverse_list_inplace_pointers, ];
-   let test_functions_names = vec![ "reverse_list_inplace", "reverse_list_recursive", "reverse_list_recursive_inplace", "reverse_list_inplace_pointers", ];
+   let test_functions: Vec<fn(Option<Box<ListNode>>)->Option<Box<ListNode>>> = vec![ Solution::reverse_list_inplace, Solution::reverse_list_recursive, Solution::reverse_list_recursive_inplace, Solution::reverse_list_inplace_pointers, Solution::reverse_list_iterative, ];
+   let test_functions_names = vec![ "reverse_list_inplace", "reverse_list_recursive", "reverse_list_recursive_inplace", "reverse_list_inplace_pointers", "reverse_list_iterative", ];
 
     assert_eq!(test_functions.len(), test_functions_names.len());
 
