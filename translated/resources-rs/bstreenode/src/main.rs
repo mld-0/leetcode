@@ -2,25 +2,25 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 #![allow(non_snake_case)]
+
 //  Ongoings:
 //  {{{
 //  Ongoing: 2023-01-19T22:13:52AEDT 'fill_list_infer_missing()' -> vector 'result' is not prefilled, we do not use 'result[loop_level] = loop_nodes' -> are we assigning to correct level (every time) by using 'Vec::push()' each time(?)
 //  Ongoing: 2023-01-20T19:00:51AEDT '_buildTreeFromNestedValuesList()' without unsafe/raw-pointers(?)
 //  Ongoing: 2023-01-20T19:55:32AEDT '_tree_toNestedNodesList()' without using unsafe/raw-pointers (how to get a reference from a RefCell that lasts longer than the scope of the the 'Ref' returned by 'RefCell::borrow()'?)
 //  Ongoing: 2023-01-20T21:52:17AEDT further debugging needed? (passes tests from python version - already had to debug pointer usage (to the point where one is unwilling to bet this all 'just works'))
+//  Ongoing: 2023-07-27T21:41:37AEST gpt4 gives us a safe `_buildTreeFromNestedValuesList` implementation,but states a safe implementation of `_tree_toNestedNodesList` isn't possible without changing the return type from `Vec<Vec<Option<&TreeNode>>>` to `Vec<Vec<Option<Ref<TreeNode>>>>` ... (it gave an implementation that was wrong for this second function first, then when told of the compiler error clarified this) 
 //  }}}
 
 //  LINK: https://rust-unofficial.github.io/too-many-lists/index.html
 
 //  Continue: 2023-01-19T22:13:16AEDT macro, 'debug!()'
-//  Continue: 2023-01-20T21:51:54AEDT implementation without unsafe/raw-pointers
 //  Continue: 2023-01-20T21:54:37AEDT review (after) 'Learn Rust With Entirely Too Many Linked Lists'
+//  Continue: 2023-07-27T21:45:40AEST leetcode; translated-rs/bstreenode; (needs) far more test cases, (attempting to trip up miri?)
 
-//  macro: get_func_name!()
-//  {{{
 macro_rules! get_func_name {
+//  {{{
     () => {{
         fn f() {}
         fn type_name_of<T>(_: T) -> &'static str {
@@ -35,6 +35,7 @@ macro_rules! get_func_name {
     }};
 }
 //  }}}
+
 use std::rc::Rc;
 use std::cell::RefCell;
 
@@ -51,7 +52,7 @@ impl TreeNode {
         TreeNode { val, left: None, right: None }
     }
 
-//   Create Binary tree from list containing nodes values in breadth-first order. None represents an empty node. Lists that have non-None children of empty nodes are invalid.
+    /// Create Binary tree from list containing nodes values in breadth-first order. None represents an empty node. Lists that have non-None children of empty nodes are invalid.
     pub fn from_list(values: &[Option<i32>]) -> Option<Rc<RefCell<TreeNode>>>
     {
         if values.len() == 0 {
@@ -102,7 +103,7 @@ impl TreeNode {
         }
         let tree_levels_count = Self::_listLevelsCountWhenNested(&values);
         println!("tree_levels_count=({:?})", tree_levels_count);
-        for i in values.len()..(2_usize.pow(tree_levels_count as u32)) {
+        for _i in values.len()..(2_usize.pow(tree_levels_count as u32)) {
             values.push(None);
         }
         let mut result = Vec::<Vec<Option<i32>>>::new();
@@ -161,15 +162,15 @@ impl TreeNode {
         std::cmp::max(l, r) + 1
     }
 
-//  Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]
+    ///  Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]
     pub fn _splitListToNestedValuesList(values: &[Option<i32>]) -> Vec<Vec<Option<i32>>>
     {
         let tree_levels_count = Self::_listLevelsCountWhenNested(values);
         let mut z: usize = 0;
         let mut tree_nestedValues = Vec::<Vec<Option<i32>>>::new();
         for loop_level in 0..(tree_levels_count as usize) {
-            let mut loop_vals = Vec::<Option<i32>>::new();;
-            for j in 0..2_usize.pow(loop_level as u32) {
+            let mut loop_vals = Vec::<Option<i32>>::new();
+            for _j in 0..2_usize.pow(loop_level as u32) {
                 let val = if values.len() > z {
                     z += 1;
                     values[z-1]
@@ -184,7 +185,7 @@ impl TreeNode {
         tree_nestedValues
     }
 
-//  Given flat list, how many levels of nested list / tree are necessary to represent it
+    ///  Given flat list, how many levels of nested list / tree are necessary to represent it
     pub fn _listLevelsCountWhenNested(values: &[Option<i32>]) -> usize 
     {
         let mut tree_levels_count: usize = 0;
@@ -194,8 +195,13 @@ impl TreeNode {
         tree_levels_count
     }
 
-//  Create tree from given nested list of values, returning nested list of the nodes of that tree"""
+    ///  Create tree from given nested list of values, returning nested list of the nodes of that tree"""
     pub fn _buildTreeFromNestedValuesList(tree_nestedValues: Vec<Vec<Option<i32>>>) -> Option<Rc<RefCell<TreeNode>>>
+    {
+        Self::_buildTreeFromNestedValuesList_unsafe(tree_nestedValues)
+    }
+
+    fn _buildTreeFromNestedValuesList_unsafe(tree_nestedValues: Vec<Vec<Option<i32>>>) -> Option<Rc<RefCell<TreeNode>>>
     {
         if tree_nestedValues.len() < 1 || tree_nestedValues[0].len() < 1 {
             panic!("Must pass at nested Vec of at least 1 element");
@@ -220,7 +226,7 @@ impl TreeNode {
                 if unsafe { parent_node.as_ref().is_none() } {
                     panic!("Invalid list: Unable to create non-null child for null parent\nloop_level=({:?}), j=({:?}), tree_nestedValues=({:?})", loop_level, j, tree_nestedValues);
                 }
-                let mut new_node = if val.is_none() {
+                let new_node = if val.is_none() {
                     None
                 } else {
                     Some(Rc::new(RefCell::new( Self { val: val.as_ref().unwrap().clone(), left: None, right: None } )))
@@ -240,8 +246,52 @@ impl TreeNode {
         head
     }
 
-//  Get the nodes of the tree as a nested list
+    fn _buildTreeFromNestedValuesList_safe(tree_nestedValues: Vec<Vec<Option<i32>>>) -> Option<Rc<RefCell<TreeNode>>>
+    {
+        if tree_nestedValues.is_empty() || tree_nestedValues[0].is_empty() {
+            panic!("Must pass at nested Vec of at least 1 element");
+        }
+        if tree_nestedValues[0][0].is_none() {
+            panic!("First element cannot be 'None'");
+        }
+        let node = TreeNode { val: tree_nestedValues[0][0].unwrap(), left: None, right: None };
+        let head = Some(Rc::new(RefCell::new(node)));
+        let mut tree_nested_nodes: Vec<Vec<Option<Rc<RefCell<TreeNode>>>>> = vec![vec![head.clone()]];
+        for loop_level in 1..tree_nestedValues.len() {
+            let mut loop_nodes: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![];
+            for (j, &val) in tree_nestedValues[loop_level].iter().enumerate() {
+                let parent_node = &tree_nested_nodes[loop_level-1][j/2];
+                if let Some(parent) = parent_node {
+                    if val.is_none() {
+                        loop_nodes.push(None);
+                    } else {
+                        let new_node = Some(Rc::new(RefCell::new(TreeNode { val: val.unwrap(), left: None, right: None })));
+                        if j % 2 == 0 {
+                            parent.borrow_mut().left = new_node.clone();
+                        } else {
+                            parent.borrow_mut().right = new_node.clone();
+                        }
+                        loop_nodes.push(new_node);
+                    }
+                } else {
+                    if val.is_some() {
+                        panic!("Invalid list: Unable to create non-null child for null parent\nloop_level=({:?}), j=({:?}), tree_nestedValues=({:?})", loop_level, j, tree_nestedValues);
+                    }
+                    loop_nodes.push(None);
+                }
+            }
+            tree_nested_nodes.push(loop_nodes);
+        }
+        head
+    }
+
+    /// Get the nodes of the tree as a nested list
     pub fn _tree_toNestedNodesList(&self) -> Vec<Vec<Option<&TreeNode>>>
+    {
+        self._tree_toNestedNodesList_unsafe()
+    }
+
+    fn _tree_toNestedNodesList_unsafe(&self) -> Vec<Vec<Option<&TreeNode>>>
     {
         let depth = self.max_depth();
         let mut tree_nestedNodes = vec![];
@@ -282,7 +332,7 @@ impl TreeNode {
         tree_nestedNodes
     }
 
-//  Text representation of tree as multi-line string
+    /// Text representation of tree as multi-line string
     pub fn to_string(&self) -> String
     {
         let mut result = "".to_string();
@@ -294,10 +344,10 @@ impl TreeNode {
         result.trim_end().to_string()
     }
 
-//  Returns list of strings, width, height, and horizontal coordinate of the root.
+    /// Returns list of strings, width, height, and horizontal coordinate of the root.
+    /// From: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
     pub fn _to_string_helper(&self) -> (Vec<String>, usize, usize, usize)
     {
-        //  LINK: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python
         //  No child
         if self.right.is_none() && self.left.is_none() {
             let line = self.val.clone().to_string();
@@ -309,7 +359,7 @@ impl TreeNode {
         }
         //  Only left child
         if self.right.is_none() {
-            let (mut lines, n, p, x) = self.left.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+            let (lines, n, p, x) = self.left.as_ref().unwrap().as_ref().borrow()._to_string_helper();
             let s = self.val.clone().to_string();
             let u = s.chars().count();
             let first_line = str::repeat(" ", x+1) + &str::repeat("_", n-x-1) + &s;
@@ -325,7 +375,7 @@ impl TreeNode {
         }
         //  Only right child
         if self.left.is_none() {
-            let (mut lines, n, p, x) = self.right.as_ref().unwrap().as_ref().borrow()._to_string_helper();
+            let (lines, n, p, x) = self.right.as_ref().unwrap().as_ref().borrow()._to_string_helper();
             let s = self.val.clone().to_string();
             let u = s.chars().count();
             let first_line = s + &str::repeat("_", x) + &str::repeat(" ", n-x);
@@ -369,7 +419,15 @@ impl TreeNode {
 fn test_fromList_toList()
 {
     println!("{}:", get_func_name!());
-    let input_values: Vec<Vec<Option<i32>>> = vec![ vec![Some(1),Some(3),Some(2),Some(5)], vec![Some(2),Some(1),Some(3),None,Some(4),None,Some(7)], vec![Some(1)], vec![Some(1),Some(2)], vec![], (1..16).map(|x| Some(x)).collect::<Vec::<Option<i32>>>(), vec![Some(1),Some(2),Some(3),Some(4),None,None,Some(7),Some(8),Some(9),None,None,None,None,Some(14),Some(15)], ];
+    let input_values: Vec<Vec<Option<i32>>> = vec![ 
+        vec![Some(1),Some(3),Some(2),Some(5)], 
+        vec![Some(2),Some(1),Some(3),None,Some(4),None,Some(7)], 
+        vec![Some(1)], 
+        vec![Some(1),Some(2)], 
+        vec![], 
+        (1..16).map(|x| Some(x)).collect::<_>(), 
+        vec![Some(1),Some(2),Some(3),Some(4),None,None,Some(7),Some(8),Some(9),None,None,None,None,Some(14),Some(15)], 
+    ];
     for values in input_values {
         println!("values=({:?})", values);
         let loop_tree = TreeNode::from_list(&values);
@@ -395,8 +453,24 @@ fn test_fillListInferMissing()
 {
     println!("{}:", get_func_name!());
     println!("warning, test values insufficent - need more complex example of btree-as-list to call this tested");
-    let input_values: Vec<Vec<Option<i32>>> = vec![ vec![Some(1)], vec![], vec![Some(1),Some(2)], vec![Some(1),None,Some(2),Some(3)], vec![Some(1),None,Some(2)], vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),Some(2),None,Some(2),None], ];
-    let result_validate: Vec<Vec<Option<i32>>> = vec![ vec![Some(1)], vec![], vec![Some(1),Some(2),None], vec![Some(1),None,Some(2),None,None,Some(3),None], vec![Some(1),None,Some(2)], vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),None,None,Some(2),None,None,None,Some(2),None], ];
+    let input_values: Vec<Vec<Option<i32>>> = vec![ 
+        vec![Some(1)], 
+        vec![], 
+        vec![Some(1),Some(2)], 
+        vec![Some(1),None,Some(2),Some(3)], 
+        vec![Some(1),None,Some(2)], 
+        vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], 
+        vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),Some(2),None,Some(2),None], 
+    ];
+    let result_validate: Vec<Vec<Option<i32>>> = vec![ 
+        vec![Some(1)], 
+        vec![], 
+        vec![Some(1),Some(2),None], 
+        vec![Some(1),None,Some(2),None,None,Some(3),None], 
+        vec![Some(1),None,Some(2)], 
+        vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], 
+        vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),None,None,Some(2),None,None,None,Some(2),None], 
+    ];
     assert_eq!(input_values.len(), result_validate.len());
     for (values, check) in input_values.iter().zip(result_validate.iter()) {
         println!("values=({:?})", values);
