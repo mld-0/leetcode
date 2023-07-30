@@ -8,6 +8,7 @@ from typing import List
 
 class Solution:
 
+    #   runtime: beats 96%
     def nextPermutation_ans(self, nums: List[int]) -> None:
         #   starting from rear, find first decreasing element, nums[l]
         l = len(nums) - 2
@@ -20,7 +21,7 @@ class Solution:
         #   for r > l, find the smallest nums[r] such that nums[r] > nums[l]
         r = l + 1
         for i in range(l+2, len(nums)):
-            if nums[i] > nums[l] and nums[i] < nums[r]:
+            if nums[i] > nums[l] and nums[i] <= nums[r]:
                 r = i
         #   swap elements at l/r
         nums[l], nums[r] = nums[r], nums[l]
@@ -31,8 +32,8 @@ class Solution:
 s = Solution()
 test_nextPermutations = [ s.nextPermutation_ans, ]
 
-inputs = [ [1,5,8,4,7,6,5,3,1], [1,3,2,5,4], [1,3,2,4], [1,2,3], [3,2,1], [2,1,3], [2,3,1], [1,1,5], [1,3,2], [5,1,1], ]
-checks = [ [1,5,8,5,1,3,4,6,7], [1,3,4,2,5], [1,3,4,2], [1,3,2], [1,2,3], [2,3,1], [3,1,2], [1,5,1], [2,1,3], [1,1,5], ]
+inputs = [ [1,5,8,4,7,6,5,3,1], [1,3,2,5,4], [1,3,2,4], [1,2,3], [3,2,1], [2,1,3], [2,3,1], [1,1,5], [1,3,2], [5,1,1], [2,3,1,3,3], ]
+checks = [ [1,5,8,5,1,3,4,6,7], [1,3,4,2,5], [1,3,4,2], [1,3,2], [1,2,3], [2,3,1], [3,1,2], [1,5,1], [2,1,3], [1,1,5], [2,3,3,1,3], ]
 assert len(inputs) == len(checks)
 
 for f in test_nextPermutations:
