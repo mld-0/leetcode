@@ -1,28 +1,18 @@
-from typing import List
+import time
 import itertools
-
-def is_sortable(obj):
-    cls = obj.__class__
-    return cls.__lt__ != object.__lt__ or cls.__gt__ != object.__gt__
+from typing import List, Set
 
 class Solution:
 
-    def combine(self, n: int, k: int) -> List[List[int]]:
-        return self.combine_Itertools(n, k)
-        #return self.combine_Recursive(n, k)
-        #return self.combine_Backtracking(n, k)
-        #return self.combine_Lexicographic(n, k)
-
-
-    #   runtime: beats 55%
-    def combine_Backtracking(self, n: int, k: int):
+    #   runtime: beats 79%
+    def combine_Backtrack(self, n: int, k: int):
         result = []
         values = list(range(1, n+1))
 
         def backtrack(first=0, cur=None):
+            nonlocal n
             if cur is None:
                 cur = []
-            #   if combination is done
             if len(cur) == k:
                 result.append(cur[:])
                 return
@@ -35,7 +25,26 @@ class Solution:
         return result
 
 
-    #   runtime: beats 34%
+    #   runtime: beats 77%
+    def combine_Backtrack_subsequent(self, n: int, k: int) -> List[List[int]]:
+
+        def solve(partial: Set[int], n: int, k: int):
+            if k == 0:
+                result.add(tuple(sorted(partial)))
+                return
+            for n in range(1,n+1):
+                if n in partial:
+                    continue
+                partial.add(n)
+                solve(partial, n, k-1)
+                partial.remove(n)
+
+        result = set()
+        solve(set(), n, k)
+        return [ list(x) for x in result ]
+
+
+    #   runtime: beats 70%
     def combine_Recursive(self, n: int, k: int): 
         result = []
         values = list(range(1, n+1))
@@ -51,11 +60,10 @@ class Solution:
         return result
 
 
-    #   runtime: beats 95%
+    #   runtime: beats 99%
     def combine_Lexicographic(self, n: int, k: int):
         #   first combination
         nums = list(range(1, k+1)) + [n+1]
-        
         result = []
         j = 0
 
@@ -70,7 +78,6 @@ class Solution:
 
         return result
 
-    
 
     #   runtime: beats 99%
     def combine_Itertools(self, n: int, k: int) -> List[List[int]]:
@@ -79,7 +86,7 @@ class Solution:
         return result
 
 
-    #   runtime: beats 90%
+    #   runtime: beats 98%
     def combine_ItertoolsEquivalent(self, n: int, k: int) -> List[List[int]]:
 
         def combinations(iterable, r):
@@ -107,14 +114,24 @@ class Solution:
         return result
 
 
+def compare_sorted(result, check):
+    return sorted([sorted(x) for x in result]) == sorted([ sorted(x) for x in check])
+
 s = Solution()
+test_functions = [ s.combine_Backtrack, s.combine_Backtrack_subsequent, s.combine_Recursive, s.combine_Lexicographic, s.combine_Itertools, s.combine_ItertoolsEquivalent, ]
 
-input_values = [ (4,2), (1,1), ]
-input_checks = [ [[2,4],[3,4],[2,3],[1,2],[1,3],[1,4]], [[1]], ]
+inputs = [ (4,2), (1,1), (3,1), ]
+checks = [ [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]], [[1]], [[1],[2],[3]], ]
+assert len(inputs) == len(checks)
 
-for (n, k), check in zip(input_values, input_checks):
-    result = s.combine(n, k)
-    print("result=(%s)" % str(result))
-    assert sorted(result) == sorted(check), "Check failed"
+for f in test_functions:
+    print(f.__name__)
+    startTime = time.time()
+    for (n, k), check in zip(inputs, checks):
+        print(f"n=({n}), k=({k})")
+        result = f(n, k)
+        print(f"result=({result})")
+        assert compare_sorted(result, check), "Check comparison failed"
+    print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
     print()
 
