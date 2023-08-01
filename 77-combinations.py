@@ -10,7 +10,6 @@ class Solution:
         values = list(range(1, n+1))
 
         def backtrack(first=0, cur=None):
-            nonlocal n
             if cur is None:
                 cur = []
             if len(cur) == k:
