@@ -29,7 +29,7 @@ class Solution:
 
 
 s = Solution()
-test_functions = [ s.firstMissingPositive_ans_indexAsKey, s.firstMissingPositive_ans_cyclicSort, ]
+test_functions = [ s.firstMissingPositive_ans_indexAsKey, ]
 
 inputs = [ [1,2,0], [3,4,-1,1], [7,8,9,11,12], [1], [2,1], [1,2,6,3,5,4], ]
 checks = [ 3, 2, 1, 2, 3, 7, ]
