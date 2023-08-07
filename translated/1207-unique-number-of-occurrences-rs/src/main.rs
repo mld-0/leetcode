@@ -5,6 +5,7 @@
 #![allow(unused)]
 #![allow(non_snake_case)]
 
+use std::time::Instant;
 use std::collections::{HashSet,HashMap};
 use counter::Counter;
 
@@ -20,7 +21,7 @@ struct Solution {}
 
 impl Solution {
 
-    //  runtime: N/A
+    //  runtime: N/A (`Counter` not available)
     pub fn unique_occurences_Counter(arr: Vec<i32>) -> bool {
         let counts = arr.iter().collect::<Counter<_>>();
         let counts_set = counts.values().collect::<HashSet<_>>();
@@ -61,12 +62,14 @@ fn main()
 
     for (f, f_name) in funcs.iter().zip(func_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for (arr, check) in inputs.iter().zip(checks.iter()) {
             println!("arr=({:?})", arr);
             let result = f(arr.clone());
             println!("result=({})", result);
             assert_eq!(result, *check, "Check comparison failed");
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }

@@ -2,10 +2,10 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 #![allow(non_snake_case)]
 
-use std::collections::{HashSet,HashMap};
+use std::time::Instant;
+use std::collections::HashMap;
 
 //  macro: vec_of_strings
 //  {{{
@@ -56,12 +56,14 @@ fn main()
 
     for (f, f_name) in funcs.iter().zip(func_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for ((pattern, s), check) in inputs.iter().zip(checks.iter()) {
             println!("pattern=({}), s=({})", pattern, s);
             let result = f(pattern.clone().to_string(), s.clone().to_string());
             println!("result=({})", result);
             assert_eq!(result, *check, "Check comparison failed");
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }

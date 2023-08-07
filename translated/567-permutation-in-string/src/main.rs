@@ -2,8 +2,10 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 #![allow(non_snake_case)]
+
+use std::time::Instant;
+
 //  macros: vec_of_strings / tuple_of_strings
 //  {{{
 macro_rules! vec_of_strings {
@@ -15,21 +17,20 @@ macro_rules! tuple_of_strings {
     ($($x:expr),+,) => ( tuple_of_strings!( $($x),* ) );
 }
 //  }}}
-struct Solution {}
 
-//  Return true if s2 contains a permutation of s1
-//  Constraint: s1/s2 contain only [a-z]
+/// Problem: Return true if s2 contains a permutation of s1
+/// (s1/s2 contain only [a-z])
+
+struct Solution {}
 
 impl Solution {
 
     //  runtime: beats 5%
     pub fn check_inclusion_Sorting(s1: String, s2: String) -> bool {
         fn sort_string_bytes(s: &str) -> String {
-            unsafe {
-                let mut s_bytes = s.as_bytes().iter().cloned().collect::<Vec<_>>();
-                s_bytes.sort();
-                String::from_utf8(s_bytes).unwrap()
-            }
+            let mut s_bytes = s.as_bytes().iter().cloned().collect::<Vec<_>>();
+            s_bytes.sort();
+            String::from_utf8(s_bytes).unwrap()
         }
         if s1.len() > s2.len() {
             return false;
@@ -169,12 +170,15 @@ fn main()
     assert_eq!(inputs.len(), checks.len());
 
     for (f, f_name) in functions.iter().zip(functions_names.iter()) {
+        println!("{}", f_name);
+        let now = Instant::now();
         for ((s1, s2), check) in inputs.iter().zip(checks.iter()) {
             println!("s1=({}), s2=({})", s1, s2);
             let result = f(s1.clone(), s2.clone());
             println!("result=({})", result);
             assert_eq!(result, *check, "Check comparison failed");
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }

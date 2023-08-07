@@ -1,3 +1,4 @@
+use std::time::Instant;
 use std::collections::HashMap;
 
 struct Solution {}
@@ -38,13 +39,15 @@ fn main()
 
     for (f, f_name) in test_functions.iter().zip(test_functions_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for ((nums, target), check) in inputs.iter().zip(checks.iter()) {
             println!("nums=({:?}), target=({})", nums, target);
             let result = f(nums.clone(), target.clone());
             println!("result=({:?})", result);
             assert_eq!(result, Vec::from(*check), "Check comparison failed");
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
+        println!();
     }
-    println!();
 }
 

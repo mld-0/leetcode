@@ -2,7 +2,6 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 
 // #[derive(PartialEq, Eq, Clone, Debug)]
 // pub struct ListNode {
@@ -13,6 +12,8 @@
 #[path = "./listnode.rs" ]
 mod listnode;
 use listnode::listnode::*;
+
+use std::time::Instant;
 
 //  macro: vec_of_strings
 //  {{{
@@ -45,21 +46,21 @@ impl Solution {
                 }
                 (*node).next = Some(Box::new(ListNode::new(0)));
                 previous = node;
-                node = (*node).next.as_deref_mut().unwrap() as *mut ListNode;
+                node = (*node).next.as_deref_mut().unwrap() as *mut _;
             }
             while l1.is_some() {
                 (*node).val = l1.as_ref().unwrap().val;
                 l1 = l1.unwrap().next;
                 (*node).next = Some(Box::new(ListNode::new(0)));
                 previous = node;
-                node = (*node).next.as_deref_mut().unwrap() as *mut ListNode;
+                node = (*node).next.as_deref_mut().unwrap() as *mut _;
             }
             while l2.is_some() {
                 (*node).val = l2.as_deref().unwrap().val;
                 l2 = l2.unwrap().next;
                 (*node).next = Some(Box::new(ListNode::new(0)));
                 previous = node;
-                node = (*node).next.as_deref_mut().unwrap() as *mut ListNode;
+                node = (*node).next.as_deref_mut().unwrap() as *mut _;
             }
             (*previous).next = None;
         }
@@ -68,7 +69,7 @@ impl Solution {
 
 
     //  runtime: beats 100%
-    pub fn merge_two_lists_recursive(mut l1: Option<Box<ListNode>>, mut l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    pub fn merge_two_lists_recursive(l1: Option<Box<ListNode>>, l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
         if l1.is_none() {
             return l2;
         }
@@ -77,12 +78,12 @@ impl Solution {
         }
         if l1.as_deref().unwrap().val < l2.as_deref().unwrap().val {
             let mut l1_unwrapped = l1.unwrap();
-            let mut l1_next = l1_unwrapped.next;
+            let l1_next = l1_unwrapped.next;
             l1_unwrapped.next = Self::merge_two_lists_recursive(l1_next, l2);
             return Some(l1_unwrapped);
         } else {
             let mut l2_unwrapped = l2.unwrap();
-            let mut l2_next = l2_unwrapped.next;
+            let l2_next = l2_unwrapped.next;
             l2_unwrapped.next = Self::merge_two_lists_recursive(l1, l2_next);
             return Some(l2_unwrapped);
         }
@@ -103,6 +104,7 @@ fn main()
 
     for (f, f_name) in functions.iter().zip(functions_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for ((l1, l2), check) in inputs.iter().zip(checks.iter()) {
             println!("l1=({:?}), l2=({:?})", l1, l2);
             let n1 = ListNode::from_list(l1);
@@ -116,6 +118,7 @@ fn main()
             println!("result_list=({:?})", result_list);
             assert_eq!(result_list, *check, "Check comparison failed");
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }

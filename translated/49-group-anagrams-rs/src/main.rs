@@ -2,9 +2,9 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 #![allow(non_snake_case)]
 
+use std::time::Instant;
 use std::collections::HashMap;
 use std::iter::FromIterator;
 
@@ -34,7 +34,7 @@ impl Solution {
                 result.insert(s_sorted, vec![s]);
             }
         }
-        Vec::from_iter(result.into_iter().map(|(k,v)| v))
+        Vec::from_iter(result.into_iter().map(|(_,v)| v))
     }
 
 }
@@ -60,12 +60,14 @@ fn main()
 
     for (f, f_name) in functions.iter().zip(function_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for (strs, check) in inputs.iter().zip(checks.iter()) {
             println!("strs=({:?})", strs);
             let result = f(strs.clone());
             println!("result=({:?})", result);
             check_result(&result, check);
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }

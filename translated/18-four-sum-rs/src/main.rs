@@ -2,8 +2,9 @@
 //  vim: set tabstop=4 modeline modelines=10:
 //  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 //  {{{2
-#![allow(unused)]
 #![allow(non_snake_case)]
+
+use std::time::Instant;
 use std::collections::HashMap;
 
 //  Continue: 2022-12-27T18:22:55AEST 'fourSum_kSumMap_Unsorted' solution
@@ -125,7 +126,7 @@ impl Solution {
 
 
     pub fn fourSum_kSumMap_Unsorted(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
-        vec![ vec![] ]
+        unimplemented!();
     }
 
 }
@@ -144,6 +145,7 @@ fn main()
 
     for (f, f_name) in test_functions.iter().zip(test_functions_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for ((nums, target), check) in inputs.iter().zip(checks.iter()) {
             println!("nums=({:?}), target=({})", nums, target);
             let result = f(nums.clone(), *target);
@@ -151,6 +153,7 @@ fn main()
             assert!(result.iter().all(|x| check.contains(&x)));
             assert!(check.iter().all(|x| result.contains(&x)));
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 

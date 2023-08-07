@@ -4,6 +4,8 @@
 //  {{{2
 #![allow(non_snake_case)]
 
+use std::time::Instant;
+
 macro_rules! vec_of_strings {
     ($($x:expr),*) => ( vec![$($x.to_string()),*] );
     ($($x:expr),+,) => ( vec_of_strings![ $($x),* ] );
@@ -107,6 +109,7 @@ fn main()
 
     for (f, f_name) in test_functions.iter().zip(test_functions_names.iter()) {
         println!("{}", f_name);
+        let now = Instant::now();
         for (text, check_list) in inputs.iter().zip(checks.iter()) {
             println!("text=({})", text);
             let result = f(text.clone());
@@ -122,6 +125,7 @@ fn main()
             assert!(flag_check);
 
         }
+        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }
