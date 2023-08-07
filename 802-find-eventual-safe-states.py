@@ -34,6 +34,28 @@ class Solution:
         return sorted(list(result))
 
 
+    #   runtime: beats 99%
+    def eventualSafeNodes_DFSCycleCheck_gpt4optimised(self, graph: List[List[int]]) -> List[int]:
+        memo = [0] * len(graph)  # 0: not visited, 1: visiting, 2: cycle, 3: safe
+
+        def contains_cycle(node: int) -> bool:
+            if memo[node] == 1:  # currently visiting
+                return True
+            if memo[node] == 2:  # previously found to be part of a cycle
+                return True
+            if memo[node] == 3:  # previously found to be safe
+                return False
+            memo[node] = 1  # mark as currently visiting
+            for n in graph[node]:
+                if contains_cycle(n):
+                    memo[node] = 2  # mark as part of a cycle
+                    return True
+            memo[node] = 3  # mark as safe
+            return False
+
+        return [i for i in range(len(graph)) if not contains_cycle(i)]
+
+
     #   runtime: TLE
     def eventualSafeNodes_BFSCycleCheck(self, graph: List[List[int]]) -> List[int]:
         result = set()
@@ -62,7 +84,7 @@ class Solution:
         return sorted(list(result))
 
 
-    #   runtime: beats 65%
+    #   runtime: beats 98%
     def eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm(self, graph: List[List[int]]) -> List[int]:
         num_nodes = len(graph)
         graph_invert = [ [] for _ in range(num_nodes) ]
@@ -96,7 +118,7 @@ class Solution:
 
 
 s = Solution()
-test_functions = [ s.eventualSafeNodes_DFSCycleCheck, s.eventualSafeNodes_BFSCycleCheck, s.eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm, ]
+test_functions = [ s.eventualSafeNodes_DFSCycleCheck, s.eventualSafeNodes_DFSCycleCheck_gpt4optimised, s.eventualSafeNodes_BFSCycleCheck, s.eventualSafeNodes_ans_TopologicalSort_KahnsAlgorithm, ]
 
 inputs = [ [[1,2],[2,3],[5],[0],[5],[],[]], [[1,2,3,4],[1,2],[3,4],[0,4],[]], [[],[0,2,3,4],[3],[4],[]], ]
 checks = [ [2,4,5,6], [4], [0,1,2,3,4], ]
