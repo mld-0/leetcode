@@ -107,6 +107,12 @@ The hardest should be (is) easy problem I've seen in some kind - an easy problem
 
 
 
+121-best-time-to-buy-and-sell-stock:
+A problem that should be easy (or, at least, one with a solution one should "just know")
+(never added here before (but (presumedly), left uncommited to denote that fact).
+
+
+
 
 122-best-time-to-buy-and-sell-stock-ii: 
 Dynamic programming solutions (top down and bottom up)
