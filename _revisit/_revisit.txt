@@ -101,6 +101,12 @@ added whitespace
 Untracked (empty)
 
 
+168-excel-sheet-column-title/171-excel-sheet-column-number:
+Solve
+The hardest should be (is) easy problem I've seen in some kind - an easy problem with a solution (somehow) just out of reach (I mean, how hard did you really try - never even using paper) (actually, I'm not sure without paper I ever would have figured out the 'first, -= 1' step?)
+
+
+
 
 122-best-time-to-buy-and-sell-stock-ii: 
 Dynamic programming solutions (top down and bottom up)
