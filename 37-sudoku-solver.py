@@ -8,6 +8,7 @@ import pprint
 
 class Solution:
 
+    #   runtime: beats 93%
     def solveSudoku(self, board):
         self.setBoard(board)
         self.solve_backtracking()
@@ -42,7 +43,9 @@ class Solution:
             for col in range(9):
                 if self.board[row][col] == '.':
                     options = self.options(row, col)
-                    if len(options) < best_options_len:
+                    if len(options) == 1:
+                        return (row, col)
+                    elif len(options) < best_options_len:
                         best_options_len = len(options)
                         best = (row, col)
         return best
