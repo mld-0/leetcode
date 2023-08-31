@@ -1,98 +1,105 @@
+//  {{{3
+//  vim: set tabstop=4 modeline modelines=10:
+//  vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
+//  {{{2
 use std::time::Instant;
+use std::collections::HashSet;
 
 struct Solution {}
 impl Solution {
     pub fn solve_sudoku(board: &mut Vec<Vec<char>>) {
-        let s = Solver { board };
+        let mut s = Solver { board };
         s.solve();
     }
 }
 
 pub struct Solver<'a> { board: &'a mut Vec<Vec<char>> }
 impl<'a> Solver<'a> {
-    fn solve(&self) {
-        println!("{:?}", &self.board);
-        unimplemented!();
+
+    //  runtime: beats 47%
+    fn solve(&mut self) -> bool {
+        let unassigned = self.find_unassigned();
+        if unassigned.is_none() {
+            return true;
+        }
+        let (row, col) = unassigned.unwrap();
+        let options = self.options(row, col);
+        for i in options {
+            self.board[row][col] = i;
+            let result = self.solve();
+            if result == true {
+                return true;
+            }
+            self.board[row][col] = '.';
+        }
+        false
     }
+
+    fn find_unassigned(&self) -> Option<(usize, usize)> {
+        let mut best = None;
+        let mut best_options_len = usize::MAX;
+        for row in 0..9 {
+            for col in 0..9 {
+                if self.board[row][col] == '.' {
+                    let options = self.options(row, col);
+                    if options.len() == 1 {
+                        return Some((row, col));
+                    } else if options.len() < best_options_len {
+                        best_options_len = options.len();
+                        best = Some((row, col));
+                    }
+                }
+            }
+        }
+        best
+    }
+
+    fn options(&self, row: usize, col: usize) -> HashSet<char> {
+        let options_row = self.options_checkrow(row);
+        let options_col = self.options_checkcol(col);
+        let options_sector = self.options_checksector(row, col);
+        options_row.intersection(&options_col).cloned().collect::<HashSet<_>>().intersection(&options_sector).cloned().collect()
+    }
+
+    fn options_checkrow(&self, row: usize) -> HashSet<char> {
+        let mut options = ('1'..='9').collect::<HashSet<char>>();
+        for loop_col in 0..9 {
+            let val = self.board[row][loop_col];
+            if val != '.' {
+                options.remove(&val);
+            }
+        }
+        options
+    }
+
+    fn options_checkcol(&self, col: usize) -> HashSet<char> {
+        let mut options = ('1'..='9').collect::<HashSet<char>>();
+        for loop_row in 0..9 {
+            let val = self.board[loop_row][col];
+            if val != '.' {
+                options.remove(&val);
+            }
+        }
+        options
+    }
+
+    fn options_checksector(&self, row: usize, col: usize) -> HashSet<char> {
+        let sector_row = row - (row % 3);
+        let sector_col = col - (col % 3);
+        let mut options = ('1'..='9').collect::<HashSet<char>>();
+        for loop_row in sector_row..sector_row+3{
+            for loop_col in sector_col..sector_col+3 {
+                let val = self.board[loop_row][loop_col];
+                if val != '.' {
+                    options.remove(&val);
+                }
+            }
+        }
+        options
+    }
+
 }
 
-//class Solution:
-//
-//    def solveSudoku(self, board):
-//        self.setBoard(board)
-//        self.solve_backtracking()
-//        return self.board
-//
-//    def setBoard(self, board):
-//        self.board = board
-//
-//    def solve_backtracking(self):
-//        """Backtracking solution, fill next empty square with each possible option and recurse"""
-//        #   for next unassigned square
-//        row, col = self.findUnassigned()
-//        if row == -1 and col == -1:
-//            return True
-//        #   try to fill that square for each possible value
-//        options = self.options(row, col)
-//        for i in options:
-//            #   attempt to place each possible value, backtracking if unsucessful
-//            self.board[row][col] = i
-//            result = self.solve_backtracking()
-//            if result == True:
-//                return True
-//            self.board[row][col] = '.'
-//        #   If we failed to place a value, problem must be unsolveable for current board
-//        return False
-//
-//    def findUnassigned(self):
-//        """Find coordinates of the empty square with the least possible options"""
-//        best = (-1, -1)
-//        best_options_len = math.inf
-//        for row in range(9):
-//            for col in range(9):
-//                if self.board[row][col] == '.':
-//                    options = self.options(row, col)
-//                    if len(options) < best_options_len:
-//                        best_options_len = len(options)
-//                        best = (row, col)
-//        return best
-//
-//    def options(self, row, col):
-//        """Get available values for a given (empty) square"""
-//        options_row = self.options_checkrow(row)
-//        options_col = self.options_checkcol(col)
-//        options_sector = self.options_checksector(row, col)
-//        return options_row & options_col & options_sector
-//
-//    def options_checkrow(self, row):
-//        """Get available values for a given row"""
-//        options = set( [str(i) for i in range(1, 10) ] )
-//        for loop_col in range(9):
-//            val = self.board[row][loop_col]
-//            if val != '.':
-//                options.remove(val)
-//        return options
-//
-//    def options_checkcol(self, col):
-//        """Get available values for a given col"""
-//        options = set( [str(i) for i in range(1, 10) ] )
-//        for loop_row in range(9):
-//            val = self.board[loop_row][col]
-//            if val != '.':
-//                options.remove(val)
-//        return options
-//
-//    def options_checksector(self, row, col):
-//        """Get available values for a given (3x3) sector"""
-//        sector_row = row - row % 3
-//        sector_col = col - col % 3 
-//        options = set( [str(i) for i in range(1, 10) ] )
-//        for loop_row in range(sector_row, sector_row+3):
-//            for loop_col in range(sector_col, sector_col+3):
-//                val = self.board[loop_row][loop_col]
-//                if val != '.':
-//                    options.remove(val)
-//        return options
 
 fn print_board(name: &str, board: &Vec<Vec<char>>) {
     println!("{}:", name);
@@ -120,15 +127,15 @@ fn main()
 
     for (f, f_name) in test_functions.iter().zip(test_functions_names.iter()) {
         println!("{}", f_name);
-        let now = Instant::now();
         for (board, check) in inputs.iter().zip(checks.iter()) {
             let mut board = board.clone();
             print_board("board", &board);
+            let now = Instant::now();
             f(&mut board);
             print_board("result", &board);
             assert_eq!(board, *check, "Check comparison failed");
+            println!("elapsed_us=({:?})", now.elapsed().as_micros());
         }
-        println!("elapsed_us=({:?})", now.elapsed().as_micros());
         println!();
     }
 }
