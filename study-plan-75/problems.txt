@@ -1,5 +1,5 @@
 Array/String:
 1768-merge-strings-alternatively (two-pointers)
 1071-greatest-common-divisor-of-strings (common-factors problem)
-
+1431-kid-with-greatest-number-of-candies (trivial array problem)
 
