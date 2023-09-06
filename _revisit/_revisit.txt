@@ -1,5 +1,10 @@
 About: changes previously uncommited (git diffs for each linked file):
 
+
+151-reverse-words-in-string:
+Still finding in-place solution really hard (just struggled immensely when revisiting this problem for 'study-plan-75)
+
+
 05-longest-palindromic-substring:
 -    def longestPalindrome_TwoPointers_ClaifyIndexes(self, s: str) -> str:
 +    def longestPalindrome_TwoPointers_ClarifyIndexes(self, s: str) -> str:
