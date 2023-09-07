@@ -4,5 +4,5 @@ Array/String:
 1431-kid-with-greatest-number-of-candies (trivial greedy array problem)
 605-can-place-flowers (trivial greedy array problem)
 345-reverse-vowels-of-a-string (trivial two-pointers problem)
-151-reverse-words-in-string, (revisited, pythonic solution is trivial, in-place solution was both hard and ultimately incorrect)
+151-reverse-words-in-string, (revisited, pythonic solution is trivial, in-place solution was somewhat hard - a more successful approach was writing tests for each helper function)
 
