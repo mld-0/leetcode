@@ -13,6 +13,9 @@ Continue: 2023-07-23T22:38:26AEST leetcode; 894-all-possible-binary-trees
 Continue: 2023-08-22T22:42:39AEST leetcode; 168-excel-sheet-column-title, 171-excel-sheet-column-number; revisit; a problem that should be (is) easy - the hardest easy problem(s) I've seen in some time 
 Continue: 2023-08-22T22:56:35AEST leetcode; 121-best-time-to-buy-and-sell-stock; revisit; (by which I mean commit solution to memory)
 
+study-plan-75:
+Continue: 2023-09-08T22:40:32AEST leetcode; study-plan-75; 283-move-zeros; why our solution is so slow, intuition behind (the much faster) ans
+
 translated-rs:
 Continue: 2023-02-08T20:53:05AEDT leetcode, translated/rs, util, check (with Miri) all Rust solutions for safety
 Continue: 2023-07-23T21:48:02AEST leetcode; translated-rs; resources; as proper libraries, imported properly

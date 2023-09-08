@@ -5,6 +5,10 @@ About: changes previously uncommited (git diffs for each linked file):
 Still finding in-place solution really hard (just struggled immensely when revisiting this problem for 'study-plan-75)
 
 
+283-move-zeros:
+Why our two-pointers solution is so slow, intuition behind faster answer (see also, problem-set-75/283-move-zeros version)
+
+
 05-longest-palindromic-substring:
 -    def longestPalindrome_TwoPointers_ClaifyIndexes(self, s: str) -> str:
 +    def longestPalindrome_TwoPointers_ClarifyIndexes(self, s: str) -> str:
