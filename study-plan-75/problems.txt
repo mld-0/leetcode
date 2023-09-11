@@ -7,7 +7,7 @@ Array/String:
 151-reverse-words-in-string, (revisited, pythonic solution is trivial, in-place solution was somewhat hard - a more successful approach was writing tests for each helper function)
 238-product-of-array-except-self (a problem with a trick one has to know or reason out to solve within the question constraints, and again to adapt it into an O(1) extra space solution)
 334-increasing-triplet-subsequence (problem with a greedy one-pass answer - another answer that is so obvious in hindsight, with a big (but not neccessary) hint from the answer being to use a/b to track values instead of indicies)
-
+443-string-compression (mostly-easy two-pointers problem)
 
 Two-pointers:
 283-move-zeros (our two pointers solutions is slow, and answer is faster) (problem is also (now) in '_revisit')
