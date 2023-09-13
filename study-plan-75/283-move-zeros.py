@@ -35,28 +35,19 @@ class Solution:
         nums[:] = extra_space[:]
 
 
-    #   runtime: beats 95%
-    def moveZeroes_ans_i(self, nums: List[int]) -> None:
-        r = 0
-        for i in range(len(nums)):
-            if nums[i] != 0:
-                nums[r] = nums[i]
-                r += 1
-        for i in range(r, len(nums)):
-            nums[i] = 0
-
-
     #   runtime: beats 98%
-    def moveZeroes_ans_ii(self, nums: List[int]) -> None:
+    def moveZeroes_ans(self, nums: List[int]) -> None:
+        l = 0
         r = 0
-        for l in range(len(nums)):
-            if nums[l] != 0:
+        while r < len(nums):
+            if nums[r] != 0:
                 nums[l], nums[r] = nums[r], nums[l]
-                r += 1
+                l += 1
+            r += 1
 
 
 s = Solution()
-test_functions = [ s.moveZeroes, s.moveZeros_extraSpace, s.moveZeroes_ans_i, s.moveZeroes_ans_ii, ]
+test_functions = [ s.moveZeroes, s.moveZeros_extraSpace, s.moveZeroes_ans, ]
 
 n = 20
 inputs = [ [0,1,0,3,12], [0], [0,0,1], [1], [1,0], [*[0 for _ in range(n)],1,1,1], ]
@@ -75,5 +66,4 @@ for f in test_functions:
         assert nums== check, "Check comparison failed"
     print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
     print()
-
 
