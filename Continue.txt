@@ -15,7 +15,6 @@ Continue: 2023-08-22T22:56:35AEST leetcode; 121-best-time-to-buy-and-sell-stock;
 
 study-plan-75:
 Continue: 2023-09-08T22:40:32AEST leetcode; study-plan-75; 283-move-zeros; why our solution is so slow, intuition behind (the much faster) ans
-Continue: 2023-09-11T21:49:53AEST leetcode; study-plan-75; 392-is-subsequence; DP-top-down and hashmap solutions
 
 translated-rs:
 Continue: 2023-02-08T20:53:05AEDT leetcode, translated/rs, util, check (with Miri) all Rust solutions for safety
