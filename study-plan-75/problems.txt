@@ -13,4 +13,5 @@ Two-pointers:
 283-move-zeros (our two pointers solutions is slow, and answer is faster) (problem is also (now) in '_revisit')
 392-is-subsequence (easy as a two-pointers problem (however there are also recursive, hashmap, and dynamic-programming bottom-up/top-down solutions)) (two-pointers, recursive, and hashmap solutions are greedy (check if any subsequence can be found) (fast), while DP solutions are not and are slow in comparison)
 11-container-with-most-water (greedy two-pointers problem)
+1679-max-number-of-k-sum-pairs (problem is a logical continuation of two-sum) (two-pointers solution involves sorting, hashmap solution mapping values to indices is TLE, optimal solution to problem involves a Counter (one-pass solution is faster for smaller inputs, however construcing an counter-dict manually cannot beat `Counter(nums)` for larger inputs)
 
