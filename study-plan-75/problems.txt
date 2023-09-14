@@ -22,4 +22,5 @@ Sliding-window:
 
 Prefix-sum:
 1732-find-the-highest-altitude (trivial prefix-sum problem)
+724-find-pivot-index (trivial prefix-sum problem)
 
