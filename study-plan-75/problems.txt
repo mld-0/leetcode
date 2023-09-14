@@ -24,3 +24,7 @@ Prefix-sum:
 1732-find-the-highest-altitude (trivial prefix-sum problem)
 724-find-pivot-index (trivial prefix-sum problem)
 
+
+HashMap/Set:
+2215-find-the-difference-of-two-arrays (trivial set difference problem)
+
