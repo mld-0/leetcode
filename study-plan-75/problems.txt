@@ -17,3 +17,5 @@ Two-pointers:
 
 Sliding-window:
 643-maximum-average-subarray-i (trivial sliding-window (cumulative sum) problem)
+1456-max-number-of-vowels-in-substring (trivial sliding-window problem)
+
