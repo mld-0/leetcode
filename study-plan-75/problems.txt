@@ -15,3 +15,5 @@ Two-pointers:
 11-container-with-most-water (greedy two-pointers problem)
 1679-max-number-of-k-sum-pairs (problem is a logical continuation of two-sum) (two-pointers solution involves sorting, hashmap solution mapping values to indices is TLE, optimal solution to problem involves a Counter (one-pass solution is faster for smaller inputs, however construcing an counter-dict manually cannot beat `Counter(nums)` for larger inputs)
 
+Sliding-window:
+643-maximum-average-subarray-i (trivial sliding-window (cumulative sum) problem)
