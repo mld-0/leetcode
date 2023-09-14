@@ -20,3 +20,6 @@ Sliding-window:
 1456-max-number-of-vowels-in-substring (trivial sliding-window problem)
 1004-max-consecutive-ones-iii (harder 'medium' problem, our solution is better described as two-pointers than sliding window(?))
 
+Prefix-sum:
+1732-find-the-highest-altitude (trivial prefix-sum problem)
+
