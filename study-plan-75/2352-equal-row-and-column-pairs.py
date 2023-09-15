@@ -1,0 +1,1 @@
+../2352-equal-row-and-column-pairs.py
