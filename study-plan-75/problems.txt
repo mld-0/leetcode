@@ -29,5 +29,5 @@ Prefix-sum:
 HashMap/Set:
 2215-find-the-difference-of-two-arrays (trivial set difference problem)
 1657-determine-if-two-strings-are-close (trivial Counter problem)
-2352-equal-row-and-column-pairs (Counter problem)
+2352-equal-row-and-column-pairs (Counter problem (alternatively ans uses Trie))
 
