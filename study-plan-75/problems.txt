@@ -19,6 +19,7 @@ Sliding-window:
 643-maximum-average-subarray-i (trivial sliding-window (cumulative sum) problem)
 1456-max-number-of-vowels-in-substring (trivial sliding-window problem)
 1004-max-consecutive-ones-iii (harder 'medium' problem, our solution is better described as two-pointers than sliding window(?))
+1493-longest-subarray-of-1s-after-deleting-one-element (sliding-window problem more easily solved with a sliding-window approach than with two-pointers)
 
 Prefix-sum:
 1732-find-the-highest-altitude (trivial prefix-sum problem)
