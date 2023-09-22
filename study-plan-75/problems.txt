@@ -35,3 +35,6 @@ Stack:
 2390-removing-stars-from-a-string (simple Stack problem (alternative ans uses two-pointers))
 735-asteriod-collision (somewhat fiddely stack problem - we make use of `while i < len(asteriods)` instead of `for i in range` to allow us to chose not to increment i in some cases - when necessary to compare it against the next asteriod on the stack, (also, unlike the answer, our problem uses the same stack `result`, instead of requiring a second temporary stack))
 
+Queue:
+933-number-of-recent-calls (queue problem)
+
