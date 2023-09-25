@@ -12,6 +12,7 @@ class Solution:
 
     #   memory limit exceded
     def longestStrChain_i(self, words: List[str]) -> int:
+        #   {{{
 
         def is_predecessor(wordA: str, wordB: str) -> bool:
             if len(wordA) + 1 != len(wordB):
@@ -54,10 +55,12 @@ class Solution:
             max_length = max( [ len(x) for x in sequences ] )
             result = max(result, max_length)
         return 1 + result
+        #   }}}
 
 
     #   runtime: beats 6%
     def longestStrChain_ii(self, words: List[str]) -> int:
+        #   {{{
 
         def is_predecessor(wordA: str, wordB: str) -> bool:
             if len(wordA) + 1 != len(wordB):
@@ -88,6 +91,49 @@ class Solution:
                     continue
                 if is_predecessor(wordA, wordB):
                     successors[wordA].append(wordB)
+        result = 0
+        for wordA in successors:
+            result = max(result, build_sequences(wordA))
+        return result + 1
+        #   }}}
+
+
+    #   runtime: beats 35%
+    def longestStrChain_iii(self, words: List[str]) -> int:
+
+        def is_predecessor(wordA: str, wordB: str) -> bool:
+            if len(wordA) + 1 != len(wordB):
+                return False
+            l = 0
+            r = 0
+            while l < len(wordA):
+                if wordA[l] == wordB[r]:
+                    l += 1
+                if l != r and l != r + 1:
+                    return False
+                r += 1
+            return True
+
+        @cache
+        def build_sequences(word: str) -> int:
+            if word not in successors:
+                return 0
+            result = 0
+            for sucessor in successors[word]:
+                result = max(result, 1 + build_sequences(sucessor))
+            return result
+
+        words_by_len = defaultdict(list)
+        for word in set(words):
+            words_by_len[len(word)].append(word)
+        successors = defaultdict(list)
+        for l in words_by_len:
+            for wordA in words_by_len[l]:
+                if l+1 not in words_by_len:
+                    continue
+                for wordB in words_by_len[l+1]:
+                    if is_predecessor(wordA, wordB):
+                        successors[wordA].append(wordB)
         result = 0
         for wordA in successors:
             result = max(result, build_sequences(wordA))
@@ -131,7 +177,8 @@ def test_is_predecessor():
 test_is_predecessor()
 
 s = Solution()
-test_functions = [ s.longestStrChain_i, s.longestStrChain_ii, s.longestStrChain_ans_LongestIncreasingSubsequence, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
+test_functions = [ s.longestStrChain_i, s.longestStrChain_ii, s.longestStrChain_iii, s.longestStrChain_ans_LongestIncreasingSubsequence, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
+#test_functions = [ s.longestStrChain_iii, ]
 
 #   {{{
 inputs = [ ["a","b","ba","bca","bda","bdca"], ["xbc","pcxbcf","xb","cxbc","pcxbc"], ["abcd","dbqca"], ["czgxmxrpx","lgh","bj","cheheex","jnzlxgh","nzlgh","ltxdoxc","bju","srxoatl","bbadhiju","cmpx","xi","ntxbzdr","cheheevx","bdju","sra","getqgxi","geqxi","hheex","ltxdc","nzlxgh","pjnzlxgh","e","bbadhju","cmxrpx","gh","pjnzlxghe","oqlt","x","sarxoatl","ee","bbadju","lxdc","geqgxi","oqltu","heex","oql","eex","bbdju","ntxubzdr","sroa","cxmxrpx","cmrpx","ltxdoc","g","cgxmxrpx","nlgh","sroat","sroatl","fcheheevx","gxi","gqxi","heheex"],
