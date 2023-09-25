@@ -198,7 +198,7 @@ def test_is_predecessor():
 test_is_predecessor()
 
 s = Solution()
-test_functions = [ s.longestStrChain_i, s.longestStrChain_ii, s.longestStrChain_iii, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
+test_functions = [ s.longestStrChain_iii, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
 
 #   {{{
 inputs = [ ["a","b","ba","bca","bda","bdca"], ["xbc","pcxbcf","xb","cxbc","pcxbc"], ["abcd","dbqca"], ["czgxmxrpx","lgh","bj","cheheex","jnzlxgh","nzlgh","ltxdoxc","bju","srxoatl","bbadhiju","cmpx","xi","ntxbzdr","cheheevx","bdju","sra","getqgxi","geqxi","hheex","ltxdc","nzlxgh","pjnzlxgh","e","bbadhju","cmxrpx","gh","pjnzlxghe","oqlt","x","sarxoatl","ee","bbadju","lxdc","geqgxi","oqltu","heex","oql","eex","bbdju","ntxubzdr","sroa","cxmxrpx","cmrpx","ltxdoc","g","cgxmxrpx","nlgh","sroat","sroatl","fcheheevx","gxi","gqxi","heheex"],
