@@ -140,16 +140,37 @@ class Solution:
         return result + 1
 
 
-    def longestStrChain_ans_LongestIncreasingSubsequence(self, words: List[str]) -> int:
-        raise NotImplementedError()
-
-
+    #   runtime: beats 92%
     def longestStrChain_ans_DP_TopDown(self, words: List[str]) -> int:
-        raise NotImplementedError()
+
+        @cache
+        def dfs(currentWord: str) -> int:
+            result = 1
+            for i in range(len(currentWord)):
+                trial = currentWord[:i] + currentWord[i+1:]
+                if trial in words:
+                    result = max(result, dfs(trial) + 1)
+            return result
+
+        words = set(words)
+        result = 1
+        for word in words:
+            result = max(result, dfs(word))
+        return result
 
 
     def longestStrChain_ans_DP_BottomUp(self, words: List[str]) -> int:
-        raise NotImplementedError()
+        words = sorted(set(words), key=len)
+        result = 0
+        table = defaultdict(int)
+        for word in words:
+            table[word] = 1
+            for i in range(len(word)):
+                trial = word[:i] + word[i+1:]
+                if trial in table and table[word] < table[trial] + 1:
+                    table[word] = table[trial] + 1
+            result = max(result, table[word])
+        return result
 
 
 def test_is_predecessor():
@@ -177,8 +198,7 @@ def test_is_predecessor():
 test_is_predecessor()
 
 s = Solution()
-test_functions = [ s.longestStrChain_i, s.longestStrChain_ii, s.longestStrChain_iii, s.longestStrChain_ans_LongestIncreasingSubsequence, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
-#test_functions = [ s.longestStrChain_iii, ]
+test_functions = [ s.longestStrChain_i, s.longestStrChain_ii, s.longestStrChain_iii, s.longestStrChain_ans_DP_TopDown, s.longestStrChain_ans_DP_BottomUp, ]
 
 #   {{{
 inputs = [ ["a","b","ba","bca","bda","bdca"], ["xbc","pcxbcf","xb","cxbc","pcxbc"], ["abcd","dbqca"], ["czgxmxrpx","lgh","bj","cheheex","jnzlxgh","nzlgh","ltxdoxc","bju","srxoatl","bbadhiju","cmpx","xi","ntxbzdr","cheheevx","bdju","sra","getqgxi","geqxi","hheex","ltxdc","nzlxgh","pjnzlxgh","e","bbadhju","cmxrpx","gh","pjnzlxghe","oqlt","x","sarxoatl","ee","bbadju","lxdc","geqgxi","oqltu","heex","oql","eex","bbdju","ntxubzdr","sroa","cxmxrpx","cmrpx","ltxdoc","g","cgxmxrpx","nlgh","sroat","sroatl","fcheheevx","gxi","gqxi","heheex"],

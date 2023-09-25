@@ -1,10 +1,6 @@
 About: changes previously uncommited (git diffs for each linked file):
 
 
-1048-longest-string-chain:
-Review ans, LongestIncreasingSubsequence, DP_TopDown, DP_BottomUp
-
-
 151-reverse-words-in-string:
 Still finding in-place solution really hard (just struggled immensely when revisiting this problem for 'study-plan-75)
 
