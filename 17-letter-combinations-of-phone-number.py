@@ -1,12 +1,12 @@
+import time
 import itertools
 import functools
+from typing import List, Optional
+
 
 class Solution:
 
     digit_to_letters = { '1': [], '2': ['a','b','c'], '3': ['d','e','f'], '4': ['g','h','i'], '5': ['j','k','l'], '6': ['m','n','o'], '7': ['p','q','r','s'], '8': ['t','u','v'], '9': ['w','x','y','z'] }
-
-    def letterCombinations(self, digits: str) -> list[str]:
-        return self.letterCombinations_cartesianproduct(digits)
 
 
     #   runtime: beats 90%
@@ -84,18 +84,20 @@ class Solution:
 s = Solution()
 
 test_functions = [ s.letterCombinations_Backtracking, s.letterCombinations_Itertools, s.letterCombinations_cartesianproduct, s.letterCombinations_iterNested, s.letterCombinations_oneline, ]
-#test_functions = [ s.letterCombinations ]
 
-digits_list = [ "23", "", "2" ]
-check_list = [ ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"], [], ["a", "b", "c"] ]
+inputs = [ "23", "", "2" ]
+checks = [ ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"], [], ["a", "b", "c"] ]
+assert len(inputs) == len(checks), "input/check lists length mismatch"
+assert len(inputs) > 0, "No input"
 
-for test_func in test_functions:
-    print(test_func.__name__)
-    for test_func in test_functions:
-        for digits, check in zip(digits_list, check_list):
-            print("digits=(%s)" % digits)
-            result = test_func(digits)
-            print("result=(%s)" % result)
-            assert set(result) == set(check), "Check failed"
+for f in test_functions:
+    print(f.__name__)
+    start_time = time.time()
+    for digits, check in zip(inputs, checks):
+        print(f"digits=({digits})")
+        result = f(digits)
+        print(f"result=({result})")
+        assert set(result) == set(check), "Check comparison failed"
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
     print()
 
