@@ -38,3 +38,6 @@ Stack:
 Queue:
 933-number-of-recent-calls (queue problem)
 
+
+Binary-search:
+374-guess-number-higher-or-lower (basic binary-search implementation)
