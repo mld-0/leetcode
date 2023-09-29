@@ -3,9 +3,10 @@
 #   vim: set tabstop=4 modeline modelines=10:
 #   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 #	{{{2
+#	Continue: 2023-03-22T22:37:29AEDT report number run / number failed
 
 bin_py=python3.11
-flag_printOutput=1
+flag_printOutput=0
 
 scripts_list=( $( find . -regex "^\./[0-9].*\.py$" | sort -V ) )
 
