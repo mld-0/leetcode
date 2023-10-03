@@ -60,6 +60,6 @@ time_end=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
 time_elapsed=$( perl -E "say $time_end - $time_start" )
 echo ""
 echo "time_elapsed=($time_elapsed)"
-echo "failures:"
+echo -n "failures: "; cat $path_failures | wc -l;
 cat $path_failures
 
