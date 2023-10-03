@@ -10,10 +10,7 @@ flag_printOutput=0
 scripts_list=( $( find . -regex "^\./[0-9].*\.py$" | sort -V ) )
 
 path_tmp=`mktemp -d`
-path_failures=$path_tmp/my-failures
-path_stdout=$path_tmp/my-stdout
-path_stderr=$path_tmp/my-stderr
-path_rc=$path_tmp/my-rc
+path_failures="$path_tmp/failures-report"
 
 #	validate: bin_py, path_tmp, scripts_list
 #	{{{
@@ -30,25 +27,28 @@ if [[ ${#scripts_list[@]} -le 0 ]]; then
 	exit 2
 fi
 #	}}}
-#	delete: path_failures
-#	{{{
-if [[ -f $path_failures ]]; then
-	rm $path_failures 
-fi
-#	}}}
 
+#	Multi-file:
+for loop_script in "${scripts_list[@]}"; do
+	current_tmp="$path_tmp/$loop_script"
+	mkdir "$current_tmp"
+done
 time_start=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
-
 i=0
 for loop_script in "${scripts_list[@]}"; do
 	(
+	current_tmp="$path_tmp/$loop_script"
+	path_failure=$current_tmp/my-failures
+	path_stdout=$current_tmp/my-stdout
+	path_stderr=$current_tmp/my-stderr
+	path_rc=$current_tmp/my-rc
 	echo "$loop_script:"
 	$bin_py $loop_script > $path_stdout 2> $path_stderr 
 	echo "$?" > $path_rc ; 
 	rc=`cat $path_rc`
 	if [[ $rc -ne 0 ]]; then
-		echo "rc=($rc): $loop_script" >> $path_failures
-		cat $path_stderr
+		echo "rc=($rc): $loop_script" >> $path_failure
+		#cat $path_stderr
 	fi
 	if [[ $flag_printOutput -ne 0 ]]; then
 		cat $path_stdout | grep -v "^$"
@@ -59,35 +59,20 @@ for loop_script in "${scripts_list[@]}"; do
 	) &
 done
 wait
-
 time_end=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
 time_elapsed=$( perl -E "say $time_end - $time_start" )
+cd "$path_tmp"
+for dir in $( find . -maxdepth 1 -type d | cut -c 3- | sort -h ); do
+    failure_file="$dir/my-failures"
+	stderr_file="$dir/my-stderr"
+    if [ -f "$failure_file" ]; then
+		result=$( cat "$failure_file" )": "$( cat "$stderr_file" | tail -n 1 )
+		echo "$result" >> "$path_failures"
+    fi
+done
+
 echo ""
 echo "time_elapsed=($time_elapsed)"
-echo "failures:"
-cat $path_failures
+echo -n "failures: "; cat $path_failures | wc -l;
+cat $path_failures 
 
-
-
-##!/usr/bin/env sh
-#
-##set -o errexit   # abort on nonzero exitstatus
-#set -o nounset   # abort on unbound variable
-#set -o pipefail  # don't hide errors within pipes
-#
-#scripts_list=( $( find . -regex "^\./[0-9].*\.py$" | sort ) )
-#time_start=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
-#
-#for loop_script in "${scripts_list[@]}"; do
-#	(
-#	echo "$loop_script:"
-#	time ( python3 $loop_script | perl -nE 'print if not /^$/' )
-#	echo ""
-#	) &
-#done
-#wait
-#
-#time_end=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
-#time_elapsed=$( perl -E "say $time_end - $time_start" )
-#echo "time_elapsed=($time_elapsed)"
-#
