@@ -1,6 +1,12 @@
 About: changes previously uncommited (git diffs for each linked file):
 
 
+04-median-of-two-sorted-arrays:
+Don't tell me there isn't a solution much less long (or readily come up with) (intuitive)
+(notably - this is the first hard problem)
+... how can this be 'hard' if the rules say nothing about not using additional memory?
+
+
 880-decoded-string-at-index:
 Reattempt / review ans
 
