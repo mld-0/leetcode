@@ -46,3 +46,7 @@ Binary-search:
 Backtracking:
 17-letter-combinations-of-phone-number (probably the quintessential example of how backtracking works)
 
+
+Dynamic-programming:
+1137-nth-tribonacci-number (simple as dynamic-programming gets, top-down (recusive-memoize) and bottom-up (table-filling) solutions)
+
