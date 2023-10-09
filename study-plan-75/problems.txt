@@ -39,6 +39,9 @@ Queue:
 933-number-of-recent-calls (queue problem)
 
 
+DFS:
+841-keys-and-rooms (trivial DFS/BFS problem)
+
 Binary-search:
 374-guess-number-higher-or-lower (basic binary-search implementation)
 
@@ -47,6 +50,6 @@ Backtracking:
 17-letter-combinations-of-phone-number (probably the quintessential example of how backtracking works)
 
 
-Dynamic-programming:
+Dynamic-programming (1D):
 1137-nth-tribonacci-number (simple as dynamic-programming gets, top-down (recusive-memoize) and bottom-up (table-filling) solutions)
 
