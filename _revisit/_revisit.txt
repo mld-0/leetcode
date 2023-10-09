@@ -152,3 +152,7 @@ Remember (intuition behind) O(n) two-pointers solution
 Binary tree search problem: Equivalent-graph DFS/BFS ans
 (revist after-completing/with-insights-from 'theory/graph-traversal-[dfs|bfs]')
 
+
+1926-nearest-exit-from-entrance-in-maze:
+Why is our solution so much less efficent than ans? (Is it just because we create so many more tuples? or because ans in-lines things we put in helper functions) (or else, where is it doing more work?) (it isn't in the number of elements popped from the queue before returning - those are effectively the same (1 less for ans))
+

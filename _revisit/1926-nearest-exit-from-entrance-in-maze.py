@@ -1,0 +1,1 @@
+../1926-nearest-exit-from-entrance-in-maze.py
