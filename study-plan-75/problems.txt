@@ -57,3 +57,6 @@ Dynamic-programming (1D):
 1137-nth-tribonacci-number (simple as dynamic-programming gets, top-down (recusive-memoize) and bottom-up (table-filling) solutions)
 746-min-cost-climbing-stairs (trivial top-down/bottom-up solutions)
 
+Dynamic-programming (2D):
+1143-longest-common-subsequence (basic dynamic-programming problem)
+
