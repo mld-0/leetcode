@@ -27,6 +27,12 @@ class TreeNode:
         head = tree_nestedNodes[0][0]
         return head
 
+    @staticmethod
+    def from_list_infer_missing(values: List[Any]) -> Optional[TreeNode]:
+        """Create Binary tree (as per `from_list()`), with missing elements filled in by `fill_list_infer_missing()`"""
+        values = TreeNode.fill_list_infer_missing(values)
+        return TreeNode.from_list(values)
+
     def to_list_nested(self) -> List[List[Any]]:
         """Convert tree into nested list, with inner list containing values from each level"""
         tree_nestedNodes = self._tree_toNestedNodesList()
