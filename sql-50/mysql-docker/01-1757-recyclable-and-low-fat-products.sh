@@ -6,6 +6,8 @@ SCRIPT_BASENAME=$(basename "$0" .sh)
 DB_NAME="${SCRIPT_BASENAME//-/_}"
 DB_NAME="${DB_NAME//[^a-zA-Z0-9_]/}"
 
+echo "$SCRIPT_BASENAME"
+
 DROP_DB_COMMAND=""
 if [ "$DROP_DATABASE_AFTER_USE" = true ]; then
   DROP_DB_COMMAND="DROP DATABASE IF EXISTS \`$DB_NAME\`;"
@@ -28,3 +30,4 @@ SELECT product_id FROM Products WHERE low_fats = 'Y' AND recyclable = 'Y';
 $DROP_DB_COMMAND
 EOF
 
+echo ""

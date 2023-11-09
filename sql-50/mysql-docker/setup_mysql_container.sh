@@ -3,6 +3,8 @@
 # Source common configuration
 source "$(dirname "$0")/config.sh"
 
+echo "Setup container:"
+
 # Pull the latest MySQL image
 docker pull $MYSQL_IMAGE
 
