@@ -1,33 +1,62 @@
 #!/bin/bash
 
 source "$(dirname "$0")/config.sh"
-
 SCRIPT_BASENAME=$(basename "$0" .sh)
-DB_NAME="${SCRIPT_BASENAME//-/_}"
-DB_NAME="${DB_NAME//[^a-zA-Z0-9_]/}"
+DB_NAME="${SCRIPT_BASENAME//-/_}"  # Replace hyphens with underscores and remove disallowed characters
 
-echo "$SCRIPT_BASENAME"
+read -r -d '' SQL_EXERCISE_QUERY <<EOSQL
+SELECT product_id FROM Products WHERE low_fats = 'Y' AND recyclable = 'Y';
+EOSQL
 
-DROP_DB_COMMAND=""
-if [ "$DROP_DATABASE_AFTER_USE" = true ]; then
-  DROP_DB_COMMAND="DROP DATABASE IF EXISTS \`$DB_NAME\`;"
-fi
-
-docker exec -i $CONTAINER_NAME mysql -u root -p$ROOT_PASSWORD <<EOF
+read -r -d '' SQL_CREATE_DB <<EOSQL
 CREATE DATABASE IF NOT EXISTS \`$DB_NAME\`;
-USE \`$DB_NAME\`;
+EOSQL
 
+read -r -d '' SQL_FILL_DB <<EOSQL
 CREATE TABLE IF NOT EXISTS Products (product_id INT, low_fats CHAR(1), recyclable CHAR(1));
 INSERT INTO Products VALUES (0, 'Y', 'N'), (1, 'Y', 'Y'), (2, 'N', 'Y'), (3, 'Y', 'Y'), (4, 'N', 'N');
+EOSQL
 
--- Display the table
+read -r -d '' SQL_SHOW_TABLE <<EOSQL
 SELECT * FROM Products;
+EOSQL
 
--- Execute the query
-SELECT product_id FROM Products WHERE low_fats = 'Y' AND recyclable = 'Y';
+read -r -d '' SQL_SELECT_DB <<EOSQL
+USE \`$DB_NAME\`;
+EOSQL
 
--- Clean up: drop the database if the flag is set
-$DROP_DB_COMMAND
+SQL_DROP_DB=$([ "$DROP_DATABASE_AFTER_USE" = true ] && echo "DROP DATABASE IF EXISTS \`$DB_NAME\`;")
+
+OUTPUT_CREATE_DB=`
+docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF 
+$SQL_CREATE_DB
+$SQL_SELECT_DB
+$SQL_FILL_DB
+$SQL_SHOW_TABLE
 EOF
+`
 
+OUTPUT_EXERCISE_QUERY=`
+docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF 
+$SQL_SELECT_DB
+$SQL_EXERCISE_QUERY
+EOF
+`
+
+OUTPUT_DROP_DB=`
+docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF
+$SQL_DROP_DB
+EOF
+`
+
+#	Print Output:
+echo "$SCRIPT_BASENAME:"
+echo "'$SQL_CREATE_DB'"
+#echo "'$SQL_FILL_DB'"
+echo "'$SQL_SHOW_TABLE'"
+echo "$OUTPUT_CREATE_DB"
+echo "'$SQL_EXERCISE_QUERY'"
+echo "$OUTPUT_EXERCISE_QUERY"
+echo "'$SQL_DROP_DB'" 
 echo ""
+
