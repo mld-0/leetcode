@@ -29,7 +29,7 @@ SQL_DROP_DB=$([ "$DROP_DATABASE_AFTER_USE" = true ] && echo "DROP DATABASE IF EX
 
 #	Create and fill DB:
 OUTPUT_CREATE_DB=`
-docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF 
+docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root --table <<EOF 
 $SQL_CREATE_DB
 $SQL_SELECT_DB
 $SQL_FILL_DB
@@ -39,7 +39,7 @@ EOF
 
 #	Run Exercise Query:
 OUTPUT_EXERCISE_QUERY=`
-docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF 
+docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root --table <<EOF 
 $SQL_SELECT_DB
 $SQL_EXERCISE_QUERY
 EOF
