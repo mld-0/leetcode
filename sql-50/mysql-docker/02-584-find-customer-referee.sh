@@ -63,7 +63,6 @@ EOF
 `
 
 #	Print Output:
-echo 		"$SCRIPT_BASENAME:"
 echo_sql 	"$SQL_CREATE_DB" 
 echo_sql 	"$SQL_FILL_DB" 
 echo_sql 	"$SQL_SHOW_TABLE" 
@@ -71,5 +70,4 @@ echo 		"$OUTPUT_CREATE_DB"
 echo_sql 	"$SQL_EXERCISE_QUERY" 
 echo 		"$OUTPUT_EXERCISE_QUERY"
 echo_sql 	"$SQL_DROP_DB" 
-echo 		""
 
