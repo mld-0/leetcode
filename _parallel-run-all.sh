@@ -7,7 +7,10 @@
 bin_py=python3.11
 flag_printOutput=0
 
+IFS_temp="$IFS"
+IFS=$'\n'
 scripts_list=( $( find . -regex "^\./[0-9].*\.py$" | sort -V ) )
+IFS="$IFS_temp"
 
 path_tmp=`mktemp -d`
 path_failures="$path_tmp/failures-report"
