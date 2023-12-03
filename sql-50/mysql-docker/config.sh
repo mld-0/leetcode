@@ -9,3 +9,7 @@ export MYSQL_PORT="3306"
 #	Should each exercise drop the database it has just created upon completion
 export DROP_DATABASE_AFTER_USE="true"
 
+echo_sql() {
+	echo "$@" | sed "s/^/>>/g"
+}
+

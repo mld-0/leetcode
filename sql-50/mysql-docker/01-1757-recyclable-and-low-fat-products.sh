@@ -53,13 +53,13 @@ EOF
 `
 
 #	Print Output:
-echo "$SCRIPT_BASENAME:"
-echo "$SQL_CREATE_DB" | sed "s/^/>>/g"
-echo "$SQL_FILL_DB" | sed "s/^/>>/g"
-echo "$SQL_SHOW_TABLE" | sed "s/^/>>/g"
-echo "$OUTPUT_CREATE_DB"
-echo "$SQL_EXERCISE_QUERY" | sed "s/^/>>/g"
-echo "$OUTPUT_EXERCISE_QUERY"
-echo "$SQL_DROP_DB" | sed "s/^/>>/g"
-echo ""
+echo 		"$SCRIPT_BASENAME:"
+echo_sql 	"$SQL_CREATE_DB" 
+echo_sql 	"$SQL_FILL_DB" 
+echo_sql 	"$SQL_SHOW_TABLE" 
+echo 		"$OUTPUT_CREATE_DB"
+echo_sql 	"$SQL_EXERCISE_QUERY" 
+echo 		"$OUTPUT_EXERCISE_QUERY"
+echo_sql 	"$SQL_DROP_DB" 
+echo 		""
 
