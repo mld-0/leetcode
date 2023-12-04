@@ -27,27 +27,14 @@ EOSQL
 
 SQL_DROP_DB=$([ "$DROP_DATABASE_AFTER_USE" = true ] && echo "DROP DATABASE IF EXISTS \`$DB_NAME\`;")
 
-#	Create and fill DB:
-OUTPUT_CREATE_DB=`
+#	Run Commands:
+OUTPUT=`
 docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root --table <<EOF 
 $SQL_CREATE_DB
 $SQL_SELECT_DB
 $SQL_FILL_DB
 $SQL_SHOW_TABLE
-EOF
-`
-
-#	Run Exercise Query:
-OUTPUT_EXERCISE_QUERY=`
-docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root --table <<EOF 
-$SQL_SELECT_DB
 $SQL_EXERCISE_QUERY
-EOF
-`
-
-#	Drop DB:
-OUTPUT_DROP_DB=`
-docker exec -i -e MYSQL_PWD="$ROOT_PASSWORD" $CONTAINER_NAME mysql -u root <<EOF
 $SQL_DROP_DB
 EOF
 `
@@ -56,8 +43,7 @@ EOF
 echo_sql 	"$SQL_CREATE_DB" 
 echo_sql 	"$SQL_FILL_DB" 
 echo_sql 	"$SQL_SHOW_TABLE" 
-echo 		"$OUTPUT_CREATE_DB"
 echo_sql 	"$SQL_EXERCISE_QUERY" 
-echo 		"$OUTPUT_EXERCISE_QUERY"
 echo_sql 	"$SQL_DROP_DB" 
+echo 		"$OUTPUT"
 
