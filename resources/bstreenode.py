@@ -21,7 +21,7 @@ class TreeNode:
 
     @staticmethod
     def from_list(values: List[Any]) -> Optional[TreeNode]:
-        """Create Binary tree from list containing nodes values in breadth-first order. None represents an empty node. Lists that have non-None children of empty nodes are invalid."""
+        """Create Binary tree from list containing nodes values in breadth-first order. None represents an empty node. Lists that have non-None children of None parents are invalid (use `from_list_infer_missing() for such lists)."""
         #   number of level in binary tree resulting from 'values'
         if not values:
             return None
@@ -49,6 +49,8 @@ class TreeNode:
         tree_nestedValues = self.to_list_nested()
         #   flatten 'tree_nestedValues'
         result = [ val for level in tree_nestedValues for val in level ]
+        if not TreeNode.is_length_of_complete_binary_tree(len(result)):
+            raise Exception(f"TreeNode.to_list(): len(result)=({len(result)}) invalid for result=({result}) (plz debug)")
         return result
 
     @staticmethod
@@ -83,13 +85,14 @@ class TreeNode:
                     loop_nodes.append(None)
                     loop_nodes.append(None)
             if z == previous_z:
-                raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values})")
+                raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values}) (plz debug)")
             result.append(loop_nodes)
             loop_level += 1
         logging.debug(f"result=({result})")
         result_flat = [ val for level in result for val in level ]
         logging.debug("result_flat=(%s)" % result_flat)
-        if len(result_flat) 
+        if not TreeNode.is_length_of_complete_binary_tree(len(result_flat)):
+            raise Exception(f"TreeNode.fill_list_infer_missing(): len(result_flat)=({len(result_flat)}) invalid for result_flat=({result_flat}), values=({values}) (plz debug)")
         return result_flat
         #   }}}
 
@@ -104,7 +107,7 @@ class TreeNode:
 
     @staticmethod
     def _splitListToNestedValuesList(values: List[Any]) -> List[List[Any]]:
-        """Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]. (Requires list to correspond to valid binary tree with no missing elements)"""
+        """Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]. Lists that have non-None children of None parent nodes are invalid."""
         #   {{{
         tree_levels_count = TreeNode._listLevelsCountWhenNested(values)
         z = 0
@@ -118,6 +121,8 @@ class TreeNode:
                 else:
                     val = None
                 loop_vals.append(val)
+            if not TreeNode.is_power_of_two(len(loop_vals)):
+                raise Exception(f"TreeNode._splitListToNestedValuesList(): invalid len(loop_vals)=({len(loop_vals)}) for loop_vals=({loop_vals}), values=({values}) (plz debug)")
             tree_nestedValues.append(loop_vals)
         logging.debug("tree_nestedValues=(%s)" % str(tree_nestedValues))
         assert len(tree_nestedValues) == tree_levels_count
@@ -150,7 +155,7 @@ class TreeNode:
                     continue
                 #   Cannot create children for missing node
                 if parent_node is None:
-                    raise Exception("Invalid list: Unable to create non-null child for null parent\nloop_level=(%s), j=(%s), tree_nestedValues=(%s)" % (loop_level, j, tree_nestedValues))
+                    raise Exception("TreeNode._buildTreeFromNestedValuesList(): Invalid list: Unable to create non-null child for null parent\nloop_level=(%s), j=(%s), tree_nestedValues=(%s)" % (loop_level, j, tree_nestedValues))
                 #   Assign node to parent
                 if j % 2 == 0:
                     logging.debug("(%s).L=(%s)" % (parent_val, val))
@@ -160,6 +165,8 @@ class TreeNode:
                     logging.debug("(%s).R=(%s)" % (parent_val, val))
                     parent_node.right= TreeNode(val)
                     loop_nodes.append(parent_node.right)
+            if not TreeNode.is_power_of_two(len(loop_nodes)):
+                raise Exception(f"TreeNode._buildTreeFromNestedValuesList(): invalid len(loop_nodes)=({len(loop_nodes)}) for tree_nestedValues=({tree_nestedValues}) (plz debug)")
             tree_nestedNodes.append(loop_nodes)
         return tree_nestedNodes
         #   }}}
@@ -238,6 +245,16 @@ class TreeNode:
         lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
         return lines, n + m + u, max(p, q) + 2, n + u // 2
         #   }}}
+
+    @staticmethod
+    def is_length_of_complete_binary_tree(n):
+        """Check if n is 1 less than a power of 2 (correct length of a complete binary tree as a list)"""
+        return n > 0 and (n + 1) & n == 0
+
+    @staticmethod
+    def is_power_of_two(n):
+        """Check if n is a power of 2 (correct length for a complete level of a binary tree)"""
+        return n > 0 and (n & (n - 1)) == 0
 
     def __eq__(self, lhs):
         if not isinstance(lhs, TreeNode):
