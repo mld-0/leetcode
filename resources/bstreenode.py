@@ -2,12 +2,15 @@
 #   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
 #   vim: set foldlevel=2 foldcolumn=2:
 #   {{{2
-#   Required for own-class type hints (alternatively use class name as string?)
-from __future__ import annotations
+
+#   Required for own-class type hints (alternatively use class name as string)
+from __future__ import annotations  
+
 from typing import List, Optional, Any
 import sys
 import logging
-#   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches) [...] (does leetcode give such an input?)
+
+#   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches) [...] (does leetcode give such an input?) [...] 2024-01-11T20:26:25AEDT added extra test case from 1026-max-diff-between-node-and-ancestor for which it was incorrect and debuged function, (message and warning remain since more test cases are probably warrented still (for this and other methods))
 
 class TreeNode:
 
@@ -55,30 +58,38 @@ class TreeNode:
         if len(values) == 0:
             return []
         values = list(values)
-        tree_levels_count = TreeNode._listLevelsCountWhenNested(values)
-        for i in range(len(values), 2**tree_levels_count):
-            values.append(None)
-        result: List[List[Any]] = [ [] for _ in range(tree_levels_count) ]
-        result[0] = [ values[0] ]
-        logging.debug("result=(%s)" % result)
+        if values[0] is None:
+            raise Exception(f"TreeNode.fill_list_infer_missing(): First element in values=({values}) may not be None")
+        result: List[List[Any]] = [ [ values[0] ] ]
         z = 1
-        for loop_level in range(1, tree_levels_count):
+        loop_level = 1
+        while z < len(values):
             loop_nodes = []
             parent_level = result[loop_level-1]
-            logging.debug("parent_level=(%s)" % parent_level)
+            previous_z = z
             for x in parent_level:
                 if x is not None:
-                    loop_nodes.append(values[z])
+                    if z < len(values):
+                        loop_nodes.append(values[z])
+                    else:
+                        loop_nodes.append(None)
                     z += 1
-                    loop_nodes.append(values[z])
+                    if z < len(values):
+                        loop_nodes.append(values[z])
+                    else:
+                        loop_nodes.append(None)
                     z += 1
                 else:
                     loop_nodes.append(None)
                     loop_nodes.append(None)
-            result[loop_level] = loop_nodes
-            logging.debug("parent_level=(%s)" % parent_level)
+            if z == previous_z:
+                raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values})")
+            result.append(loop_nodes)
+            loop_level += 1
+        logging.debug(f"result=({result})")
         result_flat = [ val for level in result for val in level ]
         logging.debug("result_flat=(%s)" % result_flat)
+        if len(result_flat) 
         return result_flat
         #   }}}
 
@@ -93,7 +104,7 @@ class TreeNode:
 
     @staticmethod
     def _splitListToNestedValuesList(values: List[Any]) -> List[List[Any]]:
-        """Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]"""
+        """Split 'values' into a list of lists, each inner list corresponding to a level in the tree, eg: [1,3,2,5] becomes [ [1], [3,2], [5,None,None,None] ]. (Requires list to correspond to valid binary tree with no missing elements)"""
         #   {{{
         tree_levels_count = TreeNode._listLevelsCountWhenNested(values)
         z = 0
@@ -260,8 +271,8 @@ def test_fillListInferMissing():
     #   {{{
     print("test_fillListInferMissing:")
     logging.warning("test_fillListInferMissing test values insufficent - need more complex example of btree-as-list to call this tested")
-    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,2,None,2,None], ]
-    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], ]
+    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,2,None,2,None], [1,None,2,None,0,3], ]
+    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], ]
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
