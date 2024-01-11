@@ -271,7 +271,13 @@ class TreeNode:
 def test_fromList_toList():
     #   {{{
     print("test_fromList_toList:")
-    input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [], list(range(1,16)), [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], ]
+    input_values = [ 
+        [1,3,2,5], 
+        [2,1,3,None,4,None,7], 
+        [1], [1,2], 
+        [], list(range(1,16)), 
+        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
+    ]
     for values in input_values:
         loop_tree = TreeNode.from_list(values)
         print(loop_tree)
@@ -288,8 +294,26 @@ def test_fillListInferMissing():
     #   {{{
     print("test_fillListInferMissing:")
     logging.warning("test_fillListInferMissing test values insufficent - need more complex example of btree-as-list to call this tested")
-    input_values = [ [1], [], [1,2], [1,None,2,3], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,2,None,2,None], [1,None,2,None,0,3], ]
-    result_validate = [ [1], [], [1,2,None], [1,None,2,None,None,3,None], [1,None,2], [1,2,2,None,3,None,3], [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], ]
+    input_values = [ 
+        [1], 
+        [], 
+        [1,2], 
+        [1,None,2,3], 
+        [1,None,2], 
+        [1,2,2,None,3,None,3], 
+        [5,4,1,None,1,None,4,2,None,2,None], 
+        [1,None,2,None,0,3], 
+    ]
+    result_validate = [ 
+       [1], 
+       [], 
+       [1,2,None], 
+       [1,None,2,None,None,3,None], 
+       [1,None,2], 
+       [1,2,2,None,3,None,3], 
+       [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], 
+       [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+    ]
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
@@ -304,7 +328,15 @@ def test_fillListInferMissing():
 
 def test_eq():
     #   {{{
-    input_values = [ [1,3,2,5], [2,1,3,None,4,None,7], [1], [1,2], [], list(range(1,16)), [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], ]
+    input_values = [ 
+        [1,3,2,5], 
+        [2,1,3,None,4,None,7], 
+        [1], 
+        [1,2], 
+        [], 
+        list(range(1,16)), 
+        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
+    ]
     for i in range(len(input_values)):
         for j in range(len(input_values)):
             l = TreeNode.from_list(input_values[i])
