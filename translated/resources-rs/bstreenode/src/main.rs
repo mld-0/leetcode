@@ -91,6 +91,9 @@ impl TreeNode {
                 result.push(y);
             }
         }
+        if !Self::is_length_of_complete_binary_tree(result.len()) {
+            panic!("TreeNode::to_list(): result.len()=({:?}) invalid for result=({:?}) (plz debug)", result.len(), result);
+        }
         result
     }
 
@@ -130,6 +133,9 @@ impl TreeNode {
                 } else {
                     loop_nodes.push(None);
                     loop_nodes.push(None);
+                    if Self::is_length_of_complete_binary_tree(values.len()) && z+1 < values.len() && values[z].is_none() && values[z+1].is_none() {
+                        z += 2;
+                    }
                 }
             }
             if z == previous_z {
@@ -147,6 +153,9 @@ impl TreeNode {
             }
         }
         println!("result_flat=({:?})", result_flat);
+        if !Self::is_length_of_complete_binary_tree(result_flat.len()) {
+            panic!("TreeNode::fill_list_infer_missing(): result_flat.len()=({:?}) invalid for result_flat=({:?}), values=({:?}) (plz debug)", result_flat.len(), result_flat, values);
+        }
         result_flat
     }
 
@@ -186,6 +195,9 @@ impl TreeNode {
                     None
                 };
                 loop_vals.push(val);
+            }
+            if !Self::is_power_of_two(loop_vals.len()) {
+                panic!("TreeNode::_splitListToNestedValuesList(): invalid loop_vals.len()=({:?}) for loop_vals=({:?}), values=({:?}) (plz debug)", loop_vals.len(), loop_vals, values);
             }
             tree_nestedValues.push(loop_vals);
         }
@@ -248,6 +260,9 @@ impl TreeNode {
                     unsafe { (*(*parent_node).as_ref().unwrap().as_ptr()).right = new_node; }
                     unsafe { loop_nodes.push( &mut (*(*parent_node).as_ref().unwrap().as_ptr()).right as *mut Option<Rc<RefCell<TreeNode>>>); };
                 }
+            }
+            if !Self::is_power_of_two(loop_nodes.len()) {
+                panic!("TreeNode::_buildTreeFromNestedValuesList_unsafe(): invalid loop_nodes.len()=({:?}) for tree_nestedValues=({:?}) (plz debug)", loop_nodes.len(), tree_nestedValues);
             }
             tree_nestedNodes.push(loop_nodes);
         }
@@ -419,6 +434,17 @@ impl TreeNode {
             lines.push(temp);
         }
         (lines, n+m+u, std::cmp::max(p,q)+2, n+u/2)
+    }
+
+
+    /// Check if n is 1 less than a power of 2 (correct length of a complete binary tree as a list)
+    fn is_length_of_complete_binary_tree(n: usize) -> bool {
+        n > 0 && ((n + 1) & n == 0)
+    }
+
+    /// Check if n is a power of 2 (correct length for a complete level of a binary tree)
+    fn is_power_of_two(n: usize) -> bool {
+        n > 0 && ((n & (n - 1)) == 0)
     }
 
 }
