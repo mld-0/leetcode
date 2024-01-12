@@ -94,43 +94,51 @@ impl TreeNode {
         result
     }
 
-//  Convert tree-as-list as given for leetcode input to format acceptable for 'from_list()' (by filling in missing None children of None parents)
-    pub fn fill_list_infer_missing(vals: &[Option<i32>]) -> Vec<Option<i32>> 
+    /// Convert tree-as-list as given for leetcode input to format acceptable for 'from_list()' (by filling in missing None children of None parents)
+    pub fn fill_list_infer_missing(values: &[Option<i32>]) -> Vec<Option<i32>> 
     {
-        let mut values: Vec<Option<i32>> = vals.iter().cloned().collect();
         if values.len() == 0 {
-            return vec![]
+            return vec![];
         }
-        let tree_levels_count = Self::_listLevelsCountWhenNested(&values);
-        println!("tree_levels_count=({:?})", tree_levels_count);
-        for _i in values.len()..(2_usize.pow(tree_levels_count as u32)) {
-            values.push(None);
+        if values[0].is_none() {
+            panic!("TreeNode::fill_list_infer_missing(): First element in values may not be None");
         }
+
         let mut result = Vec::<Vec<Option<i32>>>::new();
-        //  {{{
-        //for _ in 0..tree_levels_count {
-        //    result.push( vec![] );
-        //}
-        //result[0].push( values[0] );
-        //  }}}
         result.push( vec![ values[0] ] );
+
         let mut z = 1;
-        for loop_level in 1..(tree_levels_count as usize) {
-            let mut loop_nodes = Vec::<Option<i32>>::new();
+        let mut loop_level = 1;
+        while z < values.len() {
+            let mut loop_nodes = vec![];
             let parent_level = &result[loop_level-1];
+            let previous_z = z;
             for x in parent_level {
                 if x.is_some() {
-                    loop_nodes.push(values[z]);
+                    if z < values.len() {
+                        loop_nodes.push(values[z]);
+                    } else {
+                        loop_nodes.push(None);
+                    }
                     z += 1;
-                    loop_nodes.push(values[z]);
+                    if z < values.len() {
+                        loop_nodes.push(values[z]);
+                    } else {
+                        loop_nodes.push(None);
+                    }
                     z += 1;
                 } else {
                     loop_nodes.push(None);
                     loop_nodes.push(None);
                 }
             }
+            if z == previous_z {
+                panic!("TreeNode::fill_list_infer_missing(): z not incremented (invalid input?) (plz debug?)");
+            }
             result.push(loop_nodes);
+            loop_level += 1;
         }
+
         println!("result=({:?})", result);
         let mut result_flat = Vec::<Option<i32>>::new();
         for level in result {
@@ -461,6 +469,17 @@ fn test_fillListInferMissing()
         vec![Some(1),None,Some(2)], 
         vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], 
         vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),Some(2),None,Some(2),None], 
+        vec![Some(1),None,Some(2),None,Some(0),Some(3)], 
+
+        //vec![Some(1),None,Some(2),None,None,None,Some(0),None,None,None,None,None,None,Some(3),None], 
+
+        //vec![Some(1),Some(3),Some(2),Some(5)], 
+        //vec![Some(2),Some(1),Some(3),None,Some(4),None,Some(7)], 
+        //vec![Some(1)], 
+        //vec![Some(1),Some(2)], 
+        //vec![], 
+        //(1..16).map(|x| Some(x)).collect::<_>(), 
+        //vec![Some(1),Some(2),Some(3),Some(4),None,None,Some(7),Some(8),Some(9),None,None,None,None,Some(14),Some(15)], 
     ];
     let result_validate: Vec<Vec<Option<i32>>> = vec![ 
         vec![Some(1)], 
@@ -470,6 +489,17 @@ fn test_fillListInferMissing()
         vec![Some(1),None,Some(2)], 
         vec![Some(1),Some(2),Some(2),None,Some(3),None,Some(3)], 
         vec![Some(5),Some(4),Some(1),None,Some(1),None,Some(4),None,None,Some(2),None,None,None,Some(2),None], 
+        vec![Some(1),None,Some(2),None,None,None,Some(0),None,None,None,None,None,None,Some(3),None], 
+
+        //vec![Some(1),None,Some(2),None,None,None,Some(0),None,None,None,None,None,None,Some(3),None], 
+
+        //vec![Some(1),Some(3),Some(2),Some(5)], 
+        //vec![Some(2),Some(1),Some(3),None,Some(4),None,Some(7)], 
+        //vec![Some(1)], 
+        //vec![Some(1),Some(2)], 
+        //vec![], 
+        //(1..16).map(|x| Some(x)).collect::<_>(), 
+        //vec![Some(1),Some(2),Some(3),Some(4),None,None,Some(7),Some(8),Some(9),None,None,None,None,Some(14),Some(15)], 
     ];
     assert_eq!(input_values.len(), result_validate.len());
     for (values, check) in input_values.iter().zip(result_validate.iter()) {
