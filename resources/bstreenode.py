@@ -87,6 +87,7 @@ class TreeNode:
                     loop_nodes.append(None)
                     loop_nodes.append(None)
                     if TreeNode.is_length_of_complete_binary_tree(len(values)) and z+1 < len(values) and values[z] is None and values[z+1] is None:
+                        #   Ongoing: 2024-01-12T19:37:01AEDT this skipping of twin None values in the event the input is the exact length of a binary-tree seems like asking for trouble for that edgecase where we are given a tree with lots of implicit missing values that just happens to be the exact size of a full binary tree - although ... presumedly it would only ever actually be a problem if the input is inconsistent about including/excluding None values for missing nodes? 
                         z += 2
             if z == previous_z:
                 raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values}) (invalid input?) (or, plz debug?)")

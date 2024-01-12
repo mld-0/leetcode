@@ -134,6 +134,7 @@ impl TreeNode {
                     loop_nodes.push(None);
                     loop_nodes.push(None);
                     if Self::is_length_of_complete_binary_tree(values.len()) && z+1 < values.len() && values[z].is_none() && values[z+1].is_none() {
+                        //  Ongoing: 2024-01-12T19:37:01AEDT this skipping of twin None values in the event the input is the exact length of a binary-tree seems like asking for trouble for that edgecase where we are given a tree with lots of implicit missing values that just happens to be the exact size of a full binary tree - although ... presumedly it would only ever actually be a problem if the input is inconsistent about including/excluding None values for missing nodes? 
                         z += 2;
                     }
                 }
