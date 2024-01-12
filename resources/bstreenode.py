@@ -12,6 +12,8 @@ import logging
 
 #   Continue: 2022-09-17T14:39:33AEST test_fillListInferMissing, tested with simple input (simple 2-level tree) only (need an example of a bigger tree with omitted empty branches) [...] (does leetcode give such an input?) [...] 2024-01-11T20:26:25AEDT added extra test case from 1026-max-diff-between-node-and-ancestor for which it was incorrect and debuged function, (message and warning remain since more test cases are probably warrented still (for this and other methods))
 
+#   Ongoing: 2024-01-12T18:36:45AEDT `fill_list_infer_missing()` doesn't work for inputs where each empty node is denoted by a 'None' -> ergo it can't be used for any input?
+
 class TreeNode:
 
     def __init__(self, val: Any=0, left: Optional[TreeNode]=None, right: Optional[TreeNode]=None):
@@ -84,8 +86,10 @@ class TreeNode:
                 else:
                     loop_nodes.append(None)
                     loop_nodes.append(None)
+                    if TreeNode.is_length_of_complete_binary_tree(len(values)) and z+1 < len(values) and values[z] is None and values[z+1] is None:
+                        z += 2
             if z == previous_z:
-                raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values}) (plz debug)")
+                raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values}) (invalid input?) (or, plz debug?)")
             result.append(loop_nodes)
             loop_level += 1
         logging.debug(f"result=({result})")
@@ -274,8 +278,10 @@ def test_fromList_toList():
     input_values = [ 
         [1,3,2,5], 
         [2,1,3,None,4,None,7], 
-        [1], [1,2], 
-        [], list(range(1,16)), 
+        [1], 
+        [1,2], 
+        [], 
+        list(range(1,16)), 
         [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
     ]
     for values in input_values:
@@ -303,22 +309,44 @@ def test_fillListInferMissing():
         [1,2,2,None,3,None,3], 
         [5,4,1,None,1,None,4,2,None,2,None], 
         [1,None,2,None,0,3], 
+        [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+
+
+        [1,3,2,5], 
+        [2,1,3,None,4,None,7], 
+        [1], 
+        [1,2], 
+        [], 
+        list(range(1,16)), 
+        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
     ]
     result_validate = [ 
-       [1], 
-       [], 
-       [1,2,None], 
-       [1,None,2,None,None,3,None], 
-       [1,None,2], 
-       [1,2,2,None,3,None,3], 
-       [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], 
-       [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+        [1], 
+        [], 
+        [1,2,None], 
+        [1,None,2,None,None,3,None], 
+        [1,None,2], 
+        [1,2,2,None,3,None,3], 
+        [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], 
+        [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+        [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+
+        [1,3,2,5], 
+        [2,1,3,None,4,None,7], 
+        [1], 
+        [1,2], 
+        [], 
+        list(range(1,16)), 
+        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
     ]
+
     assert len(input_values) == len(result_validate)
     for values, check in zip(input_values, result_validate):
         print("values=(%s)" % values)
         result = TreeNode.fill_list_infer_missing(values)
         print("result=(%s)" % result)
+        while len(check) < len(result): #   extend `check` with `None` to account for trailing `None`s
+            check.append(None)
         assert result == check, "Check comparison failed"
         if values == check:
             logging.debug("note: values == check (no modification was required)")
