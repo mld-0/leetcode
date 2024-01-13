@@ -44,34 +44,34 @@ def bsearch_find_leftmost(nums: List[int], target: int) -> List[int]:
     """Get index of leftmost instance of `target` in sorted list `nums`, or -1 if not found"""
     l = 0
     r = len(nums) - 1
+    result = -1
     while l <= r:
-        mid = (r + l) // 2
+        mid = (l + r) // 2
         if nums[mid] == target:
-            while mid-1 >= 0 and nums[mid-1] == target:
-                mid = mid - 1
-            return mid
-        elif nums[mid] < target:
-            l = mid + 1
+            result = mid
+            r = mid - 1
         elif nums[mid] > target:
             r = mid - 1
-    return -1
+        elif nums[mid] < target:
+            l = mid + 1
+    return result
 
 
 def bsearch_find_rightmost(nums: List[int], target: int) -> List[int]:
     """Get index of rightmost instance of `target` in sorted list `nums`, or -1 if not found"""
     l = 0
     r = len(nums) - 1
+    result = -1
     while l <= r:
-        mid = (r + l) // 2
+        mid = (l + r) // 2
         if nums[mid] == target:
-            while mid+1 < len(nums) and nums[mid+1] == target:
-                mid = mid + 1
-            return mid
-        elif nums[mid] < target:
+            result = mid
             l = mid + 1
         elif nums[mid] > target:
             r = mid - 1
-    return -1
+        elif nums[mid] < target:
+            l = mid + 1
+    return result
 
 
 def bsearch_findMin(nums: List[int]) -> int:
