@@ -6,7 +6,7 @@ class Solution:
     """Determine whether the number of occurences of each value in `arr` is unique"""
 
     #   runtime: beats 97%
-    def uniqueOccurences_i(self, arr: List[int]) -> bool:
+    def uniqueOccurrences_i(self, arr: List[int]) -> bool:
         counts = Counter(arr)
         counts_set = set(counts.values())
         if len(counts.values()) == len(counts_set):
