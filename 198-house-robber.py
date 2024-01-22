@@ -1,21 +1,11 @@
-from typing import List
+import time
+from typing import List, Optional
 
 class Solution:
-
-    def rob(self, nums: List[int]) -> int:
-        #self.decisions = {}
-        #self.maxRobbedAmount = {}
-        #result = self.rob_RecursiveMemorize(nums)
-        #print(self.decisions)
-        #return result
-        #return self.rob_DP(nums)
-        return self.rob_DP_SpaceOptimised(nums)
-
-
+    """Determine the maximum quantity that can be stolen by robbing the houses in `nums`, where we cannot rob two adjacent houses with the police being alerted"""
 
     #   runtime: beats 97%
     def rob_RecursiveMemorize(self, nums: List[int], i: int=0) -> int:
-        """Recursively decide whether to skip house i in 'nums', or to rob i and i+1"""
         maxRobbedAmount = dict()
         decisions = dict()
 
@@ -49,7 +39,7 @@ class Solution:
             return ans
 
         result = rob_solve(nums, i)
-        print(decisions)
+        #print(decisions)
         return result
 
 
@@ -78,7 +68,7 @@ class Solution:
             else:
                 maxRobbedAmount[i] = trial_A
 
-        print(decisions)
+        #print(decisions)
         return maxRobbedAmount[0]
 
 
@@ -111,22 +101,26 @@ class Solution:
             else:
                 rob_next = trial_A
 
-        print(decisions)
+        #print(decisions)
         return rob_next
 
 
 s = Solution()
 test_functions = [ s.rob_RecursiveMemorize, s.rob_DP, s.rob_DP_SpaceOptimised, ] 
 
-input_values = [ [1,2,3,1], [2,7,9,3,1], ]
-input_checks = [ 4, 12 ]
+inputs = [ [1,2,3,1], [2,7,9,3,1], ]
+checks = [ 4, 12 ]
+assert len(inputs) == len(checks), "input/check lists length mismatch"
+assert len(inputs) > 0, "No input"
 
-for test_func in test_functions:
-    print(test_func.__name__)
-    for nums, check in zip(input_values, input_checks):
-        print("nums=(%s)" % nums)
-        result = test_func(nums)
-        print("result=(%s)" % str(result))
-        assert check == result, "Check failed"
+for f in test_functions:
+    print(f.__name__)
+    start_time = time.time()
+    for nums, check in zip(inputs, checks):
+        print(f"nums=({nums})")
+        result = f(nums)
+        print(f"result=({result})")
+        assert result == check, "Check comparison failed"
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
     print()
 
