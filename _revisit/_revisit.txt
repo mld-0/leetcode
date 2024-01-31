@@ -160,3 +160,6 @@ Why is our solution so much less efficent than ans? (Is it just because we creat
 1066-campus-bikes-ii:
 Intution for DP-top-down solution (could you do it upon revisit), implement DP-bottom-up solution.
 
+739-daily-temperatues:
+A medium problem for which the intuition behind ans is not-at-all immediately obvious (in the sense one feels one could use the same technique again)
+
