@@ -31,10 +31,10 @@ def list2str(vals: List, max_str_length: int=60):
 #   }}}
 
 class Solution:
-    """Sort the characters in the input string in decreasing order based on the frequency of occurences of that character"""
+    """Sort the characters in the input string in decreasing order based on the frequency of occurrences of that character"""
 
     #   runtime: beats 84%
-    def frequencySort_BucketCountHeapSort(self, s: str) -> str:
+    def frequencySort_BucketArrayHeapSort(self, s: str) -> str:
         char2index = \
             { chr(ord('a')+i): i for i in range(0,26) } | \
             { chr(ord('A')+i): i+26 for i in range(0,26) } | \
