@@ -90,6 +90,7 @@ class Solution:
                 return i
 
 
+    #   beats 98%
     def numSquares_ans_Maths(self, n: int) -> int:
 
         def isSquare(n: int) -> bool:
