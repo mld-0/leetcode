@@ -31,6 +31,7 @@ def list2str(vals: List, max_str_length: int=60):
 #   }}}
 
 class Solution:
+    """Determine the first palindrome in a list of strings"""
 
     #   runtime: 39%
     def firstPalindrome_TwoPointers(self, words: List[str]) -> str:
