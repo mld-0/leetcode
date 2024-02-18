@@ -34,38 +34,36 @@ def list2str(vals: List, max_str_length: int=60):
 #   }}}
 
 class Solution:
+    """Find the longest consecutive sequence in an unsorted list in O(n)"""
 
     #   runtime: TLE
     def longestConsecutive_i(self, nums: List[int]) -> int:
         if len(nums) <= 1:
             return len(nums)
 
-        smallest = min(nums)
-        largest = max(nums)
         nums_set = set(nums)
 
         result = 1
         for n in nums_set:
             current = 1
-            for i in range(n+1, largest+1):
+            i = n+1
+            while True:
                 if i in nums_set:
                     current += 1
                 else:
                     break
+                i += 1
             result = max(current, result)
 
         return result
 
 
-    #   runtime: beats 72%
+    #   runtime: beats 98%
     def longestConsecutive_ii(self, nums: List[int]) -> int:
         if len(nums) <= 1:
             return len(nums)
 
-        smallest = min(nums)
-        largest = max(nums)
         nums_set = set(nums)
-
         smallest_start = dict()
 
         result = 1
@@ -73,7 +71,8 @@ class Solution:
             if n in smallest_start:
                 continue
             current = 1
-            for i in range(n+1, largest+1):
+            i = n+1
+            while True:
                 if i in nums_set:
                     current += 1
                     if i not in smallest_start:
@@ -82,6 +81,7 @@ class Solution:
                         smallest_start[i] = min(smallest_start[i], n)
                 else:
                     break
+                i += 1
             result = max(current, result)
 
         return result
@@ -106,7 +106,7 @@ s = Solution()
 test_functions = [ s.longestConsecutive_i, s.longestConsecutive_ii, s.longestConsecutive_ans, ]
 arg_names = ["nums"]
 
-inputs = [ [100,4,200,1,3,2], [0,3,7,2,5,8,4,6,0,1], [], [0,0], [0,1,2,4,8,5,6,7,9,3,55,88,77,99,999999], [1,0,-1], ]
+inputs = [ [100,4,200,1,3,2], [0,3,7,2,5,8,4,6,0,1], [], [0,0], [0,1,2,4,8,5,6,7,9,3,55,88,77,99,99999999], [1,0,-1], ]
 checks = [ 4, 9, 0, 1, 10, 3, ]
 assert len(inputs) == len(checks), "input/check lists length mismatch"
 assert len(inputs) > 0, "No input"
