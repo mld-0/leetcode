@@ -73,9 +73,14 @@ for dir in $( find . -maxdepth 1 -type d | cut -c 3- | sort -h ); do
 		echo "$result" >> "$path_failures"
     fi
 done
+num_total="${#scripts_list[@]}"
+num_failures=$( cat "$path_failures" | wc -l )
+num_succeses=$( perl -E "say $num_total - $num_failures" )
 
 echo ""
 echo "time_elapsed=($time_elapsed)"
-echo -n "failures: "; cat $path_failures | wc -l;
+echo "total: $num_total"
+echo "successes: $num_succeses"
+echo "failures: $num_failures"
 cat $path_failures 
 

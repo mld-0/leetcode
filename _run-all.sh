@@ -61,8 +61,15 @@ done
 
 time_end=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
 time_elapsed=$( perl -E "say $time_end - $time_start" )
+
+num_total="${#scripts_list[@]}"
+num_failures=$( cat "$path_failures" | wc -l )
+num_succeses=$( perl -E "say $num_total - $num_failures" )
+
 echo ""
 echo "time_elapsed=($time_elapsed)"
-echo -n "failures: "; cat $path_failures | wc -l;
+echo "total: $num_total"
+echo "successes: $num_succeses"
+echo "failures: $num_failures"
 cat $path_failures
 
