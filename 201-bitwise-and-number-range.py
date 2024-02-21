@@ -1,51 +1,78 @@
-#   VIM SETTINGS: {{{3
-#   vim: set tabstop=4 modeline modelines=10 foldmethod=marker:
-#   vim: set foldlevel=2 foldcolumn=2:
-#   }}}1
+#   {{{3
+#   vim: set tabstop=4 modeline modelines=10:
+#   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
 #   {{{2
+import time
+import math
+from typing import List, Optional
+#   arg_printer(args: List, arg_names: List), list2str(vals: List, max_str_length: int=60) {{{
+def arg_printer(args: List, arg_names: List):  
+    assert len(args) == len(arg_names), "input args / arg_names length mismatch"
+    output = ""
+    for arg, arg_name in zip(args, arg_names):
+        output += f"{arg_name}=({list2str(arg)}), "
+    print(output[:-2])
+def list2str(vals: List, max_str_length: int=60):  
+    def build_string(vals, num_elements):
+        if num_elements < len(vals):
+            return f"[{','.join(map(str, vals[:num_elements]))},...,{vals[-1]}]"
+        else:
+            return str(vals)
+    if type(vals) != type([]):
+        return str(vals)
+    if len(vals) == 0:
+        return str(vals)
+    num_elements = len(vals)
+    if num_elements > 100:
+        return f"len([...])=({num_elements})"
+    while num_elements > 0:
+        formatted_list = build_string(vals, num_elements)
+        if len(formatted_list) <= max_str_length:
+            break
+        num_elements -= 1
+    return formatted_list
+#   }}}
+
 class Solution:
+    """Return the bitwise and of all numbers in the range [left,right]"""
 
-    #   runtime: TLE
-    def rangeBitwiseAnd_i(self, left: int, right: int) -> int:
-        result = left
-        for i in range(left+1, right+1):
-            result &= i
-        return result
-
-    
-    #   runtime: beats 90%
-    def rangeBitwiseAnd_ii(self, left: int, right: int) -> int:
-        """Find the 'common prefix' of the binary numbers between 'left' and 'right'"""
-        #   how many right shifts until 'left' and 'right' are equal
+    #   runtime: beats 93%
+    def rangeBitwiseAnd_CommonPrefix(self, left: int, right: int) -> int:
+        if left == 0 or right == 0:
+            return 0
         i = 0
         while left != right:
-            left = left >> 1
-            right = right >> 1
+            left >>= 1
+            right >>= 1
             i += 1
-        #   shift back left to obtain the binary common prefix
         return left << i
 
 
-    #   runtime: beats 99%
-    def rangeBitwiseAnd_iii(self, left: int, right: int) -> int:
-        """Find the 'common prefix' of the binary numbers between 'left' and 'right'"""
+    #   runtime: beats 100%
+    def rangeBitwiseAnd_ans_BrianKernighan(self, left: int, right: int) -> int:
         while left < right:
             right = right & (right - 1)
         return right
 
 
 s = Solution()
-test_functions = [ s.rangeBitwiseAnd_ii, s.rangeBitwiseAnd_iii, ]
+test_functions = [ s.rangeBitwiseAnd_i, ]
+arg_names = ["left", "right"]
 
-input_values = [ (5,7), (0,0), (1,2147483647), ]
-input_checks = [ 4, 0, 0, ]
+inputs = [ (5,7), (0,0), (1,2147483647), ]
+checks = [ 4, 0, 0, ]
+assert len(inputs) == len(checks), "input/check lists length mismatch"
+assert len(inputs) > 0, "No input"
 
-for test_func in test_functions:
-    print(test_func.__name__)
-    for (l, r), check in zip(input_values, input_checks):
-        print("l=(%s), r=(%s)" % (l, r))
-        result = test_func(l, r)
-        print("result=(%s)" % result)
+for f in test_functions:
+    print(f.__name__)
+    start_time = time.time()
+    for args, check in zip(inputs, checks):
+        if type(args) != type(tuple()) and len(arg_names) == 1: args = tuple([args])
+        arg_printer(args, arg_names)
+        result = f(*args)
+        print(f"result=({list2str(result)})")
         assert result == check, "Check comparison failed"
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
     print()
 
