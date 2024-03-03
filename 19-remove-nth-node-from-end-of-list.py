@@ -1,98 +1,102 @@
-import sys
-import logging
-from typing import Optional
+#   {{{3
+#   vim: set tabstop=4 modeline modelines=10:
+#   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
+#   {{{2
+import time
 from resources.listnode import ListNode
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+from typing import List, Optional
+#   arg_printer(args: List, arg_names: List), list2str(vals: List, max_str_length: int=60) {{{
+def arg_printer(args: List, arg_names: List):  
+    assert len(args) == len(arg_names), "input args / arg_names length mismatch"
+    output = ""
+    for arg, arg_name in zip(args, arg_names):
+        output += f"{arg_name}=({list2str(arg)}), "
+    print(output[:-2])
+def list2str(vals: List, max_str_length: int=60):  
+    def build_string(vals, num_elements):
+        if num_elements < len(vals):
+            return f"[{','.join(map(str, vals[:num_elements]))},...,{vals[-1]}]"
+        else:
+            return str(vals)
+    if type(vals) != type([]):
+        return str(vals)
+    if len(vals) == 0:
+        return str(vals)
+    num_elements = len(vals)
+    if num_elements > 100:
+        return f"len([...])=({num_elements})"
+    while num_elements > 0:
+        formatted_list = build_string(vals, num_elements)
+        if len(formatted_list) <= max_str_length:
+            break
+        num_elements -= 1
+    return formatted_list
+#   }}}
 
 class Solution:
-
-    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        #return self.removeNthFromEnd_Ans(head, n)
-        return self.removeNthFromEnd_A(head, n)
-
-
-    def removeNthFromStart(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        if n == 0:
-            head = head.next
-            return head
-        first = head
-        second = first
-        i = 0
-        while i < n:
-            second = first
-            first = first.next
-            i += 1
-        if first is not None:
-            second.next = first.next
-        else:
-            second.next = None
-        return head
-
-
-    #       runtime: beats 55%
-    def removeNthFromEnd_A(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        list_len = 1
-        first = head
-
-        while first.next is not None:
-            first = first.next
-            list_len += 1
-
-        index_remove = list_len - n
-
-        return self.removeNthFromStart(head, index_remove)
-
-
-    #       runtime: beats 80%
-    def removeNthFromEnd_Ans(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
-        first = head
-        second = head
-
-        while n > 0:
-            first = first.next
-            n -= 1
-
-        if first is None:
-            return head.next
-
-        while first.next:
-            first = first.next
-            second = second.next
-
-        second.next = second.next.next
-        return head
-
+    """Remove the n-th node from the end of a linked list and return its head"""
 
     #   runtime: beats 98%
-    def removeNthFromEnd_TwoPointers(self, head: ListNode, n: int) -> ListNode:
+    def removeNthFromEnd_TwoPass(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        list_length = 0
+        current = head
+        while current is not None:
+            current = current.next
+            list_length += 1
+
+        #   position of node to be removed (0-indexed)
+        index_remove = list_length - n
+
+        if index_remove == 0:
+            return head.next
+        previous = None
+        current = head
+        for i in range(index_remove):
+            previous = current
+            current = current.next
+        previous.next = current.next
+        return head
+
+
+    #   runtime: beats 99%
+    def removeNthFromEnd_TwoPointers(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        if head.next is None:
+            return None
+
         l = head
         r = head
-
-        for i in range(n):
+        for i in range(n+1):
+            if r is None:
+                return head.next
             r = r.next
 
-        if r is None:
-            return head.next
-
-        while r.next is not None:
-            r = r.next
+        while r is not None:
             l = l.next
-
+            r = r.next
         l.next = l.next.next
         return head
 
 
-list_values = [ ([1,2,3,4,5], 2), ([1], 1), ([1,2], 1) ]
-list_checks = [ [1,2,3,5], [], [1] ]
-
 s = Solution()
+test_functions = [ s.removeNthFromEnd_TwoPass, s.removeNthFromEnd_TwoPointers, ]
+arg_names = ["head", "n"]
 
-for (loop_values, loop_n), loop_check in zip(list_values, list_checks):
-    loop_node = ListNode.from_list(loop_values)
-    result = s.removeNthFromEnd(loop_node, loop_n)
-    print("result=(%s)" % str(result))
-    result_list = []
-    if result is not None: 
-        result_list = result.to_list()
-    assert( result_list == loop_check)
+inputs = [ ([1,2,3,4,5], 2), ([1], 1), ([1,2], 1), ([1,2],2), ]
+checks = [ [1,2,3,5], [], [1], [2], ]
+assert len(inputs) == len(checks), "input/check lists length mismatch"
+assert len(inputs) > 0, "No input"
+
+for f in test_functions:
+    print(f.__name__)
+    start_time = time.time()
+    for args, check in zip(inputs, checks):
+        args = (ListNode.from_list(args[0]), args[1])
+        if type(args) != type(tuple()) and len(arg_names) == 1: args = tuple([args])
+        arg_printer(args, arg_names)
+        result = f(*args)
+        result = result.to_list() if result is not None else []
+        print(f"result=({list2str(result)})")
+        assert result == check, "Check comparison failed"
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
+    print()
 
