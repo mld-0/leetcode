@@ -1,88 +1,72 @@
+#   {{{3
+#   vim: set tabstop=4 modeline modelines=10:
+#   vim: set foldlevel=2 foldcolumn=2 foldmethod=marker:
+#   {{{2
+import time
 from resources.listnode import ListNode
-
+from typing import List, Optional
 
 class Solution:
+    """Reverse a linked-list, returning the new head"""
 
-    def reverseList(self, head):
-        #return self.reverseList_A(head)
-        #return self.reverseList_Inplace(head)
-        #return self.reverseList_Recursive(head)
-        return self.reverseList_RecursiveInplace(head)
-
-    #       runtime: beats 39%
-    def reverseList_Iterative(self, head):
+    #   runtime: beats 90%
+    def reverseList_List(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if head is None:
             return None
         elements = []
-        node = head
-        while node is not None:
-            elements.append(node.val)
-            node = node.next
-        elements = elements[::-1]
-        result = ListNode()
-        node = result
-        previous = node
-        for i in elements:
-            node.val = i
-            node.next = ListNode()
-            previous = node
-            node = node.next
-        previous.next = None
-        return result
-
-    
-    #       runtime: beats 97%
-    def reverseList_Inplace(self, head):
-        curr = head
-        prev = None
-        while curr is not None:
-            next_node = curr.next
-            curr.next = prev
-            prev = curr
-            curr = next_node
-        return prev
-
-    
-    #   runtime: beats 90%
-    def reverseList_Recursive(self, head, r=None):
-        if head is None:
-            return r
-        if r is None:
-            r = ListNode(head.val)
-            return self.reverseList_Recursive(head.next, r)
-        r = ListNode(head.val, r)
-        return self.reverseList_Recursive(head.next, r)
+        current = head
+        while current is not None:
+            elements.append(current)
+            current = current.next
+        for i in range(len(elements)-1, 0, -1):
+            elements[i].next = elements[i-1]
+        elements[0].next = None
+        return elements[-1]
 
 
-    #   runtime: beats 97%
-    def reverseList_RecursiveInplace(self, head):
-        if head is None or head.next is None:
-            return head
-        p = self.reverseList_RecursiveInplace(head.next)
-        head.next.next = head
-        head.next = None
-        return p
+    #   runtime: beats 93%
+    def reverseList_TwoPointers(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        previous = None
+        current = head
+        while current is not None:
+            temp = current.next
+            current.next = previous
+            previous = current
+            current = temp
+        return previous
 
-        
+
+    #   runtime: beats 99%
+    def reverseList_Recursive(self, head: Optional[ListNode]) -> Optional[ListNode]:
+
+        def solve(current, previous):
+            if current is None:
+                return previous
+            temp = current.next
+            current.next = previous
+            return solve(temp, current)
+
+        return solve(head, None)
 
 
 s = Solution()
+test_functions = [ s.reverseList_List, s.reverseList_TwoPointers, s.reverseList_Recursive, ]
 
-input_list = [ [1,2,3,4,5], [1,2], [] ]
-check_list = [ [5,4,3,2,1], [2,1], [] ]
+inputs = [ [1,2,3,4,5], [1,2], [], list(range(100)), ]
+checks = [ [5,4,3,2,1], [2,1], [], list(reversed(range(100))), ]
+assert len(inputs) == len(checks), "input/check lists length mismatch"
+assert len(inputs) > 0, "No input"
 
-for loop_input, loop_check in zip(input_list, check_list):
-    print("loop_input=(%s)" % loop_input)
-    loop_input_linked = ListNode.from_list(loop_input)
-    print("loop_input_linked=(%s)" % loop_input_linked)
-    result = s.reverseList(loop_input_linked)
-    print("result=(%s)" % result)
-    print("loop_check=(%s)" % loop_check)
-    result_list = []
-    if result is not None:
-        result_list = result.to_list()
-    assert result_list == loop_check 
+for f in test_functions:
+    print(f.__name__)
+    start_time = time.time()
+    for vals, check in zip(inputs, checks):
+        head = ListNode.from_list(vals)
+        print(f"head=({head})")
+        result = f(head)
+        print(f"result=({result})")
+        result = result.to_list() if result is not None else []
+        assert result == check, "Check comparison failed"
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
     print()
-
-
 
