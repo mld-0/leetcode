@@ -124,6 +124,40 @@ class BTree_DFS_Iterative:
         return result
 
 
+class BTree_DFS_MorrisPreorderTraversal:
+
+    def MorrisPreorderTraversal(self, root: TreeNode) -> List[int]:
+        """Constant-space pre-order tree-traversal method"""
+        result = []
+        current = root
+        #path = []
+        previous = None
+        while current:
+            if current.left:
+                previous = current.left
+                depth = 1
+                while previous.right and not previous.right is current:
+                    previous = previous.right
+                    depth += 1
+                if not previous.right:
+                    #path.append(current.val)
+                    result.append(current.val)
+                    previous.right = current
+                    current = current.left
+                else:
+                    #if not previous.left: print(f"path to leaf: {path}")
+                    #for _ in range(depth): path.pop()
+                    previous.right = None
+                    current = current.right
+            else:
+                #path.append(current.val)
+                result.append(current.val)
+                #if not current.right: print(f"path to leaf: {path}")
+                current = current.right
+        return result
+
+
+
 #   Adjacency Matrix vs List for representing graphs:
 #
 #   A matrix will be more memory efficient for a graph with many edges, a list for graphs with fewer edges
@@ -240,11 +274,29 @@ class test_BTree_DFS:
         print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
         print()
         #   }}}
+    def test_dfs_Morris(self):
+        #   {{{
+        s = BTree_DFS_MorrisPreorderTraversal()
+        inputs = [ [1,2,3,4,5,6,7], ]
+        checks = [ [1,2,4,5,3,6,7], ]
+        assert len(inputs) == len(checks)
+        startTime = time.time()
+        print("test_dfs_Morris:")
+        for vals, check in zip(inputs, checks):
+            head = TreeNode.from_list_infer_missing(vals)
+            print(f"{head}")
+            result = s.MorrisPreorderTraversal(head)
+            print(f"result=({result})")
+            assert result == check
+        print("elapsed_ms=(%0.2f)" % ((time.time() - startTime) * 1000000))
+        print()
+    #   }}}
     @staticmethod
     def run():
         t = test_BTree_DFS()
         t.test_dfs(BTree_DFS_Recursive())
         t.test_dfs(BTree_DFS_Iterative())
+        t.test_dfs_Morris()
 
 class test_Graph_DFS:
     @staticmethod
