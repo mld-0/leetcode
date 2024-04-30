@@ -26,3 +26,23 @@
 #       (n & (-n))  == n
 #       (n & (n-1)) == 0
 
+
+#   From: 1915-number-of-wonderful-strings:
+#   Check whether two numbers differ by 0, 1, or more bits 
+#   (xor them and check if the result is a power of two)
+#       temp = a ^ b
+#       if a == b:
+#           print("differ by 0 bits")
+#       elif (a & (a - 1)) == 0: 
+#           print("differ by 1 bit")
+#       else: 
+#           print("differ by >1 bits")
+
+
+
+#   From: 201-bitwise-and-number-range
+#   
+#   isolate the leftmost one bit of n:
+#       1 << int(math.log2(n))
+#
+#   [{a better way (surely)?}]
