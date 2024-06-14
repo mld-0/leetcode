@@ -33,11 +33,10 @@ call_get_scripts_list()
 		echo "error, not found, path_script=($path_script)" > /dev/stderr
 		exit 2
 	fi
-	#IFS_temp="$IFS"
-	#IFS=$'\n'
-	local IFS=$'\n'
+	IFS_temp="$IFS"
+	IFS=$'\n'
 	scripts_list=( $( $SHELL "$path_script_get_numbered" ) )
-	#IFS="$IFS_temp"
+	IFS="$IFS_temp"
 	if [[ ${#scripts_list[@]} -le 0 ]]; then 
 		echo "error, scripts_list=(${scripts_list[@]})" > /dev/stderr; 
 		exit 2; 
@@ -61,26 +60,26 @@ run_scripts_list_parallel()
 	local time_start=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
 	echo "$time_start" > "$path_tmp/time-start"
 	for loop_script in "${scripts_list[@]}"; do
-		(
-			loop_script_filename=$( basename "$loop_script" )
-			current_tmp="$path_tmp/$loop_script_filename"
-			run_msg="./$loop_script_filename"
-			$bin_py $loop_script_filename > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
-			echo "$run_msg"
-			#echo "$loop_script_filename:"
-			$bin_py $loop_script > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
-			echo "$?" > "$current_tmp/my-rc" ; 
-			rc=`cat "$current_tmp/my-rc"`
-			if [[ $rc -ne 0 ]]; then
-				echo "$loop_script_filename" > "$current_tmp/failed"
-				echo "$loop_script_filename" >> "$path_tmp/failured-scripts-log"
-			fi
-			if [[ $flag_printOutput -ne 0 ]]; then
-				cat "$current_tmp/my-stdout" | grep -v "^$"
-				echo "rc=($rc)"
-				echo ""
-			fi
-		) &
+	(
+		loop_script_filename=$( basename "$loop_script" )
+		current_tmp="$path_tmp/$loop_script_filename"
+		run_msg="./$loop_script_filename"
+		$bin_py $loop_script_filename > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
+		echo "$run_msg"
+		#echo "$loop_script_filename:"
+		$bin_py $loop_script > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
+		echo "$?" > "$current_tmp/my-rc" ; 
+		rc=`cat "$current_tmp/my-rc"`
+		if [[ $rc -ne 0 ]]; then
+			echo "$loop_script_filename" > "$current_tmp/failed"
+			echo "$loop_script_filename" >> "$path_tmp/failured-scripts-log"
+		fi
+		if [[ $flag_printOutput -ne 0 ]]; then
+			cat "$current_tmp/my-stdout" | grep -v "^$"
+			echo "rc=($rc)"
+			echo ""
+		fi
+	) &
 	done
 	wait
 	local time_end=$( perl -MTime::HiRes=time -E 'printf "%.6f\n", time' )
@@ -141,11 +140,16 @@ cleanup_tmpdir()
 	fi
 }
 
-validate_command "$bin_py"
-call_get_scripts_list "$path_script_get_numbered"
-setup_tmpdirs
-run_scripts_list_parallel
-report_errors
-report_summary
-cleanup_tmpdir "$flag_cleanupOnFinish" "$path_tmp" 
+main() 
+{
+	validate_command "$bin_py"
+	call_get_scripts_list "$path_script_get_numbered"
+	setup_tmpdirs
+	run_scripts_list_parallel
+	report_errors
+	report_summary
+	cleanup_tmpdir "$flag_cleanupOnFinish" "$path_tmp" 
+}
+
+main
 
