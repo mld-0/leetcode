@@ -55,7 +55,7 @@ def execute_script(script_path):
     """
     Executes a Python script located at the given path, capturing its output, errors, and return code.
 
-    Created by gpt-1o
+    Created by gpt-1o (AND ONLY SUPERFICIALLY TESTED)
 
     The function changes the current working directory to the directory containing the script and temporarily
     adds that directory to `sys.path` before execution. This ensures that any imports within the script of
