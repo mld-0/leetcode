@@ -4,6 +4,7 @@
 #   {{{2
 import time
 import math
+from collections import deque
 from typing import List, Optional
 
 class Solution:
@@ -24,18 +25,13 @@ class Solution:
         for col in range(len(grid[0])-2, -1, -1):
             for row in range(len(grid)):
                 table_current = table[row][col]
-                trial_row = row - 1
-                if trial_row >= 0 and trial_row < len(grid):
-                    if grid[row][col] < grid[trial_row][col+1]:
-                        table_current = max(table_current, 1 + table[trial_row][col+1])
-                trial_row = row 
-                if trial_row >= 0 and trial_row < len(grid):
-                    if grid[row][col] < grid[trial_row][col+1]:
-                        table_current = max(table_current, 1 + table[trial_row][col+1])
-                trial_row = row + 1
-                if trial_row >= 0 and trial_row < len(grid):
-                    if grid[row][col] < grid[trial_row][col+1]:
-                        table_current = max(table_current, 1 + table[trial_row][col+1])
+                for delta in (-1, 0, 1):
+                    trial_row = row + delta
+                    if trial_row < 0 or trial_row >= len(grid):
+                        continue
+                    if grid[row][col] >= grid[trial_row][col+1]:
+                        continue
+                    table_current = max(table_current, 1 + table[trial_row][col+1])
                 table[row][col] = table_current
 
         result = 0
@@ -54,18 +50,13 @@ class Solution:
             if (row, col) in memo:
                 return memo[(row,col)]
             temp = 0
-            trial_row = row - 1
-            if trial_row >= 0 and trial_row < len(grid):
-                if grid[row][col] < grid[trial_row][col+1]:
-                    temp = max(temp, 1 + solve(trial_row, col+1))
-            trial_row = row
-            if trial_row >= 0 and trial_row < len(grid):
-                if grid[row][col] < grid[trial_row][col+1]:
-                    temp = max(temp, 1 + solve(trial_row, col+1))
-            trial_row = row + 1
-            if trial_row >= 0 and trial_row < len(grid):
-                if grid[row][col] < grid[trial_row][col+1]:
-                    temp = max(temp, 1 + solve(trial_row, col+1))
+            for delta in (-1, 0, 1):
+                trial_row = row + delta
+                if trial_row < 0 or trial_row >= len(grid):
+                    continue
+                if grid[row][col] >= grid[trial_row][col+1]:
+                    continue
+                temp = max(temp, 1 + solve(trial_row, col+1))
             memo[(row,col)] = temp
             return temp
 
@@ -77,8 +68,31 @@ class Solution:
         return result
 
 
+    #   runtime: beats 88%
+    #    memory: beats 92%
     def maxMoves_ans_BFS(self, grid: List[List[int]]) -> int:
-        raise NotImplementedError("Review BFS answer")
+        M, N = len(grid), len(grid[0])
+        deltas = (-1, 0, 1)
+        result = 0
+        queue = deque()
+        seen = [ [ False ] * N for _ in range(M) ]
+        for start_row in range(M):
+            queue.append( ( start_row, 0) )
+            seen[start_row][0] = True
+        while len(queue) > 0:
+            row, col = queue.popleft()
+            result = max(result, col)
+            if col == N - 1:
+                return col
+            for delta in deltas:
+                trial_row = row + delta
+                if (trial_row < 0 or trial_row >= M) or (grid[row][col] >= grid[trial_row][col+1]) or (seen[trial_row][col+1] == True):
+                    continue
+                if col + 1 == N - 1:
+                    return col + 1
+                queue.append( (trial_row, col+1) )
+                seen[trial_row][col+1] = True
+        return result
 
 
 s = Solution()
