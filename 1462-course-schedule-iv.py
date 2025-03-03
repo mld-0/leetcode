@@ -66,18 +66,59 @@ class Solution:
         return [ search(start, end) for end, start in queries ]
 
 
-
+    #   runtime: beats 93%
+    #    memory: eats 25%
     def checkIfPrerequisite_ans_TopologicalSortKahnAlgorithm(self, numCourses: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
-        raise NotImplementedError("unimplemented, ans Topological Sort (Kahn's Algorithm) and Floyd Warshall Algorithm")
+
+        #   directDependents[a] = set of nodes for which `a` is a direct prerequisite
+        directDependents = defaultdict(set)
+
+        #   preqCounts[a] = count of how many direct prerequisites does `a` have
+        preqCounts = defaultdict(int)
+
+        #   Construct adjacency list from edge list `prerequisites`
+        for prereq, course in prerequisites:
+            directDependents[prereq].add(course)
+            preqCounts[course] += 1
+
+        #   queue[a] = nodes with no prerequisites not yet explored
+        queue = deque()
+        for course in range(numCourses):
+            if preqCounts[course] == 0:
+                queue.append(course)
+
+        #   allPrereqs[a] = nodes which are directly or indirectly prerequisites of `a`
+        allPrereqs = defaultdict(set)
+        while len(queue) > 0:
+            current = queue.popleft()
+            for dependent in directDependents[current]:
+                allPrereqs[dependent].add(current)
+                allPrereqs[dependent] |= allPrereqs[current]
+                preqCounts[dependent] -= 1
+                if preqCounts[dependent] == 0:
+                    queue.append(dependent)
+
+        #   Answer the queries using `allPrereqs`
+        result = []
+        for pre, post in queries:
+            result.append( pre in allPrereqs[post] )
+
+        #print(f"directDependents=({directDependents}), preqCounts=({preqCounts})")
+        #print(f"queue=({queue})")
+        #print(f"allPrereqs=({allPrereqs})")
+        return result
 
 
     def checkIfPrerequisite_ans_FloydWarshall(self, numCourses: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
-        raise NotImplementedError("unimplemented, ans Topological Sort (Kahn's Algorithm) and Floyd Warshall Algorithm")
+        raise NotImplementedError("complete example theory/topological-sort and ans Floyd Warshall Algorithm")
 
 
 
 s = Solution()
-test_functions = [ s.checkIfPrerequisite_DFS, s.checkIfPrerequisite_BFS, s.checkIfPrerequisite_ans_TopologicalSortKahnAlgorithm, s.FloydWarshall, ]
+test_functions = [ s.checkIfPrerequisite_DFS, s.checkIfPrerequisite_BFS, s.checkIfPrerequisite_ans_TopologicalSortKahnAlgorithm, s.checkIfPrerequisite_ans_FloydWarshall, ]
+
+#test_functions = [s.checkIfPrerequisite_ans_TopologicalSortKahnAlgorithm, s.checkIfPrerequisite_ans_FloydWarshall, ]
+#test_functions = [s.checkIfPrerequisite_ans_TopologicalSortKahnAlgorithm, ]
 
 inputs = [
         (2, [[1,0]], [[0,1],[1,0]]),
@@ -98,6 +139,10 @@ checks = [
           [True,False,True,True,True,True,True,True,False,False,True,True,False,False,True,True,True,True,False,False,True,False,True,False,True,False,True,True,False,True,True,False,False,True,False,False,True,True,True,False],
 
           ]
+
+#inputs = [ (3, [[1,2],[1,0],[2,0]], [[1,0],[1,2]]), ]; checks = [ [True,True], ];
+#inputs = [ (5, [[0,1],[1,2],[2,3],[3,4]], [[0,4],[4,0],[1,3],[3,0]]), ]; checks = [ [True,False,True,False], ];
+
 assert len(inputs) == len(checks), "input/check lists length mismatch"
 assert len(inputs) > 0, "No input"
 
