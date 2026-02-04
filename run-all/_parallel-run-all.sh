@@ -18,6 +18,11 @@ set -o nounset   	# abort on unbound variable
 set -o pipefail  	# don't hide errors within pipes
 nl=$'\n'
 
+
+#	Must be run from within containing directory
+#	(we need to find `path_script_get_numbered`)
+
+
 bin_py="python3.11"
 path_script_get_numbered="get-numbered-problems.sh"
 flag_report_failed_scripts=1

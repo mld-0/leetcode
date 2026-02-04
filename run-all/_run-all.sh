@@ -6,6 +6,9 @@
 
 #	Deprecated: 2024-05-27T21:51:31AEST `_parallel-run-all.sh` does everything this script does better. For a single-threaded version, simple remove the `( ) & wait` from the main loop of `run_scripts_list_parallel()` in said script
 
+#	Must be run from within containing directory
+#	(we need to find `path_script_get_numbered`)
+
 #set -o errexit   # abort on nonzero exitstatus
 set -o nounset   # abort on unbound variable
 set -o pipefail  # don't hide errors within pipes
