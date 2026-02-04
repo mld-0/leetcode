@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import sys
 import os
 import re
@@ -32,6 +31,17 @@ def parse_runall_output_get_failures(input_lines):
     """Given the input as a list of lines, extract the filename, return code, and error message, as printed by the `_parallel-run-all.sh` script.
     These lines are in the format: 'rc=(1): ./05-longest-palindromic-substring.py: NotImplementedError: Complete `TwoPointers_ClarifyIndexes`'"""
 
+
+    def resolve_filename(filename):
+        if os.path.isfile(filename):
+            return filename
+        else:
+            old_filename = filename
+            filename = os.path.join("../", filename)
+            if not os.path.isfile(filename):
+                raise Exception(f"Could not find filename=({old_filename}) in current or parent directory")
+            return filename
+
     #   If given a list of strings, turn it into a single string
     if type(input_lines) == type([]):
         input_lines = ''.join(input_lines)
@@ -60,6 +70,7 @@ def parse_runall_output_get_failures(input_lines):
         match_file = line_file.rstrip(":")
         match_exception = line_exception.strip()
         #logging.debug(f"match_file=({match_file}), match_exception=({match_exception})")
+        match_file = resolve_filename(match_file)
         match_record = { 'filename': match_file, 'message': match_exception, 'rc': None, }
         failures.append(match_record)
 
