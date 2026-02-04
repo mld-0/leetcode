@@ -5,6 +5,7 @@
 import sys
 import os
 import io
+import time
 import traceback
 import contextlib
 import re
@@ -14,7 +15,9 @@ import runpy
 import multiprocessing as mp
 from contextlib import redirect_stdout, redirect_stderr
 from concurrent.futures import ProcessPoolExecutor
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
+#logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+logging.basicConfig(stream=sys.stderr, level=logging.WARN)
 
 
 def natural_sort_key(s):
@@ -37,9 +40,8 @@ def get_scriptnames(path_dir):
     ]
     filenames.sort(key=natural_sort_key)
     logging.debug(f"len(filenames)=({len(filenames)})")
-    logging.debug(f"filenames=({filenames})")
+    #logging.debug(f"filenames=({filenames})")
     return filenames
-
 
 
 
@@ -48,32 +50,56 @@ def _exec_script(path_script: str):
     Created by ChatGPT5.2 and effectively untested 
     Executes a Python file in an isolated process, capturing stdout/stderr.
     returncode: 0 on success, 1 on exception.
+    Executes a Python file in an isolated process, capturing stdout/stderr.
+    Runs with the script's directory as the current working directory.
     """
+    path_script = os.path.abspath(path_script)
+    script_dir = os.path.dirname(path_script)
 
-    logging.debug(f"path_script=({path_script}")
+    basename_script = os.path.basename(path_script)
+    print(basename_script)
 
     out = io.StringIO()
     err = io.StringIO()
     rc = 0
 
+    old_cwd = os.getcwd()
+    old_syspath0 = sys.path[0] if sys.path else None
+
     try:
+        # Behave like: (cd script_dir && python script.py)
+        os.chdir(script_dir)
+
+        # Helps relative imports like `import helper` where helper.py is alongside the script.
+        if sys.path:
+            sys.path[0] = script_dir
+        else:
+            sys.path.insert(0, script_dir)
+
         with redirect_stdout(out), redirect_stderr(err):
-            # Run as if it's __main__
             runpy.run_path(path_script, run_name="__main__")
+
     except SystemExit as e:
-        # allow scripts that call sys.exit(n)
         rc = int(e.code) if isinstance(e.code, int) else 0
     except Exception:
         rc = 1
         err.write(traceback.format_exc())
+    finally:
+        # Restore state
+        try:
+            os.chdir(old_cwd)
+        except Exception:
+            pass
 
-    stdout, stderr = out.getvalue(), err.getvalue()
+        if old_syspath0 is None:
+            # sys.path was empty before
+            if sys.path:
+                sys.path.pop(0)
+        else:
+            sys.path[0] = old_syspath0
 
-    logging.debug(f"stdout=({stdout})")
-    logging.debug(f"stderr=({stderr})")
-    logging.debug(f"rc=({rc})")
+    return rc, out.getvalue(), err.getvalue()
 
-    return rc, stdout, stderr
 
 
 def run_all_parallel(path_dir, script_names, max_workers=None, chunksize=1):
@@ -93,6 +119,7 @@ def run_all_parallel(path_dir, script_names, max_workers=None, chunksize=1):
 
     if max_workers is None:
         max_workers = min(len(paths), os.cpu_count() or 1)
+    logging.debug(f"max_workers=({max_workers})")
 
     results = {}
     with ProcessPoolExecutor(max_workers=max_workers, mp_context=ctx) as ex:
@@ -105,6 +132,39 @@ def run_all_parallel(path_dir, script_names, max_workers=None, chunksize=1):
 
     return results
 
+
+def print_errors(results):
+
+    def final_line(s):
+        return next((line.lstrip() for line in reversed(s.splitlines()) if line.strip()), "")
+
+    print()
+    print("errors:")
+    for loop_script in results.keys():
+        if results[loop_script]['returncode'] == 0:
+            continue
+        loop_msg = final_line(results[loop_script]['stderr'])
+        print("%s:\n\t%s" % (loop_script, loop_msg))
+
+
+def print_summary(results, start_time, end_time):
+    num_total = len(results)
+
+    scripts_failed = [ script for script in results.keys() if results[script]['returncode'] != 0 ]
+    scripts_succeesses = [ script for script in results.keys() if results[script]['returncode'] == 0 ]
+
+    num_failures = len(scripts_failed)
+    num_successes = len(scripts_succeesses)
+    assert num_failures + num_successes == len(results.keys()), "Length of failures plus successes should equal scripts run"
+
+
+    elapsed_seconds = (end_time - start_time) / 1000000000
+
+    print()
+    print(f"time to run solutions: {elapsed_seconds} seconds")
+    print(f"total: {num_total}")
+    print(f"successes: {num_successes}")
+    print(f"failures: {num_failures}")
 
 
 #   {{{
@@ -648,11 +708,14 @@ def run_all_parallel(path_dir, script_names, max_workers=None, chunksize=1):
 def main():
     parent_dir = get_self_parent_dir()
     script_names = get_scriptnames(parent_dir)
-    max_workers = 10
+    max_workers = None
     chunksize = 1
     #script_names = [ '884-uncommon-words-in-two-sentences.py', '1544-make-string-great.py', ]
+    start_time = time.time_ns()
     results = run_all_parallel(parent_dir, script_names, max_workers, chunksize)
-    print(f"completed=({len(results)})")
+    end_time = time.time_ns()
+    print_errors(results)
+    print_summary(results, start_time, end_time)
 
 
 if __name__ == '__main__':
