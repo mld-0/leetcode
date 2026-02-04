@@ -46,6 +46,7 @@ call_get_scripts_list()
 
 setup_tmpdirs() 
 {
+	echo "path_tmp=($path_tmp)"
 	for loop_script in "${scripts_list[@]}"; do
 		loop_script_filename=$( basename "$loop_script" )
 		current_tmp="$path_tmp/$loop_script_filename"
@@ -64,7 +65,7 @@ run_scripts_list_parallel()
 		loop_script_filename=$( basename "$loop_script" )
 		current_tmp="$path_tmp/$loop_script_filename"
 		run_msg="./$loop_script_filename"
-		$bin_py $loop_script_filename > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
+		#$bin_py $loop_script_filename > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
 		echo "$run_msg"
 		#echo "$loop_script_filename:"
 		$bin_py $loop_script > "$current_tmp/my-stdout" 2> "$current_tmp/my-stderr"
