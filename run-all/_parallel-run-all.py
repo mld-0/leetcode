@@ -19,6 +19,8 @@ from concurrent.futures import ProcessPoolExecutor
 #logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logging.basicConfig(stream=sys.stderr, level=logging.WARN)
 
+version = "2026.02.04"
+
 
 def natural_sort_key(s):
     """Generate a sort key that sorts strings in human/natural order."""

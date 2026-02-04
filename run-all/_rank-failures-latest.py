@@ -11,15 +11,13 @@ from datetime import datetime
 #logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 logging.basicConfig(stream=sys.stderr, level=logging.WARNING)
 
-version = "2025.02.04"
+version = "2026.02.04"
 
 #   Usage:
-#   #>$     python3 run-all/_parallel-run-all.py | python3 _rank-failures-latest.py
-#   (Must be run from top level dir containing `_rank-failures-latest.py`, and only python (not shell) run-all script works when called from outside dir 'run-all')
-#   (Clean it up by redirecting stderr from _parallel-run-all to /dev/null)
-#   (Taking list of failed scripts with exceptions and querying creation, modification, and commit times
+#   #>$     python3 _parallel-run-all.py 2> /dev/null | python3 _rank-failures-latest.py
+#   (Taking list of failed scripts with exceptions and querying creation, modification, and commit times)
 #   Requires report of failures to be in the following format:
-#   (This is included in output currently (2026-02-04) by both python/shell parallel-run-all scripts)
+#   (This is included in output currently (version 2026-02-04) by both python/shell parallel-run-all scripts)
 #       - Begins with line "errors:"
 #       - Finishes with empty line
 #       - Alternating lines with filename and last line from stderr when run (name of the exception)
