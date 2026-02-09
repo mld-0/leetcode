@@ -25,6 +25,8 @@ Continue: 2024-11-19T21:33:30AEDT leetcode/2461-max-sum-distinct-subarrays-len-k
 
 Continue: 2025-03-03T22:29:08AEDT leetcode/1462-course-schedule-iv; complete example theory/topological-sort and ans Floyd Warshall Algorithm
 
+Continue: 2026-02-09T20:35:35AEDT leetcode/1832-balance-binary-search-tree; solution not started, have just completed check function 
+
 
 
 study-plan-75:
