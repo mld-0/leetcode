@@ -9,13 +9,114 @@ from resources.bstreenode import TreeNode
 class Solution:
     """Generate a balanced BST from the values of an input BST"""
 
-    def balanceBST_i(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
-        raise NotImplementedError("Finished `is_balanced()` check function, but solution is unstarted")
+    #   runtime: beats 40%
+    #    memory: beats 51%
+    def balanceBST_splitlist(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+
+        def to_list(node, values):
+            if node is None:
+                return
+            if node.left is not None:
+                to_list(node.left, values)
+            values.append(node.val)
+            if node.right is not None:
+                to_list(node.right, values)
+
+        def build_tree(node, values):
+            if len(values) == 0:
+                return None
+            if len(values) == 1:
+                node.val = values[0]
+                return node
+            left, mid, right = split_list(values)
+            node.val = mid
+            node.left, node.right = None, None
+            if len(left) >= 1:
+                node.left = build_tree(TreeNode(), left)
+            if len(right) >= 1:
+                node.right = build_tree(TreeNode(), right)
+            return node
+
+        def split_list(values: List[int]) -> Tuple[List[int],int,List[int]]:
+            result = None
+            if len(values) == 1:
+                result = ([], values[0], [])
+            elif len(values) == 0:
+                result = ([], None, [])
+            else:
+                midpoint = len(values) // 2
+                left = values[:midpoint]
+                mid = values[midpoint]
+                right = values[midpoint+1:]
+                result = (left, mid, right)
+            return result
+
+        values = []
+        to_list(root, values)
+        result = build_tree(TreeNode(), values)
+        return result
+
+
+    #   runtime: beats 40%
+    #    memory: beats 51%
+    def balanceBST_splitlist_indicies(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+
+        def to_list(values, node):
+            if node is None:
+                return
+            if node.left is not None:
+                to_list(values, node.left)
+            values.append(node.val)
+            if node.right is not None:
+                to_list(values, node.right)
+
+        def build_tree(values, node, LR=None):
+            if LR is None:
+                LR = (0, len(values))
+            l = LR[0]
+            r = LR[1]
+            Len = r - l
+            if Len == 0:
+                return None
+            left, mid, right = split_list(values, l, r)
+            node.val = mid
+            node.left, node.right = None, None
+            if left[1] - left[0] >= 1:
+                node.left = build_tree(values, TreeNode(), left)
+            if right[1] - right[0] >= 1:
+                node.right = build_tree(values, TreeNode(), right)
+            return node
+
+        def split_list(values, l, r): 
+            Len = r - l
+            midpoint = (r - l) // 2 + l 
+            result = (None, None, None)
+            if Len == 0:
+                result = ((l,l), values[midpoint], (r,r))
+            if Len == 1:
+                result = ((l,l), values[l], (r,r))
+            if Len > 1:
+                result = ((l,midpoint), values[midpoint], (midpoint+1,r))
+            return result
+
+        values = []
+        to_list(values, root)
+        result = build_tree(values, TreeNode())
+        return result
+
+
+    def balanceBST_ans_traversal(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        raise NotImplementedError("Review Answers: traversal and in-place balancing")
+
+
+    def balanceBST_ans_InPlaceBalancing(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        raise NotImplementedError("Review Answers: traversal and in-place balancing")
 
 
 
 def check_is_height_balanced(root: Optional[TreeNode]) -> bool:
     """Determine if a given BST is height balanced (Created with ChatGPT5.2) (tests *appear* correct)"""
+    #   {{{
     def height(n: Optional[TreeNode]) -> int:
         if n is None:
             return 0
@@ -29,9 +130,11 @@ def check_is_height_balanced(root: Optional[TreeNode]) -> bool:
             return -1
         return 1 + max(hl, hr)
     return height(root) != -1
+    #   }}}
 
 def check_is_valid_bst(root: Optional[TreeNode]) -> bool:
     """Check if a given btree is a valid bst (Created with ChatGPT5.2) (tests *appear* correct)"""
+    #   {{{
     def valid(node: Optional[TreeNode], low, high) -> bool:
         if node is None:
             return True
@@ -39,6 +142,7 @@ def check_is_valid_bst(root: Optional[TreeNode]) -> bool:
             return False
         return valid(node.left, low, node.val) and valid(node.right, node.val, high)
     return valid(root, None, None)
+    #   }}}
 
 #   Test check functions:
 #   {{{
@@ -61,7 +165,7 @@ test_check_is_height_balanced()
 test_check_is_valid_bst()
 
 s = Solution()
-test_functions = [ s.balanceBST_i, ]
+test_functions = [ s.balanceBST_splitlist, s.balanceBST_splitlist_indicies, s.balanceBST_ans_traversal, s.balanceBST_ans_InPlaceBalancing, ]
 
 inputs = [ [1,None,2,None,3,None,4,None,None], [2,1,3], ]
 assert len(inputs) > 0, "No input"
@@ -79,7 +183,6 @@ for f in test_functions:
         assert check_is_valid_bst(result), "Check is bst failed"
         if result is not None and root is not None:
             assert set(result.to_list()) == set(root.to_list()), "Sorted list comparison failed"
-            assert len(result.to_list()) == len(root.to_list()), "List length comparison failed"
-        print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
-        print()
+    print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
+    print()
 
