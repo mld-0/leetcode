@@ -38,3 +38,7 @@ Continue: 2023-02-08T20:53:05AEDT leetcode, translated/rs, util, check (with Mir
 Continue: 2023-07-23T21:48:02AEST leetcode; translated-rs; resources; as proper libraries, imported properly
 Continue: 2023-07-27T21:45:40AEST leetcode; translated-rs/bstreenode; (needs) far more test cases, (attempting to trip up miri?)
 
+
+resources:
+Continue: 2026-02-10T17:34:20AEDT leetcode; resources; bstree; rust and python versions; we disabled a change we made about skipping implicit values (it would seem on 2024-01-12), but never commited it, disabled or not disabled, both all problems for bstree itself appear to run, but there are test cases which break which we have commented out?, investigate when/why change was undone and where/whether it matters?
+

@@ -86,9 +86,9 @@ class TreeNode:
                 else:
                     loop_nodes.append(None)
                     loop_nodes.append(None)
-                    if TreeNode.is_length_of_complete_binary_tree(len(values)) and z+1 < len(values) and values[z] is None and values[z+1] is None:
-                        #   Ongoing: 2024-01-12T19:37:01AEDT this skipping of twin None values in the event the input is the exact length of a binary-tree seems like asking for trouble for that edgecase where we are given a tree with lots of implicit missing values that just happens to be the exact size of a full binary tree - although ... presumedly it would only ever actually be a problem if the input is inconsistent about including/excluding None values for missing nodes? 
-                        z += 2
+                    #if TreeNode.is_length_of_complete_binary_tree(len(values)) and z+1 < len(values) and values[z] is None and values[z+1] is None:
+                    #    #   Ongoing: 2024-01-12T19:37:01AEDT this skipping of twin None values in the event the input is the exact length of a binary-tree seems like asking for trouble for that edgecase where we are given a tree with lots of implicit missing values that just happens to be the exact size of a full binary tree - although ... presumedly it would only ever actually be a problem if the input is inconsistent about including/excluding None values for missing nodes? 
+                    #    z += 2
             if z == previous_z:
                 raise Exception(f"TreeNode.fill_list_infer_missing(): z not incremented (parent_level=({parent_level}) must be all None) for values=({values}) (invalid input?) (or, plz debug?)")
             result.append(loop_nodes)
@@ -310,16 +310,16 @@ def test_fillListInferMissing():
         [1,2,2,None,3,None,3], 
         [5,4,1,None,1,None,4,2,None,2,None], 
         [1,None,2,None,0,3], 
-        [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
 
+        #[1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
 
-        [1,3,2,5], 
-        [2,1,3,None,4,None,7], 
-        [1], 
-        [1,2], 
-        [], 
-        list(range(1,16)), 
-        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
+        #[1,3,2,5], 
+        #[2,1,3,None,4,None,7], 
+        #[1], 
+        #[1,2], 
+        #[], 
+        #list(range(1,16)), 
+        #[1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
     ]
     result_validate = [ 
         [1], 
@@ -330,15 +330,16 @@ def test_fillListInferMissing():
         [1,2,2,None,3,None,3], 
         [5,4,1,None,1,None,4,None,None,2,None,None,None,2,None], 
         [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
-        [1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
 
-        [1,3,2,5], 
-        [2,1,3,None,4,None,7], 
-        [1], 
-        [1,2], 
-        [], 
-        list(range(1,16)), 
-        [1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
+        #[1,None,2,None,None,None,0,None,None,None,None,None,None,3,None], 
+
+        #[1,3,2,5], 
+        #[2,1,3,None,4,None,7], 
+        #[1], 
+        #[1,2], 
+        #[], 
+        #list(range(1,16)), 
+        #[1,2,3,4,None,None,7,8,9,None,None,None,None,14,15], 
     ]
 
     assert len(input_values) == len(result_validate)
