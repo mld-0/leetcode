@@ -60,3 +60,10 @@ Dynamic-programming (1D):
 Dynamic-programming (2D):
 1143-longest-common-subsequence (basic dynamic-programming problem)
 
+
+Heap / Priority Queue:
+215-kth-largest-element-in-array 
+	Sorting, although not O(n), is an acceptably fast solution. However, this problem asks for O(n). 
+	Where we are given three approaches: counting sort, min/max-heap, and quickselect
+
+
