@@ -27,6 +27,8 @@ Continue: 2025-03-03T22:29:08AEDT leetcode/1462-course-schedule-iv; complete exa
 
 Continue: 2026-02-10T19:11:25AEDT leetcode/1382-balance-binary-search-tree; review ans; traversal and in-place balancing
 
+Continue: 2026-02-26T19:45:17AEDT leetcode/1404-num-steps-reducenum-bin-rep-to-one; leetcode/1404-num-steps-reducenum-bin-rep-to-one; continue problem when leetcode no longer down (is there an efficent add_one / is_one? other solutions? ... a mathematical solution? or is converting to an int (diy) fair game when the rest of the question is simple mathematical operations?)
+
 
 
 study-plan-75:
