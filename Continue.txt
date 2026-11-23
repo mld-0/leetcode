@@ -30,6 +30,9 @@ Continue: 2026-02-10T19:11:25AEDT leetcode/1382-balance-binary-search-tree; revi
 Continue: 2026-02-26T19:45:17AEDT leetcode/1404-num-steps-reducenum-bin-rep-to-one; leetcode/1404-num-steps-reducenum-bin-rep-to-one; continue problem when leetcode no longer down (is there an efficent add_one / is_one? other solutions? ... a mathematical solution? or is converting to an int (diy) fair game when the rest of the question is simple mathematical operations?)
 
 
+Continue: 2026-11-23T19:45:06AEDT leetcode/1352-product-of-last-k-numbers; non-tle solution not found, naive solution uses queue, finish solving problem / find solution which isn't
+
+
 
 study-plan-75:
 Continue: 2023-09-08T22:40:32AEST leetcode; study-plan-75; 283-move-zeros; why our solution is so slow, intuition behind (the much faster) ans
