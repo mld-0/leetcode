@@ -60,17 +60,58 @@ class ProductOfNumbers_iii:
         return self.vals[k-1]
 
 
-#   runtime: TLE
-class ProductOfNumbers_iv:
+#   runtime: beats 60%
+#    memory: beats 67%
+class ProductOfNumbers_productprefixs:
 
     def __init__(self):
-        raise NotImplementedError("Non TLE Solution not found yet")
+        self.prefixes = []
 
     def add(self, num: int) -> None:
-        ...
+        if num == 0:
+            self.prefixes = []
+            return
+        temp = num
+        if len(self.prefixes) > 0:
+            temp *= self.prefixes[-1]
+        self.prefixes.append(temp)
 
     def getProduct(self, k: int) -> int:
-        ...
+        if k > len(self.prefixes):
+            return 0
+        if k == len(self.prefixes):
+            return self.prefixes[-1]
+        a = self.prefixes[-1]
+        b = self.prefixes[-(k+1)]
+        result = a
+        if b != 0:
+            result = a // b
+        return result
+
+
+#   runtime: beats 70%
+#    memory: beats 87%
+class ProductOfNumbers_ans:
+
+    def __init__(self):
+        self.prefixes = [1]
+        self.size = 0
+
+    def add(self, num: int):
+        if num == 0:
+            self.prefixes = [1]
+            self.size = 0
+        else:
+            temp = self.prefixes[self.size] * num
+            self.prefixes.append(temp)
+            self.size += 1
+
+    def getProduct(self, k: int) -> int:
+        if k > self.size:
+            return 0
+        a = self.prefixes[self.size]
+        b = self.prefixes[self.size - k]
+        return a // b
 
 
 
@@ -103,10 +144,9 @@ def run_solution(c, ops, vals):
             assert len(loop_val) == 1
             loop_result = s.getProduct(*loop_val)
         result.append(loop_result)
-    print(s.vals)
     return result
 
-test_classes = [ ProductOfNumbers_naive, ProductOfNumbers_ii, ProductOfNumbers_iii, ProductOfNumbers_iv, ]
+test_classes = [ ProductOfNumbers_naive, ProductOfNumbers_ii, ProductOfNumbers_iii, ProductOfNumbers_productprefixs, ProductOfNumbers_ans, ]
 
 inputs = [
     ( ["ProductOfNumbers","add","add","add","add","add","getProduct","getProduct","getProduct","add","getProduct"],
@@ -130,7 +170,6 @@ for c in test_classes:
         print(f"args=({list2str(args)})")
         result = run_solution(c, ops, args)
         print(f"result=({list2str(result)})")
-        #print(f"result=({result})")
         assert len(result) == len(check), "Check comparison failed (length)"
         assert result == check, "Check comparison failed"
     print("elapsed_us=(%0.2f)" % ((time.time() - start_time) * 1_000_000))
